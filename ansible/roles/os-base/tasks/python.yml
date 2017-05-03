@@ -1,11 +1,56 @@
-- name: Install virtualenv
-  apt: name={{ item }} state=latest
+- name: Is python 3 installed?
+  command: /usr/local/bin/python3
+  register: command_result
+  ignore_errors: yes
+  become_user: vagrant
+
+- debug:
+    msg: "command result: {{ command_result }}"
+
+- name: Yum builddep
+  command: yum-builddep -y python
+  when: command_result.rc != 0
+
+- name: Create python source folders
+  file: path={{ item }} state=directory mode=0755
   with_items:
-    - python3-pip
-    - virtualenv
+    - "{{ python_installation_path }}"
+    - "{{ python_installation_path }}/sources"
+  when: command_result.rc != 0
+
+- name: Fetch Python 3 sources
+  get_url:
+    url: https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tgz
+    dest: "{{ python_installation_path }}"
+  when: command_result.rc != 0
+
+- name: Unarchive Python 3 sources
+  unarchive: src={{ python_installation_path }}/Python-3.6.1.tgz dest={{ python_installation_path }}/sources copy=no
+  when: command_result.rc != 0
+
+- name: Configure Python 3
+  command: ./configure  --prefix=/usr/local --enable-unicode=ucs4 --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib" chdir="{{ python_installation_path }}/sources/Python-3.6.1"
+  when: command_result.rc != 0
+
+- name: Compile Python 3
+  command: make chdir="{{ python_installation_path }}/sources/Python-3.6.1"
+  when: command_result.rc != 0
+
+- name: Install Python 3
+  command: make altinstall chdir="{{ python_installation_path }}/sources/Python-3.6.1"
+  when: command_result.rc != 0
+
+- name: Link libraries
+  file: src="/usr/local/lib/{{ item }}" dest="/usr/lib64/{{ item }}" state=link
+  with_items:
+    - "libpython3.6m.so.1.0"
+    - "libpython3.so"
+  when: command_result.rc != 0
 
 - name: Create virtual environment directory for Python {{ python_virtualenv_path }}
-  file: path={{ python_virtualenv_path }} state=directory owner=ubuntu group=ubuntu mode=0755
+  file: path={{ python_virtualenv_path }} state=directory owner=vagrant group=vagrant mode=0755
+  when: command_result.rc != 0
 
 - name: Install virtual environment for Python
-  command: python3 -m virtualenv {{ python_virtualenv_path }}
+  command: /usr/local/bin/python3 -m venv {{ python_virtualenv_path }}
+  when: command_result.rc != 0

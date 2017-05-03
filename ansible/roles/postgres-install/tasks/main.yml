@@ -1,20 +1,20 @@
 ---
 
-- name: Adding APT repository key
-  apt_key:
-    id: ACCC4CF8
-    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
-
-- name: Add PostgreSQL official APT repository
-  become: yes
-  apt_repository:
-    repo: "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main"
+- name: Install Postgresql repository
+  yum_repository:
+    name: postgresql
+    description: Postresql
+    baseurl: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7.3-x86_64/
+    gpgcheck: no
+    state: present
 
 - name: Install PostgreSQL 9 and python psycopg2
-  apt: name={{ item }} state=present
+  yum: name={{ item }} state=present
   with_items:
-    - postgresql-9.6
-    - postgresql-contrib
+    - postgresql96
+    - postgresql96-server
+    - postgresql96-devel
+    - postgresql96-libs
     - python-psycopg2
 
 - name: Create Postgres directories
@@ -23,7 +23,7 @@
     - "{{ metax_db_data_path }}"
 
 - name: Initialize Postgres database cluster
-  command: /usr/lib/postgresql/9.6/bin/pg_ctl initdb -D {{ metax_db_data_path }} creates={{ metax_db_data_path }}/postgresql.conf
+  command: /usr/pgsql-9.6/bin/pg_ctl initdb -D {{ metax_db_data_path }} creates={{ metax_db_data_path }}/postgresql.conf
   become_user: postgres
 
 - name: Copy Postgres configuration
@@ -33,15 +33,12 @@
   copy:
     dest: /etc/systemd/system/metaxdb.service
     content: |
-      .include /lib/systemd/system/postgresql.service
+      .include /lib/systemd/system/postgresql-9.6.service
       [Service]
       Environment=PGDATA={{ metax_db_data_path }}
 
-- name: Install PostGIS
-  apt: name={{ item }} state=present
-  with_items:
-    - postgis
-    - postgresql-9.6-postgis-2.3
+- name: Install PostGIS 2.1
+  yum: name=postgis2_96 state=present
 
 - name: Enable metaxdb service
   systemd:
