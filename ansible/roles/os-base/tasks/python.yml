@@ -1,0 +1,11 @@
+- name: Install virtualenv
+  apt: name={{ item }} state=latest
+  with_items:
+    - python3-pip
+    - virtualenv
+
+- name: Create virtual environment directory for Python {{ python_virtualenv_path }}
+  file: path={{ python_virtualenv_path }} state=directory owner=ubuntu group=ubuntu mode=0755
+
+- name: Install virtual environment for Python
+  command: python3 -m virtualenv {{ python_virtualenv_path }}

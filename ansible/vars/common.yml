@@ -1,0 +1,7 @@
+project_name: metax-api
+project_repo: https://github.com/CSCfi/metax-api
+
+metax_base_path: /srv/metax
+python_virtualenv_path: "{{ metax_base_path }}/pyenv"
+metax_db_data_path: "{{ metax_base_path }}/db"
+metax_app_base_path: "{{ metax_base_path }}/{{ project_name }}"

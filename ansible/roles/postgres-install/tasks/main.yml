@@ -1,0 +1,51 @@
+---
+
+- name: Adding APT repository key
+  apt_key:
+    id: ACCC4CF8
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+
+- name: Add PostgreSQL official APT repository
+  become: yes
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main"
+
+- name: Install PostgreSQL 9 and python psycopg2
+  apt: name={{ item }} state=present
+  with_items:
+    - postgresql-9.6
+    - postgresql-contrib
+    - python-psycopg2
+
+- name: Create Postgres directories
+  file: path={{ item }} state=directory owner=postgres group=postgres mode=700
+  with_items:
+    - "{{ metax_db_data_path }}"
+
+- name: Initialize Postgres database cluster
+  command: /usr/lib/postgresql/9.6/bin/pg_ctl initdb -D {{ metax_db_data_path }} creates={{ metax_db_data_path }}/postgresql.conf
+  become_user: postgres
+
+- name: Copy Postgres configuration
+  copy: src=pg_hba.conf dest={{ metax_db_data_path }}/pg_hba.conf owner=postgres group=postgres
+
+- name: Install metaxdb service
+  copy:
+    dest: /etc/systemd/system/metaxdb.service
+    content: |
+      .include /lib/systemd/system/postgresql.service
+      [Service]
+      Environment=PGDATA={{ metax_db_data_path }}
+
+- name: Install PostGIS
+  apt: name={{ item }} state=present
+  with_items:
+    - postgis
+    - postgresql-9.6-postgis-2.3
+
+- name: Enable metaxdb service
+  systemd:
+    name: metaxdb
+    state: started
+    enabled: yes
+    daemon_reload: yes

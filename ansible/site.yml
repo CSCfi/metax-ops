@@ -1,0 +1,13 @@
+---
+
+- hosts: local_development
+  become: true
+  vars_files:
+    - "vars/common.yml"
+    - "vars/environments/{{ deployment_environment_id }}.yml"
+    - "{{ secrets_file_path }}"
+  roles:
+    - os-base
+- include: provision_dbservers.yml
+- include: provision_webservers.yml
+- include: deploy.yml
