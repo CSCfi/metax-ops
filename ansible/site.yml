@@ -1,7 +1,7 @@
 ---
 
 - hosts: local_development
-  become: true
+  become: yes
   vars_files:
     - "vars/common.yml"
     - "vars/environments/{{ deployment_environment_id }}.yml"

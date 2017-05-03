@@ -9,8 +9,8 @@ if [ ! -f /vagrant_bootstrap_done.info ]; then
   export DEBIAN_FRONTEND=noninteractive
   sudo apt-get update
   sudo apt-get upgrade
-  #sudo apt-get -y install epel-release
-  #sudo apt-get -y upgrade ca-certificates --disablerepo=epel
+  #CENTOS: sudo apt-get -y install epel-release
+  #CENTOS: sudo apt-get -y upgrade ca-certificates --disablerepo=epel
   sudo apt-get -y install python-pip gcc libffi-dev libssl-dev python-dev
   sudo pip install pip --upgrade
   sudo pip install setuptools --upgrade
@@ -25,17 +25,11 @@ cd /metax/ansible
 ansible-playbook site.yml
 SCRIPT
 
-#required_plugins = %w( vagrant-vbguest )
-#required_plugins.each do |plugin|
-#    exec "vagrant plugin install #{plugin};vagrant #{ARGV.join(" ")}" unless Vagrant.has_plugin? plugin || ARGV[0] == 'plugin'
-#end
-
 Vagrant.configure("2") do |config|
   config.vm.define "metax_local_dev_env" do |server|
-    #server.vm.box = "centos-7"
-    #server.vm.box_url = "http://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1703_01.VirtualBox.box"
+    #CENTOS: server.vm.box = "centos-7"
+    #CENTOS: server.vm.box_url = "http://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1703_01.VirtualBox.box"
     server.vm.box = "ubuntu/xenial64"
-    #server.vm.box_url = "https://atlas.hashicorp.com/ubuntu/boxes/xenial64/versions/20170502.0.0/providers/virtualbox.box"
 
     server.vm.network :private_network, ip: "20.20.20.20"
 
@@ -49,11 +43,6 @@ Vagrant.configure("2") do |config|
     end
 
     server.vm.provision "shell", inline: $script
-
-    #server.vm.provision "ansible" do |ansible|
-    #  ansible.playbook = "./ansible/site.yml"
-    #  ansible.verbose = "v"
-    #end
 
     server.vm.provider "virtualbox" do |vbox|
         vbox.name = "metax_local_development"
