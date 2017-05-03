@@ -4,7 +4,7 @@
   apt: pkg=nginx state=latest
 
 - name: NGINX | Configure NGINX
-  copy: src=vars/metax_nginx.conf dest=/etc/nginx/
+  copy: src=templates/metax_nginx.conf dest=/etc/nginx/
 
 - name: NGINX | Start NGINX
   service: name=nginx enabled=yes state=started
