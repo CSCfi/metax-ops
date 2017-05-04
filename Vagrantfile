@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# This script is to be run by saying 'vagrant up' in this folder. This script
+# should be run only when creating a local development environment.
 
 # Pre-provisioner shell script installs Ansible into the guest and continues
 # to provision rest of the system in the guest. Works also on Windows.
@@ -23,11 +25,16 @@ cd /metax/ansible
 ansible-playbook site.yml
 SCRIPT
 
+#exec "vagrant plugin install vagrant-vbguest;vagrant #{ARGV.join(" ")}" unless Vagrant.has_plugin? vagrant-vbguest || ARGV[0] == 'plugin'
+
+required_plugins = %w( vagrant-vbguest )
+required_plugins.each do |plugin|
+   exec "vagrant plugin install #{plugin};vagrant #{ARGV.join(" ")}" unless Vagrant.has_plugin? plugin || ARGV[0] == 'plugin'
+end
+
 Vagrant.configure("2") do |config|
   config.vm.define "metax_local_dev_env" do |server|
-    server.vm.box = "centos-7"
-    server.vm.box_url = "http://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1703_01.VirtualBox.box"
-
+    server.vm.box = "centos/7"
     server.vm.network :private_network, ip: "20.20.20.20"
 
     case RUBY_PLATFORM

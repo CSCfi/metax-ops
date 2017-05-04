@@ -5,7 +5,7 @@
   become_user: postgres
 
 - name: Ensure Metax database user exists and has access
-  postgresql_user: db={{ metax_db_name }} name={{ metax_db_user }} password={{ metax_db_password }} priv=ALL
+  postgresql_user: db={{ metax_db_name }} name={{ metax_db_user }} password={{ metax_db_password_local_dev_env }} priv=ALL
   become_user: postgres
 
 - name: Remove unnecessary privileges from user

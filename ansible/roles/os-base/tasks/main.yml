@@ -1,7 +1,10 @@
 ---
-  
+
 - name: Create folder {{ metax_base_path }}
   file: path={{ metax_app_base_path }} state=directory owner=vagrant group=vagrant mode=0755
+
+- name: Create folder {{ metax_db_data_path }}
+  file: path={{ metax_db_data_path }} state=directory owner=vagrant group=vagrant mode=0755
 
 - name: Ensure common packages
   yum: pkg={{ item }} state=latest

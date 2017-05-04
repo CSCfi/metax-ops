@@ -37,7 +37,7 @@
       [Service]
       Environment=PGDATA={{ metax_db_data_path }}
 
-- name: Install PostGIS 2.1
+- name: Install PostGIS
   yum: name=postgis2_96 state=present
 
 - name: Enable metaxdb service
