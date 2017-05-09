@@ -1,0 +1,7 @@
+[Unit]
+Description=Gunicorn application server handling {{ project_name }}
+
+[Service]
+Environment="PYTHONPATH={{ metax_django_base_path }}"
+WorkingDirectory={{ metax_django_base_path }}
+ExecStart={{ python_virtualenv_path }}/bin/python {{ python_virtualenv_path }}/bin/gunicorn --config /etc/gunicorn.py  {{ wsgi_module }}:application

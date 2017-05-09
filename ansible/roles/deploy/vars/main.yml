@@ -1,2 +1,1 @@
-# pythonpath: "{{ metax_django_base_path }}"
 wsgi_module: metax_api.wsgi

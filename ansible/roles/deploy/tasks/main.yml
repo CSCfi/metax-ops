@@ -25,7 +25,7 @@
   - restart gunicorn
 
 - name: copy gunicorn service file
-  template: src=templates/gunicorn.j2 dest=/etc/init/gunicorn.conf
+  template: src=templates/gunicorn.service dest=/etc/systemd/system/gunicorn.service
   notify:
   - restart gunicorn
 
