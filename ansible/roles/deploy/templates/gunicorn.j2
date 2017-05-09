@@ -1,5 +1,0 @@
-description "Gunicorn application server handling {{ project_name }}"
-
-chdir {{ metax_django_base_path }}
-env PYTHONPATH={{ metax_django_base_path }}
-exec gunicorn --config {{ metax_app_base_path }}/gunicorn_conf.py  {{ wsgi_module }}:application
