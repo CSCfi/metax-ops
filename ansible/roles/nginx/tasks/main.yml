@@ -12,5 +12,5 @@
 - name: NGINX | Remove default NGINX config file
   file: path=/etc/nginx/sites-enabled/default state=absent
 
-- name: NGINX | Start NGINX
-  service: name=nginx enabled=yes state=started
+- name: NGINX | Restart NGINX
+  service: name=nginx enabled=yes state=restarted
