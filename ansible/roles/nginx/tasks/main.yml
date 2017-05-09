@@ -3,8 +3,11 @@
 - name: NGINX | Install NGINX
   apt: pkg=nginx state=latest
 
-- name: NGINX | Configure NGINX
-  copy: src=templates/metax_nginx.conf dest=/etc/nginx/
+- name: NGINX | Copy NGINX conf file to sites-available
+  template: src=templates/metax_nginx.conf dest=/etc/nginx/sites-available/metax
+
+- name: NGINX | Symlink NGINX conf file to sites-enabled
+  file: state=link src=/etc/nginx/sites-available/metax dest=/etc/nginx/sites-enabled/metax
 
 - name: NGINX | Start NGINX
   service: name=nginx enabled=yes state=started

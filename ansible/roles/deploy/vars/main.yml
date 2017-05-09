@@ -1,3 +1,2 @@
-pythonpath: "{{ metax_app_base_path }}/something"
-static_root: "{{ metax_app_base_path }}/static"
-wsgi_module: something.wsgi
+# pythonpath: "{{ metax_django_base_path }}"
+wsgi_module: metax_api.wsgi

@@ -1,27 +1,30 @@
 ---
 
+- stat: path={{ metax_app_base_path }}
+  register: git_repo
+
 - name: Clone/pull project repo
   git: repo={{ project_repo }} dest={{ metax_app_base_path }} accept_hostkey=yes
-  notify:
-  - restart gunicorn
+  when: git_repo.stat.isdir is not defined
 
 - name: install python packages
-  pip: requirements={{ metax_app_base_path }}/requirements.txt
+  pip: requirements={{ metax_app_base_path }}/requirements.txt virtualenv={{ python_virtualenv_path }}
+
+- name: create directory for static files
+  file: path={{ static_root }} state=directory
+
+- name: django migrate
+  django_manage: command=migrate app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
+
+- name: django collectstatic
+  django_manage: command=collectstatic app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
+
+- name: copy gunicorn config file
+  template: src=vars/gunicorn_conf.py dest=/etc/gunicorn.py
   notify:
   - restart gunicorn
 
-- name: copy nginx config
-  template: src=metax_nginx.conf dest=/etc/nginx/sites-enabled/{{ project_name }}.conf
-  notify:
-  - restart nginx
-
-- name: django migrate
-  django_manage: command=migrate app_path={{ metax_app_base_path }} virtualenv={{ python_virtualenv_path }}
-
-- name: django collectstatic
-  django_manage: command=collectstatic app_path={{ metax_app_base_path }} virtualenv={{ python_virtualenv_path }}
-
-- name: copy gunicorn config
+- name: copy gunicorn service file
   template: src=templates/gunicorn.j2 dest=/etc/init/gunicorn.conf
   notify:
   - restart gunicorn
