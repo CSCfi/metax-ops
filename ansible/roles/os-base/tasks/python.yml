@@ -2,10 +2,10 @@
   apt: name={{ item }} state=latest
   with_items:
     - python3-pip
-    - virtualenv
+    - python3-venv
 
 - name: Create virtual environment directory for Python {{ python_virtualenv_path }}
   file: path={{ python_virtualenv_path }} state=directory owner=ubuntu group=ubuntu mode=0755
 
 - name: Install virtual environment for Python
-  command: virtualenv -p python3 {{ python_virtualenv_path }}
+  command: pyvenv {{ python_virtualenv_path }}
