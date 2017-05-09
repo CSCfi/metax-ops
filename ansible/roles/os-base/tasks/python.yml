@@ -8,4 +8,4 @@
   file: path={{ python_virtualenv_path }} state=directory owner=ubuntu group=ubuntu mode=0755
 
 - name: Install virtual environment for Python
-  command: python3 -m virtualenv {{ python_virtualenv_path }}
+  command: virtualenv -p python3 {{ python_virtualenv_path }}
