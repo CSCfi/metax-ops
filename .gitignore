@@ -1,6 +1,9 @@
 # ignore metax-api because it is another git-repo
 metax-api/
 
+# ansible retry-file
+ansible/site.retry
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
