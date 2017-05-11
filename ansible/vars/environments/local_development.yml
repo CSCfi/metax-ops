@@ -3,3 +3,5 @@ metax_app_base_path: "{{ shared_folder_base_path }}/{{ project_name }}"
 
 metax_db_name: metax_db
 metax_db_user: metax_user
+
+project_repo_branch: dev

@@ -1,3 +1,6 @@
+# Ignore vagrant cache directory
+.vagrant/
+
 # ignore metax-api because it is another git-repo
 metax-api/
 

@@ -1,10 +1,7 @@
 ---
 
-- stat: path={{ metax_app_base_path }}
-  register: git_repo
-
 - name: Clone/pull project repo
-  command: git clone {{ project_repo }} {{ metax_app_base_path }} creates={{ metax_app_base_path }}
+  git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
 
 - name: install python packages
   pip: requirements={{ metax_app_base_path }}/requirements.txt virtualenv={{ python_virtualenv_path }}

@@ -23,11 +23,14 @@
     - "{{ metax_db_data_path }}"
 
 - name: Initialize Postgres database cluster
-  command: /usr/lib/postgresql/9.6/bin/pg_ctl initdb -D {{ metax_db_data_path }} creates={{ metax_db_data_path }}/postgresql.conf
+  command: /usr/lib/postgresql/9.6/bin/initdb --pgdata={{ metax_db_data_path }} --encoding=UTF8 creates={{ metax_db_data_path }}/postgresql.conf
   become_user: postgres
 
-- name: Copy Postgres configuration
+- name: Copy Postgres host based authentication configuration
   copy: src=pg_hba.conf dest={{ metax_db_data_path }}/pg_hba.conf owner=postgres group=postgres
+
+- name: Copy Postgres configuration with Django recommended defaults
+  copy: src=templates/postgresql.conf dest={{ metax_db_data_path }}/postgresql.conf owner=postgres group=postgres mode=600
 
 - name: Install metaxdb service
   copy:
