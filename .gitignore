@@ -1,3 +1,7 @@
+# Ignore swap files
+*.sw# Ignore swap files
+*.swp
+
 # Ignore vagrant cache directory
 .vagrant/
 

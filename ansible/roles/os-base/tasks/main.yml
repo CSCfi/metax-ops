@@ -1,20 +1,17 @@
 ---
 
 - name: Create folder {{ metax_app_base_path }}
-  file: path={{ metax_app_base_path }} state=directory owner=ubuntu group=ubuntu mode=0755
+  file: path={{ metax_app_base_path }} state=directory owner={{ default_user }} group={{ default_user }} mode=0755
 
 - name: Create folder {{ metax_db_data_path }}
-  file: path={{ metax_db_data_path }} state=directory owner=ubuntu group=ubuntu mode=0755
+  file: path={{ metax_db_data_path }} state=directory owner={{ default_user }} group={{ default_user }} mode=0755
 
 - name: Ensure common packages
-  apt: pkg={{ item }} state=latest
+  apt: pkg={{ item }} state=latest update_cache=yes upgrade=safe
   with_items:
     - htop
     - git
     - zip
     - unzip
-    - supervisor
     - curl
     - vim
-
-- include: python.yml

@@ -2,3 +2,5 @@ metax_db_name: metax_db
 metax_db_user: metax_user
 
 project_repo_branch: dev
+
+default_user: cloud-user

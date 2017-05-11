@@ -1,0 +1,13 @@
+[dbservers]
+metax-db-dev ansible_host=86.50.169.34 ansible_connection=ssh ansible_user=cloud-user
+
+[webservers]
+metax-web-dev ansible_host=193.166.24.98 ansible_connection=ssh ansible_user=cloud-user
+
+[development:children]
+dbservers
+webservers
+
+[development:vars]
+deployment_environment_id=development
+secrets_file_path="vars/secrets-defaults.yml"

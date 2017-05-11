@@ -5,7 +5,7 @@
     - python3-venv
 
 - name: Create virtual environment directory for Python {{ python_virtualenv_path }}
-  file: path={{ python_virtualenv_path }} state=directory owner=ubuntu group=ubuntu mode=0755
+  file: path={{ python_virtualenv_path }} state=directory owner={{ default_user }} group={{ default_user }} mode=0755
 
 - name: Install virtual environment for Python
   command: pyvenv {{ python_virtualenv_path }}
