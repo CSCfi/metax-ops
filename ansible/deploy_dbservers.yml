@@ -5,6 +5,5 @@
   vars_files:
     - "vars/common.yml"
     - "vars/environments/{{ deployment_environment_id }}.yml"
-    - "{{ secrets_file_path }}"
   roles:
     - deploy_dbservers

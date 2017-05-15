@@ -1,17 +1,17 @@
 ---
 
 - name: Ensure Metax database is present
-  postgresql_db: name="{{ metax_db_name }}"
+  postgresql_db: name="{{ ansible_env.METAX_DATABASE | default('metax_db') }}"
   become_user: postgres
 
 - name: Ensure Metax database user exists and has access
-  postgresql_user: db={{ metax_db_name }} name={{ metax_db_user }} password={{ metax_db_password }} priv=ALL
+  postgresql_user: db={{ ansible_env.METAX_DATABASE | default('metax_db') }} name={{ ansible_env.METAX_DATABASE_USER | default('metax_user') }} password={{ ansible_env.METAX_DATABASE_PASSWORD | default('metax') }} priv=ALL
   become_user: postgres
 
 - name: Remove unnecessary privileges from user
-  postgresql_user: name={{ metax_db_name }} role_attr_flags=NOSUPERUSER,NOCREATEDB
+  postgresql_user: name={{ ansible_env.METAX_DATABASE | default('metax_db') }} role_attr_flags=NOSUPERUSER,NOCREATEDB
   become_user: postgres
 
 - name: Remove unnecessary privileges from others
-  postgresql_privs: db={{ metax_db_name }} role=PUBLIC type=database priv=ALL state=absent
+  postgresql_privs: db={{ ansible_env.METAX_DATABASE | default('metax_db') }} role=PUBLIC type=database priv=ALL state=absent
   become_user: postgres

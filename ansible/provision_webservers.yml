@@ -5,8 +5,10 @@
   vars_files:
     - "vars/common.yml"
     - "vars/environments/{{ deployment_environment_id }}.yml"
-    - "{{ secrets_file_path }}"
   roles:
     - os-base
     - python
     - nginx
+  handlers:
+    - name: restart sshd
+      service: name=sshd state=restarted
