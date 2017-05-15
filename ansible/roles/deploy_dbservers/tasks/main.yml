@@ -1,0 +1,36 @@
+---
+
+- include_role:
+    name: update_packages
+
+- name: Create db backup directories
+  file: owner=postgres group=postgres mode=0750 state=directory path={{ item }}
+  with_items:
+    - "{{ metax_db_backup_path }}"
+    - "{{ metax_db_backup_path }}/latest"
+    - "{{ metax_db_backup_path }}/archive"
+
+- name: Find latest backup
+  command: "find {{ metax_db_backup_path }}/latest -type f"
+  register: latest_backup
+
+- name: Find archived backups
+  command: "find {{ metax_db_backup_path }}/archive -type f -mtime +5"
+  register: archived_backups
+
+- name: Delete old db backups
+  file: state=absent path={{ item }}
+  with_items: "{{ archived_backups.stdout_lines }}"
+  become_user: postgres
+
+- name: Move previous db backup to archive
+  command: mv {{ item }} {{ metax_db_backup_path }}/archive
+  with_items: "{{ latest_backup.stdout_lines }}"
+  become_user: postgres
+
+- shell: date +%Y%m%d%H%M%S
+  register: timestamp
+
+- name: Backup database
+  command: "pg_dump {{ metax_db_name }} -f {{ metax_db_backup_path }}/latest/{{ metax_db_name }}_backup_{{ timestamp.stdout }}.dump"
+  become_user: postgres

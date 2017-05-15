@@ -7,7 +7,7 @@
     - "vars/environments/{{ deployment_environment_id }}.yml"
     - "{{ secrets_file_path }}"
   roles:
-    - deploy
+    - deploy_webservers
   handlers:
     - name: restart nginx
       service: name=nginx state=restarted

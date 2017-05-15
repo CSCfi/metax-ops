@@ -1,0 +1,2 @@
+- name: Update apt-get cache and safe upgrade apt-get packages
+  apt: upgrade=safe update_cache=yes

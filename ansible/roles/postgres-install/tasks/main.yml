@@ -1,5 +1,8 @@
 ---
 
+- name: Create db folder {{ metax_db_data_path }}
+  file: path={{ metax_db_data_path }} state=directory owner={{ default_user }} group={{ default_user }} mode=0755
+
 - name: Adding APT repository key
   apt_key:
     id: ACCC4CF8
