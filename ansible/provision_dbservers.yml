@@ -7,8 +7,9 @@
     - "vars/environments/{{ deployment_environment_id }}.yml"
   roles:
     - os-base
-    - postgres-install
-    - postgres-data
+    - postgres
   handlers:
     - name: restart sshd
       service: name=sshd state=restarted
+    - name: restart postgres
+      service: name=metaxdb state=restarted

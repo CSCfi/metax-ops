@@ -1,0 +1,12 @@
+[dbservers]
+metax-db-test ansible_host=86.50.169.34 ansible_connection=ssh ansible_user=metax-user
+
+[webservers]
+metax-web-test ansible_host=193.166.24.98 ansible_connection=ssh ansible_user=metax-user
+
+[staging:children]
+dbservers
+webservers
+
+[staging:vars]
+deployment_environment_id=staging

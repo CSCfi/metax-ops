@@ -8,6 +8,12 @@
 #   when: deployment_environment_id != 'local_development'
 #   notify: "restart sshd"
 
+- name: Install fi_FI local_development
+  command: "{{ item }}"
+  with_items:
+    - locale-gen fi_FI.UTF-8
+    - update-locale
+
 - name: Disable SSH password authentication
   lineinfile:
     dest: "/etc/ssh/sshd_config"
@@ -16,9 +22,6 @@
   when: deployment_environment_id != 'local_development'
   notify: "restart sshd"
 
-- include_role:
-    name: update_packages
-    
 - name: Ensure os common packages
   apt: pkg={{ item }} state=latest
   with_items:
@@ -29,3 +32,6 @@
     - curl
     - vim
     - aptitude
+
+- include_role:
+    name: update_packages

@@ -1,0 +1,12 @@
+[dbservers]
+metax-playground xxx.xxx.xxx.xxx ansible_connection=ssh ansible_ssh_user=metax-user
+
+[webservers]
+metax-playground xxx.xxx.xxx.xxx ansible_connection=ssh ansible_ssh_user=metax-user
+
+[playground:children]
+dbservers
+webservers
+
+[playground:vars]
+deployment_environment_id=playground

@@ -10,4 +10,3 @@ webservers
 
 [local_development:vars]
 deployment_environment_id=local_development
-secrets_file_path="vars/secrets-defaults.yml"

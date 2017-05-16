@@ -1,0 +1,82 @@
+---
+
+- name: Create db folder {{ metax_db_data_path }}
+  file: path={{ metax_db_data_path }} state=directory owner={{ default_user }} group={{ default_user }} mode=0755
+
+- name: Adding APT repository key
+  apt_key:
+    id: ACCC4CF8
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+
+- name: Add PostgreSQL official APT repository
+  become: yes
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main"
+
+- name: Install PostgreSQL 9 and python psycopg2
+  apt: name={{ item }} state=present
+  with_items:
+    - postgresql-9.6
+    - postgresql-contrib
+    - python-psycopg2
+
+- name: Create Postgres directories
+  file: path={{ item }} state=directory owner=postgres group=postgres mode=700
+  with_items:
+    - "{{ metax_db_data_path }}"
+
+- name: Initialize Postgres database cluster
+  command: /usr/lib/postgresql/9.6/bin/initdb --pgdata={{ metax_db_data_path }} --locale=fi_FI.utf8 --encoding=UTF8 creates={{ metax_db_data_path }}/postgresql.conf
+  become_user: postgres
+
+- name: Initialize Postgres database cluster
+  command: /usr/lib/postgresql/9.6/bin/initdb --pgdata={{ metax_db_data_path }} creates={{ metax_db_data_path }}/postgresql.conf
+  become_user: postgres
+
+- name: Copy Postgres host based authentication configuration
+  copy: src=templates/pg_hba.conf dest={{ metax_db_data_path }}/pg_hba.conf owner=postgres group=postgres
+
+- name: Copy Postgres configuration with Django recommended defaults
+  copy: src=postgresql.conf dest={{ metax_db_data_path }}/postgresql.conf owner=postgres group=postgres mode=600
+  notify: restart postgres
+
+- name: Install metaxdb service
+  copy:
+    dest: /etc/systemd/system/metaxdb.service
+    content: |
+      .include /lib/systemd/system/postgresql.service
+      [Service]
+      Environment=PGDATA={{ metax_db_data_path }}
+
+# - name: Install PostGIS
+#   apt: name={{ item }} state=present
+#   with_items:
+#     - postgis
+#     - postgresql-9.6-postgis-2.3
+
+- name: Enable metaxdb service
+  systemd:
+    name: metaxdb
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: Ensure Metax database is present
+  postgresql_db: template=template0 db={{ ansible_env.METAX_DATABASE | default('metax_db') }} state=present encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
+  become_user: postgres
+
+- name: Ensure Metax database is present
+  postgresql_db: db={{ ansible_env.METAX_DATABASE | default('metax_db') }} state=present
+  become_user: postgres
+
+- name: Remove unnecessary privileges from others
+  postgresql_privs: db={{ ansible_env.METAX_DATABASE | default('metax_db') }} role=PUBLIC type=database priv=ALL state=absent
+  become_user: postgres
+
+- name: Ensure Metax database user exists, set privileges and roles
+  postgresql_user: db={{ ansible_env.METAX_DATABASE | default('metax_db') }} name={{ ansible_env.METAX_DATABASE_USER | default('metax_user') }} password={{ ansible_env.METAX_DATABASE_PASSWORD | default('YMDLekQMqrVKcs37') }} priv=ALL role_attr_flags=NOSUPERUSER,NOCREATEDB,NOCREATEROLE state=present
+  become_user: postgres
+
+- name: Make Metax database user the owner of the database
+  postgresql_db: name="{{ ansible_env.METAX_DATABASE | default('metax_db') }}" owner={{ ansible_env.METAX_DATABASE_USER | default('metax_user') }}
+  become_user: postgres
