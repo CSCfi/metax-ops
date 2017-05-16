@@ -8,6 +8,25 @@
 #   when: deployment_environment_id != 'local_development'
 #   notify: "restart sshd"
 
+- name: Make sure we have a 'wheel' group
+  group: name=wheel state=present
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+
+- name: Add metax-user user to OS and to 'wheel' group
+  user: name=metax-user group=wheel state=present createhome=yes append=yes
+
+- name: Add .ssh folder to metax-user home
+  file: path=/home/metax-user/.ssh state=directory owner=metax-user group=wheel
+
+- name: Create empty authorized_keys for metax-user
+  file: path=/home/metax-user/.ssh/authorized_keys state=touch owner=metax-user group=wheel
+
 - name: Install fi_FI local_development
   command: "{{ item }}"
   with_items:
