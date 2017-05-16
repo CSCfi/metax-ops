@@ -80,3 +80,7 @@
 - name: Make Metax database user the owner of the database
   postgresql_db: name="{{ ansible_env.METAX_DATABASE | default('metax_db') }}" owner={{ ansible_env.METAX_DATABASE_USER | default('metax_user') }}
   become_user: postgres
+
+- name: Install uuid-ossp postgresql-extension to be able to generate uuid values
+  postgresql_ext: name=uuid-ossp db=metax_db state=present
+  become_user: postgres
