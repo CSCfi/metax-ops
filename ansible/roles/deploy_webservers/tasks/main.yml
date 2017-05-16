@@ -37,5 +37,17 @@
 - name: make sure nginx server is running
   service: name=nginx state=started enabled=yes
 
-- name: make sure gunicorn server is running
+- name: make sure gunicorn server is running when not in local development
   service: name=gunicorn state=started enabled=yes
+  when: deployment_environment_id != 'local_development'
+
+- name: make sure gunicorn server is NOT running when in local development
+  service: name=gunicorn state=stopped enabled=yes
+  when: deployment_environment_id == 'local_development'
+
+- name: copy django lightweight development webserver service file
+  template: src=templates/django_development_webserver.service dest=/etc/systemd/system/runserver.service
+
+- name: django run local development web server
+  service: name=runserver state=started enabled=yes
+  when: deployment_environment_id == 'local_development'
