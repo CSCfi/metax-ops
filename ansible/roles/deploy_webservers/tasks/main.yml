@@ -4,7 +4,7 @@
     name: update_packages
 
 - name: Create folder {{ metax_app_base_path }}
-  file: path={{ metax_app_base_path }} state=directory owner={{ default_user }} group={{ default_user }} mode=0755
+  file: path={{ metax_app_base_path }} state=directory owner={{ django_user }} group=wheel mode=0755
 
 - name: Clone/pull project repo
   git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
@@ -26,28 +26,25 @@
 
 - name: copy gunicorn config file
   template: src=vars/gunicorn_conf.py dest=/etc/gunicorn.py
-  notify:
-  - restart gunicorn
 
 - name: copy gunicorn service file
   template: src=templates/gunicorn.service dest=/etc/systemd/system/gunicorn.service
-  notify:
-  - restart gunicorn
 
 - name: make sure nginx server is running
   service: name=nginx state=started enabled=yes
 
-- name: make sure gunicorn server is running when not in local development
-  service: name=gunicorn state=started enabled=yes
+- name: make sure gunicorn server is running when NOT in local development
+  service: name=gunicorn state=restarted enabled=yes
   when: deployment_environment_id != 'local_development'
 
-- name: make sure gunicorn server is NOT running when in local development
-  service: name=gunicorn state=stopped enabled=yes
-  when: deployment_environment_id == 'local_development'
+- block:
+    - name: make sure gunicorn server is NOT running when in local development
+      service: name=gunicorn state=stopped enabled=yes
 
-- name: copy django lightweight development webserver service file
-  template: src=templates/django_development_webserver.service dest=/etc/systemd/system/runserver.service
+    - name: create django lightweight development webserver service
+      template: src=templates/django_development_webserver.service dest=/etc/systemd/system/runserver.service
 
-- name: django run local development web server
-  service: name=runserver state=started enabled=yes
+    - name: run django lightweight development webserver
+      service: name=runserver state=started enabled=yes
+
   when: deployment_environment_id == 'local_development'

@@ -1,6 +1,0 @@
----
-
-- include: provision_dbservers.yml
-- include: provision_webservers.yml
-- include: deploy_dbservers.yml
-- include: deploy_webservers.yml

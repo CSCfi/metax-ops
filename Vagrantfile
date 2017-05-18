@@ -20,7 +20,8 @@ if [ ! -f /vagrant_bootstrap_done.info ]; then
   sudo touch /vagrant_bootstrap_done.info
 fi
 cd /metax/ansible
-ansible-playbook site.yml
+ansible-playbook site_provision.yml
+ansible-playbook site_deploy.yml
 SCRIPT
 
 Vagrant.configure("2") do |config|

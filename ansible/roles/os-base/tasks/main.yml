@@ -6,11 +6,10 @@
 #     regexp: "^Port"
 #     line: "Port 2222"
 #   when: deployment_environment_id != 'local_development'
-#   notify: "restart sshd"
+#   notify: restart sshd
 
 - name: Make sure we have a 'wheel' group
   group: name=wheel state=present
-  when: deployment_environment_id != 'local_development'
 
 - name: Allow 'wheel' group to have passwordless sudo
   lineinfile:
@@ -18,19 +17,18 @@
     state: present
     regexp: '^%wheel'
     line: '%wheel ALL=(ALL) NOPASSWD: ALL'
-  when: deployment_environment_id != 'local_development'
 
 - name: Add metax-user user to OS and to 'wheel' group
   user: name=metax-user group=wheel state=present createhome=yes append=yes
-  when: deployment_environment_id != 'local_development'
 
-- name: Add .ssh folder to metax-user home
-  file: path=/home/metax-user/.ssh state=directory owner=metax-user group=wheel
-  when: deployment_environment_id != 'local_development'
+- block:
+    - name: Add .ssh folder to metax-user home
+      file: path=/home/{{ django_user }}/.ssh state=directory owner={{ django_user }} group=wheel
 
-- name: Create empty authorized_keys for metax-user
-  file: path=/home/metax-user/.ssh/authorized_keys state=touch owner=metax-user group=wheel
-  when: deployment_environment_id != 'local_development'
+    - name: Create empty authorized_keys for metax-user
+      file: path=/home/{{ django_user }}/.ssh/authorized_keys state=touch owner={{ django_user }} group=wheel
+
+  when: deployment_environment_id != 'local_development' and deployment_environment_id != 'playground'
 
 - name: Install fi_FI local_development
   command: "{{ item }}"
@@ -44,7 +42,7 @@
     regexp: "^PasswordAuthentication"
     line: "PasswordAuthentication no"
   when: deployment_environment_id != 'local_development'
-  notify: "restart sshd"
+  notify: restart sshd
 
 - name: Ensure os common packages
   apt: pkg={{ item }} state=latest

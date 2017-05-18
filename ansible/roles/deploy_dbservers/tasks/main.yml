@@ -18,19 +18,20 @@
   command: "find {{ metax_db_backup_path }}/archive -type f -mtime +5"
   register: archived_backups
 
-- name: Delete old db backups
-  file: state=absent path={{ item }}
-  with_items: "{{ archived_backups.stdout_lines }}"
-  become_user: postgres
-
-- name: Move previous db backup to archive
-  command: mv {{ item }} {{ metax_db_backup_path }}/archive
-  with_items: "{{ latest_backup.stdout_lines }}"
-  become_user: postgres
-
-- shell: date +%Y%m%d%H%M%S
+- name: Get current timestamp
+  shell: date +%Y%m%d%H%M%S
   register: timestamp
 
-- name: Backup database
-  command: "pg_dump {{ ansible_env.METAX_DATABASE | default('metax_db') }} -f {{ metax_db_backup_path }}/latest/{{ ansible_env.METAX_DATABASE | default('metax_db') }}_backup_{{ timestamp.stdout }}.dump"
+- block:
+    - name: Delete old db backups
+      file: state=absent path={{ item }}
+      with_items: "{{ archived_backups.stdout_lines }}"
+
+    - name: Move previous db backup to archive
+      command: mv {{ item }} {{ metax_db_backup_path }}/archive
+      with_items: "{{ latest_backup.stdout_lines }}"
+
+    - name: Backup database
+      command: "pg_dump {{ ansible_env.METAX_DATABASE | default(default_db_name) }} -f {{ metax_db_backup_path }}/latest/{{ ansible_env.METAX_DATABASE | default(default_db_name) }}_backup_{{ timestamp.stdout }}.dump"
+
   become_user: postgres

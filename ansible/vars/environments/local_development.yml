@@ -2,3 +2,4 @@ shared_folder_base_path: /metax
 metax_app_base_path: "{{ shared_folder_base_path }}/{{ project_name }}"
 project_repo_branch: master
 default_user: ubuntu
+django_user: ubuntu
