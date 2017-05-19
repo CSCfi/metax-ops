@@ -16,7 +16,7 @@
   file: path={{ static_root }} state=directory
 
 - name: create logging directory
-  file: path=/var/log/metax_api state=directory owner={{ django_user }} group={{ django_user }}
+  file: path=/var/log/metax-api state=directory owner={{ django_user }} group=wheel
 
 - name: django migrate
   django_manage: command=migrate app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
