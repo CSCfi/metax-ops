@@ -9,6 +9,7 @@
     - os-base
     - python
     - nginx
+    - provision_django
   handlers:
     - name: restart sshd
       service: name=sshd state=restarted

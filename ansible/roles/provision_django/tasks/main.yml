@@ -1,0 +1,14 @@
+- name: Create folder {{ metax_app_base_path }}
+  file: path={{ metax_app_base_path }} state=directory owner={{ django_user }} group=wheel mode=0755
+
+- name: Clone project repo from branch {{ project_repo_branch }} to {{ metax_app_base_path }}
+  git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
+
+- name: install app python package requirements
+  pip: requirements={{ metax_app_base_path }}/requirements.txt virtualenv={{ python_virtualenv_path }}
+
+- name: create directory for static files
+  file: path={{ static_root }} state=directory
+
+- name: create logging directory
+  file: path=/var/log/metax-api state=directory owner={{ django_user }} group=wheel
