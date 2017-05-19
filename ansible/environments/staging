@@ -1,14 +1,14 @@
 [dbservers]
 # Use the below one for deployment
-#metax-db-test ansible_host="{{ primary_dbserver_external_ip }}" ansible_connection=ssh ansible_user=metax-user
+metax-db-test ansible_host="{{ primary_dbserver_external_ip }}" ansible_connection=ssh ansible_user=metax-user
 # Use the below one for provisioning. Always do provisioning from a local environment.
-metax-db-test ansible_host="{{ primary_dbserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user
+#metax-db-test ansible_host="{{ primary_dbserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user
 
 [webservers]
 # Use the below one for deployment
-#metax-web-test ansible_host="{{ primary_webserver_external_ip }}" ansible_connection=ssh ansible_user=metax-user
+metax-web-test ansible_host="{{ primary_webserver_external_ip }}" ansible_connection=ssh ansible_user=metax-user
 # Use the below one for provisioning. Always do provisioning from a local environment.
-metax-web-test ansible_host="{{ primary_webserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user
+#metax-web-test ansible_host="{{ primary_webserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user
 
 [staging:children]
 dbservers

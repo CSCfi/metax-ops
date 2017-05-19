@@ -40,10 +40,6 @@
   file: dest=/etc/postgresql/9.6/main src={{ metax_db_config_path }} state=link force=yes
   become_user: postgres
 
-# - name: Initialize Postgres database cluster
-#   command: /usr/lib/postgresql/9.6/bin/initdb --pgdata={{ metax_db_data_path }} --locale=fi_FI.utf8 --encoding=UTF8 creates={{ metax_db_data_path }}/postgresql.conf
-#   become_user: postgres
-
 - name: Copy Postgres host based authentication configuration
   template: src=templates/pg_hba.conf dest={{ metax_db_config_path }}/pg_hba.conf owner=postgres group=postgres
 
@@ -137,7 +133,7 @@
       postgresql_db: name="{{ ansible_env.METAX_DATABASE | default(default_db_name) }}" owner={{ ansible_env.METAX_DATABASE_USER | default(default_db_user) }}
 
     - name: Install uuid-ossp postgresql-extension to be able to generate uuid values
-      postgresql_ext: name=uuid-ossp db=metax_db state=present
+      postgresql_ext: name=uuid-ossp db="{{ ansible_env.METAX_DATABASE | default(default_db_name) }}" state=present
 
   become_user: postgres
 

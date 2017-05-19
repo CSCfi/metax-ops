@@ -1,8 +1,8 @@
-- name: Install virtualenv
+- name: Install pip and virtualenv
   apt: name={{ item }} state=latest
   with_items:
     - python3-pip
     - python3-venv
 
-- name: Install virtual environment for Python
+- name: Setup virtual environment for Python to {{ python_virtualenv_path }}
   command: pyvenv {{ python_virtualenv_path }} creates={{ python_virtualenv_path }}
