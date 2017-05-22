@@ -38,10 +38,8 @@
     - name: make sure gunicorn server is NOT running when in local development
       service: name=gunicorn state=stopped enabled=yes
 
-    - name: create django lightweight development webserver service
-      template: src=templates/django_development_webserver.service dest=/etc/systemd/system/runserver.service
-
-    - name: run django lightweight development webserver
-      service: name=runserver state=started enabled=yes
+    - name: inform the user how to start a local development server
+      debug:
+        msg: "Local dev environment successfully set up.\nrun python manage.py runserver as metax-user with virtualenv enabled to run Django development server"
 
   when: deployment_environment_id == 'local_development'
