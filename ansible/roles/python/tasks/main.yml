@@ -6,3 +6,6 @@
 
 - name: Setup virtual environment for Python to {{ python_virtualenv_path }}
   command: pyvenv {{ python_virtualenv_path }} creates={{ python_virtualenv_path }}
+
+- name: Set owner of pyvenv to django user
+  file: path={{ python_virtualenv_path }} owner={{ django_user }} group=wheel
