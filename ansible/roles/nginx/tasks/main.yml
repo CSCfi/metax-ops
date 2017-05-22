@@ -12,5 +12,17 @@
 - name: NGINX | Remove default NGINX config file
   file: path=/etc/nginx/sites-enabled/default state=absent
 
+- name: NGINX | Create directory for ssl certificates
+  file: path=/etc/nginx/ssl_certs state=directory
+
+- name: NGINX | Generate Diffie-Hellman PFS (Perfect Forward Secrecy) group
+  command: openssl dhparam -out /etc/nginx/ssl_certs/dhparam.pem 2048
+
+# todo certs for other envs
+
+- name: NGINX | Create self-signed SSL cert
+  command: openssl req -x509 -nodes -subj "/C=FI/ST=Espoo/L=Uusimaa/O=REDS/CN={{ server_domain_name }}" -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl_certs/nginx-selfsigned.key -out /etc/nginx/ssl_certs/nginx-selfsigned.crt
+  when: deployment_environment_id == 'local_development'
+
 - name: NGINX | Restart NGINX
   service: name=nginx enabled=yes state=restarted
