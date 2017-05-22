@@ -22,7 +22,7 @@
 
 - name: NGINX | Create self-signed SSL cert
   command: openssl req -x509 -nodes -subj "/C=FI/ST=Espoo/L=Uusimaa/O=REDS/CN={{ server_domain_name }}" -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl_certs/nginx-selfsigned.key -out /etc/nginx/ssl_certs/nginx-selfsigned.crt
-  when: deployment_environment_id == 'local_development'
+  when: deployment_environment_id == 'local_development' or deployment_environment_id == 'playground'
 
 - name: NGINX | Restart NGINX
   service: name=nginx enabled=yes state=restarted

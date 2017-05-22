@@ -4,4 +4,3 @@ project_repo_branch: master
 default_user: ubuntu
 django_user: metax-user
 server_domain_name: metax.csc.local
-server_certificate_name: nginx-selfsigned
