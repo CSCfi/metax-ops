@@ -113,6 +113,20 @@
     regexp: "^default_text_search_config"
     line: "default_text_search_config = 'pg_catalog.finnish'"
 
+- name: Optimize Postgres configuration shared_buffers
+  lineinfile:
+    dest: "{{ metax_db_config_path }}/postgresql.conf"
+    state: present
+    regexp: "^shared_buffers"
+    line: "shared_buffers = '{{ (ansible_memtotal_mb*0.25) | int }}MB'"
+
+- name: Optimize Postgres configuration effective_cache_size
+  lineinfile:
+    dest: "{{ metax_db_config_path }}/postgresql.conf"
+    state: present
+    regexp: "^#effective_cache_size"
+    line: "effective_cache_size = '{{ (ansible_memtotal_mb*0.75) | int }}MB'"
+
 - name: Start postgres
   service: name=postgresql state=restarted
 
