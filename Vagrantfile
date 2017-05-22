@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
         server.vm.synced_folder "./", "/metax", :mount_options => ["dmode=755","fmode=644"]
     else
         # Basic VM synced folder mount
-        server.vm.synced_folder "", "/metax"
+        server.vm.synced_folder "", "/metax", :mount_options => ["dmode=777,fmode=777"]
     end
 
     server.vm.provision "shell", inline: $script
