@@ -9,6 +9,3 @@
 
 - name: create directory for static files
   file: path={{ static_root }} state=directory
-
-- name: create logging directory
-  file: path=/var/log/metax-api state=directory owner={{ django_user }} group=wheel
