@@ -1,0 +1,65 @@
+---
+
+- name: Check if Redis service exists
+  stat: path=/etc/systemd/system/redis.service
+  register: service_status
+
+- block:
+
+    - name: Create directory for extracting Redis package
+      file:
+        path: /tmp/redis-stable
+        state: directory
+        recurse: yes
+
+    - name: Fetch latest stable Redis package
+      get_url:
+        url: http://download.redis.io/redis-stable.tar.gz
+        dest: /tmp/redis-stable.tar.gz
+
+    - name: Unarchive Redis package
+      unarchive:
+        src: /tmp/redis-stable.tar.gz
+        dest: /tmp
+
+    - name: Make Redis
+      make: chdir=/tmp/redis-stable
+
+    # - name: Test Redis make
+    #   make: chdir=/tmp/redis-stable target=test
+    #   register: redis_test
+
+    - name: Install Redis
+      make: chdir=/tmp/redis-stable target=install
+
+    - name: Create /etc/redis for storing Redis configuration
+      file: path=/etc/redis state=directory
+
+    - name: Copy Redis configuration to its place
+      copy: src=redis.conf dest=/etc/redis
+
+    - name: Install Redis systemd service
+      copy:
+        dest: /etc/systemd/system/redis.service
+        content: |
+          [Unit]
+          Description=Redis In-Memory Data Store
+          After=network.target
+          [Service]
+          User=redis
+          Group=root
+          ExecStart=/usr/local/bin/redis-server /etc/redis/redis.conf
+          ExecStop=/usr/local/bin/redis-cli shutdown
+          Restart=always
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Add redis user to OS
+      user: name=redis state=present createhome=no system=yes
+
+    - name: Create /var/lib/redis for Redis persistent data
+      file: path=/var/lib/redis state=directory owner=redis mode=770
+  #when: not service_status.stat.exists
+
+- name: Start Redis service
+  systemd: name=redis state=started enabled=yes
