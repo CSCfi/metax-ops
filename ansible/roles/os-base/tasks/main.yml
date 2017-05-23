@@ -57,6 +57,11 @@
     - curl
     - vim
     - aptitude
+    - ntp
+
+- name: Set timezone to Europe/Helsinki
+  timezone:
+    name: Europe/Helsinki
 
 - include_role:
     name: update_packages
