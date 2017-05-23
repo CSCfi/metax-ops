@@ -58,6 +58,8 @@
     - vim
     - aptitude
     - ntp
+    - tree
+    - zile
 
 - name: Set timezone to Europe/Helsinki
   timezone:
