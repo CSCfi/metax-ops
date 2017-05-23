@@ -58,6 +58,13 @@
     - vim
     - aptitude
     - tcl
+    - ntp
+    - tree
+    - zile
+
+- name: Set timezone to Europe/Helsinki
+  timezone:
+    name: Europe/Helsinki
 
 - include_role:
     name: update_packages
