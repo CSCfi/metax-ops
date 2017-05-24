@@ -47,84 +47,84 @@
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^#listen_addresses"
+    regexp: "listen_addresses ="
     line: "listen_addresses = '*'"
 
 - name: Change Postgres configuration log_timezone to Finnish locale
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^log_timezone"
+    regexp: "log_timezone ="
     line: "log_timezone = 'Europe/Helsinki'"
 
 - name: Change Postgres configuration default_transaction_isolation to Django recommended value
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^#default_transaction_isolation"
+    regexp: "default_transaction_isolation ="
     line: "default_transaction_isolation = 'read committed'"
 
 - name: Change Postgres configuration timezone to Finnish locale
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^timezone"
+    regexp: "timezone ="
     line: "timezone = 'Europe/Helsinki'"
 
 - name: Change Postgres configuration client_encoding UTF8
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^#client_encoding"
+    regexp: "client_encoding ="
     line: "client_encoding = 'UTF8'"
 
 - name: Change Postgres configuration lc_messages to Finnish locale UTF8
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^lc_messages"
+    regexp: "lc_messages ="
     line: "lc_messages = 'fi_FI.utf8'"
 
 - name: Change Postgres configuration lc_monetary to Finnish locale UTF8
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^lc_monetary"
+    regexp: "lc_monetary ="
     line: "lc_monetary = 'fi_FI.utf8'"
 
 - name: Change Postgres configuration lc_numeric to Finnish locale UTF8
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^lc_numeric"
+    regexp: "lc_numeric ="
     line: "lc_numeric = 'fi_FI.utf8'"
 
 - name: Change Postgres configuration lc_time to Finnish locale UTF8
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^lc_time"
+    regexp: "lc_time ="
     line: "lc_time = 'fi_FI.utf8'"
 
 - name: Change Postgres configuration default_text_search_config to Finnish
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^default_text_search_config"
+    regexp: "default_text_search_config ="
     line: "default_text_search_config = 'pg_catalog.finnish'"
 
 - name: Optimize Postgres configuration shared_buffers
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^shared_buffers"
+    regexp: "shared_buffers ="
     line: "shared_buffers = '{{ (ansible_memtotal_mb*0.25) | int }}MB'"
 
 - name: Optimize Postgres configuration effective_cache_size
   lineinfile:
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
-    regexp: "^#effective_cache_size"
+    regexp: "effective_cache_size ="
     line: "effective_cache_size = '{{ (ansible_memtotal_mb*0.75) | int }}MB'"
 
 - name: Start postgres
