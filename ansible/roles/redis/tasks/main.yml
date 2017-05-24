@@ -51,6 +51,7 @@
       unarchive:
         src: /tmp/redis-stable.tar.gz
         dest: /tmp
+        remote_src: yes
 
     - name: Make Redis
       make: chdir=/tmp/redis-stable

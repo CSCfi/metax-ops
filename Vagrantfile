@@ -7,9 +7,9 @@
 $script = <<SCRIPT
 if [ ! -f /vagrant_bootstrap_done.info ]; then
   export DEBIAN_FRONTEND=noninteractive
-  sudo apt-get update
-  sudo apt-get upgrade
-  sudo apt-get -y install python-pip gcc libffi-dev libssl-dev python-dev
+  sudo apt update
+  sudo apt upgrade
+  sudo apt -y install python-pip gcc libffi-dev libssl-dev
   sudo pip install pip --upgrade
   sudo pip install setuptools --upgrade
   sudo pip install markupsafe ansible paramiko

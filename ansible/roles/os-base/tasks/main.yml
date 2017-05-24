@@ -18,7 +18,6 @@
   lineinfile:
     path: /home/{{ django_user }}/.bashrc
     line: 'export LC_ALL=C'
-  when: deployment_environment_id == 'local_development'
 
 - name: Create /srv/metax base directory
   file: path=/srv/metax state=directory owner={{ django_user }} group=metax mode=0755
@@ -43,6 +42,9 @@
 - name: Ensure os common packages
   apt: pkg={{ item }} state=latest
   with_items:
+    - build-essential
+    - python-dev
+    - python3-dev
     - htop
     - git
     - zip

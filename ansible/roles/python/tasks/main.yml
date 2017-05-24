@@ -8,9 +8,8 @@
   command: pyvenv {{ python_virtualenv_path }} creates={{ python_virtualenv_path }}
 
 - name: Set owner of pyvenv to django user
-  file: path={{ python_virtualenv_path }} owner={{ django_user }} group=metax recurse=yes
+  file: path={{ python_virtualenv_path }} owner={{ django_user }} group=metax recurse=yes mode=0755
 
-- name: install wheel package using pip (To enable using pip for installing requirements as {{ django_user }} in local dev env)
+- name: install wheel package to enable using pip for installing requirements as {{ django_user }}
   pip: name=wheel virtualenv={{ python_virtualenv_path }}
-  become: "{{ django_user }}"
-  when: deployment_environment_id == 'local_development'
+  become_user: "{{ django_user }}"

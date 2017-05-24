@@ -1,3 +1,4 @@
 project_repo_branch: staging
 default_user: cloud-user
 django_user: metax-user
+server_domain_name: 193.166.24.134
