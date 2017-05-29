@@ -8,11 +8,21 @@
 #   when: deployment_environment_id != 'local_development'
 #   notify: restart sshd
 
+- name: Make sure we have a 'wheel' group
+  group: name=wheel state=present
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+
 - name: Make sure we have a 'metax' group in OS
   group: name=metax state=present
 
-- name: Add {{ django_user }} user to OS and to 'metax' group
-  user: name={{ django_user }} group=metax state=present createhome=yes
+- name: Add {{ django_user }} user to OS and to 'metax' and 'wheel' groups
+  user: name={{ django_user }} groups=metax,wheel state=present createhome=yes
 
 - name: Add env variables for {{ django_user }}
   lineinfile:
