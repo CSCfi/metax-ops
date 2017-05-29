@@ -16,3 +16,5 @@ static_root: "{{ metax_django_base_path }}/static"
 default_db_name: metax_db
 default_db_user: metax_db_user
 default_db_password: YMDLekQMqrVKcs37
+
+default_rabbitmq_password: RKZ7CBebjLEUJsqL

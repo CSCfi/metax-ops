@@ -1,0 +1,32 @@
+---
+
+  - name: Install Erlang package
+    apt: pkg=erlang state=latest
+
+  - name: Add RabbitMQ official apt repository
+    apt_repository: repo='deb http://www.rabbitmq.com/debian/ testing main' state=present update_cache=yes
+
+  - name: Add RabbitMQ public key to trusted key list
+    apt_key: url="https://www.rabbitmq.com/rabbitmq-release-signing-key.asc" state=present
+
+  - name: Install RabbitMQ server
+    apt: pkg=rabbitmq-server state=latest update_cache=yes
+
+  - name: Enable RabbitMQ management plugin (access it via <ip_address>:15672)
+    rabbitmq_plugin: names=rabbitmq_management state=enabled
+
+  - name: Add new admin user for RabbitMQ
+    rabbitmq_user:
+      user: admin
+      password: "{{ ansible_env.RABBITMQ_ADMIN_PASSWORD | default(default_rabbitmq_password) }}"
+      tags: administrator,admin
+      vhost: /
+      configure_priv: .*
+      write_priv: .*
+      read_priv: .*
+
+  - name: Remove default admin user
+    rabbitmq_user: user=guest state=absent
+
+  - name: Restart RabbitMQ
+    service: name=rabbitmq-server state=restarted
