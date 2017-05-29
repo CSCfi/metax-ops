@@ -9,19 +9,14 @@ if [ ! -f /vagrant_bootstrap_done.info ]; then
   export DEBIAN_FRONTEND=noninteractive
   sudo apt update
   sudo apt upgrade
-  sudo apt -y install python-pip gcc libffi-dev libssl-dev
+  sudo apt -y install python-pip libffi-dev libssl-dev
   sudo pip install pip --upgrade
-  sudo pip install setuptools --upgrade
-  sudo pip install markupsafe ansible paramiko
-  sudo pip install urllib3
-  sudo pip install pyopenssl
-  sudo pip install ndg-httpsclient
-  sudo pip install pyasn1
+  sudo pip install ansible
+  cd /metax/ansible
+  ansible-playbook site_provision.yml
+  ansible-playbook site_deploy.yml
   sudo touch /vagrant_bootstrap_done.info
 fi
-cd /metax/ansible
-ansible-playbook site_provision.yml
-ansible-playbook site_deploy.yml
 SCRIPT
 
 Vagrant.configure("2") do |config|
