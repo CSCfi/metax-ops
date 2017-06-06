@@ -16,7 +16,7 @@
   file: path={{ static_root }} state=directory
 
 - name: create django app logging directory
-  file: path="/var/log/metax-api" state=directory owner={{ django_user }} group=metax
+  file: path=/var/log/metax-api state=directory owner={{ django_user }} group=metax
 
 - name: create django app log file and ensure file permissions
   copy: content="" dest=/var/log/metax-api/metax_api.log force=no owner={{ django_user }} group=metax mode=0755
