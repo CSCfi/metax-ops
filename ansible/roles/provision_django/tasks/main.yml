@@ -19,7 +19,7 @@
   file: path=/var/log/metax-api state=directory owner={{ django_user }} group=metax
 
 - name: create django app log file and ensure file permissions
-  copy: content="" dest=/var/log/metax-api/metax_api.log force=no owner={{ django_user }} group=metax mode=0755
+  copy: content="" dest=/var/log/{{ project_name }}/metax_api.log force=no owner={{ django_user }} group=metax mode=0755
 
 - name: copy gunicorn config file
   template: src=vars/gunicorn_conf.py dest=/etc/gunicorn.py

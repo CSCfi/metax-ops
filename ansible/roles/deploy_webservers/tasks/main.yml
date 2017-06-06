@@ -25,6 +25,9 @@
   when: deployment_environment_id != 'local_development'
 
 - block:
+    - name: copy bash aliases to user home dir
+      template: src=templates/bash_aliases dest=/home/{{ default_user }}/.bash_aliases
+
     - name: make sure gunicorn server is NOT running when in local development
       service: name=gunicorn state=stopped enabled=yes
 
