@@ -1,20 +1,26 @@
-# general useful
+
+# ALIASES TO USE FOR DEVELOPMENT
+
+# Generally useful
+# Use metax-user user when running these
 alias aliases='cat ~/.bash_aliases'
 alias metax-src='cd {{ metax_django_base_path }}'
 alias source-pyvenv='source {{ python_virtualenv_path }}/bin/activate'
 alias tail-log='tail -f -n 200 /var/log/{{ project_name }}/metax_api.log'
 
-# drop and create db
+# Drop and create db
+# Use ubuntu user when running these
 alias drop-metax-db='sudo -su postgres psql -c '"'"'drop database {{ default_db_name }};'"'"
 alias create-metax-db='sudo -su postgres psql -c '"'"'create database {{ default_db_name }};'"'"
 alias alter-metax-db='sudo -su postgres psql -c '"'"'alter database metax_db owner to {{ default_db_user }};'"'"
 
 # django-specific aliases
-# note: must be executed in dir {{ metax_django_base_path }}
-alias rm-migrations='rm -rf metax_api/migrations/*'
-alias makemigrations='python manage.py makemigrations metax_api'
-alias migrate='python manage.py migrate metax_api'
-alias loaddata='python manage.py loaddata metax_api/tests/file_test_data_list.json'
+# Use metax-user user when running these
+alias rm-migrations='cd {{ metax_django_base_path }};rm -rf metax_api/migrations/*;cd -'
+alias makemigrations='cd {{ metax_django_base_path }};python manage.py makemigrations metax_api;cd -'
+alias migrate='cd {{ metax_django_base_path }};python manage.py migrate metax_api;cd -'
+alias loaddata='cd {{ metax_django_base_path }};python manage.py loaddata metax_api/tests/file_test_data_list.json;cd -'
+alias runserver='cd {{ metax_django_base_path }};python manage.py runserver;cd -'
 
 # in one command: completely drop and recreate db, delete django migration files, and recreate tables
 alias recreate-db='drop-metax-db && create-metax-db && alter-metax-db && rm-migrations && makemigrations && migrate'

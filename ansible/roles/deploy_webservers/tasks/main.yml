@@ -28,11 +28,16 @@
     - name: copy bash aliases to user home dir
       template: src=templates/bash_aliases dest=/home/{{ default_user }}/.bash_aliases
 
+    - name: Add aliases message to {{ default_user }} profile
+      lineinfile:
+        dest: "/home/{{ default_user }}/.profile"
+        state: present
+        line: "aliases"
+
     - name: make sure gunicorn server is NOT running when in local development
       service: name=gunicorn state=stopped enabled=yes
 
-    - name: inform the user how to start a local development server
-      debug:
-        msg: "Local dev environment successfully set up.\nrun python manage.py runserver as metax-user with virtualenv enabled to run Django development server"
+    - debug:
+        msg: "Local dev environment successfully set up. Run commands 'sudo -su {{ django_user }}' and 'source-pyvenv;runserver' to run Django development server"
 
   when: deployment_environment_id == 'local_development'
