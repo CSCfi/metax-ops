@@ -83,7 +83,7 @@
     dest: "{{ metax_db_config_path }}/postgresql.conf"
     state: present
     regexp: "lc_messages ="
-    line: "lc_messages = 'fi_FI.utf8'"
+    line: "lc_messages = 'en_US.utf8'"
 
 - name: Change Postgres configuration lc_monetary to Finnish locale UTF8
   lineinfile:
