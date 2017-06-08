@@ -1,4 +1,5 @@
 project_name: metax-api
+django_app_name: metax_api
 project_repo: https://github.com/CSCfi/metax-api
 
 metax_base_path: /srv/metax
