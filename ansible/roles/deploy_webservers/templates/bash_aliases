@@ -16,8 +16,9 @@ alias alter-metax-db='sudo -su postgres psql -c '"'"'alter database metax_db own
 alias rm-migrations='cd {{ metax_django_base_path }};rm -rf metax_api/migrations/*;cd -'
 alias makemigrations='cd {{ metax_django_base_path }};python manage.py makemigrations metax_api;cd -'
 alias migrate='cd {{ metax_django_base_path }};python manage.py migrate metax_api;cd -'
-alias loaddata='cd {{ metax_django_base_path }};python manage.py loaddata metax_api/tests/file_test_data_list.json;cd -'
+alias loaddata='cd {{ metax_django_base_path }};python manage.py loaddata metax_api/tests/testdata/test_data.json;cd -'
 alias runserver='cd {{ metax_django_base_path }};python manage.py runserver;cd -'
+alias runtests='cd {{ metax_django_base_path }};python manage.py test --failfast;cd -'
 
 # in one command: completely drop and recreate db, delete django migration files, and recreate tables
 alias recreate-db='drop-metax-db && create-metax-db && alter-metax-db && rm-migrations && makemigrations && migrate'
