@@ -1,6 +1,8 @@
+server_certificate_name: nginx-selfsigned
 shared_folder_base_path: /metax
 metax_app_base_path: "{{ shared_folder_base_path }}/{{ project_name }}"
-project_repo_branch: master
+project_repo_branch: staging
 default_user: ubuntu
 django_user: metax-user
 server_domain_name: metax.csc.local
+nginx_proxy_pass: http://127.0.0.1:8000

@@ -1,0 +1,8 @@
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream={{ metax_base_path }}/gunicorn/socket
+
+[Install]
+WantedBy=sockets.target

@@ -7,3 +7,6 @@
     - "vars/environments/{{ deployment_environment_id }}.yml"
   roles:
     - deploy_dbservers
+  handlers:
+    - name: reboot
+      command: /sbin/reboot

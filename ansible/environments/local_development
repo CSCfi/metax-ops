@@ -13,4 +13,3 @@ deployment_environment_id=local_development
 primary_dbserver_external_ip=127.0.0.1
 primary_webserver_external_ip=127.0.0.1
 primary_webserver_internal_ip=127.0.0.1
-server_certificate_name=nginx-selfsigned

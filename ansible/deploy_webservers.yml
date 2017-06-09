@@ -10,3 +10,5 @@
   handlers:
     - name: restart nginx
       service: name=nginx state=restarted
+    - name: reboot
+      command: /sbin/reboot

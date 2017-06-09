@@ -3,11 +3,8 @@
 
 - name: Clone project repo from branch {{ project_repo_branch }} to {{ metax_app_base_path }}
   git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
+  become_user: "{{ django_user }}"
   ignore_errors: yes
-
-- name: Symlink pre-commit hook in .githooks/ to .git/hooks/
-  shell: cd {{ metax_app_base_path }}/.git/hooks; ln -sfn ../../.githooks/pre-commit pre-commit
-  when: deployment_environment_id == 'local_development'
 
 - name: Install app python package requirements
   pip: requirements={{ metax_app_base_path }}/requirements.txt virtualenv={{ python_virtualenv_path }}
@@ -16,14 +13,15 @@
 - name: Create directory for static files
   file: path={{ static_root }} state=directory
 
-- name: create django app logging directory
+- name: Create django app logging directory
   file: path=/var/log/metax-api state=directory owner={{ django_user }} group=metax
 
-- name: create django app log file and ensure file permissions
+- name: Create django app log file and ensure file permissions
   copy: content="" dest=/var/log/{{ project_name }}/metax_api.log force=no owner={{ django_user }} group=metax mode=0755
 
-- name: copy gunicorn config file
-  template: src=vars/gunicorn_conf.py dest=/etc/gunicorn.py
+- name: Symlink pre-commit hook in .githooks/ to .git/hooks/
+  shell: cd {{ metax_app_base_path }}/.git/hooks; ln -sfn ../../.githooks/pre-commit pre-commit
+  when: deployment_environment_id == 'local_development'
 
-- name: copy gunicorn service file
-  template: src=templates/gunicorn.service dest=/etc/systemd/system/gunicorn.service
+- include_role:
+    name: gunicorn

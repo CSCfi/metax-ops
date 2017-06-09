@@ -1,6 +1,0 @@
-[Unit]
-Description=Django lightweight webserver for local development handling {{ project_name }}
-
-[Service]
-WorkingDirectory={{ metax_django_base_path }}
-ExecStart={{ python_virtualenv_path }}/bin/python manage.py runserver

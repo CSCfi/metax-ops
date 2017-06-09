@@ -35,3 +35,11 @@
       command: "pg_dump {{ ansible_env.METAX_DATABASE | default(default_db_name) }} -f {{ metax_db_backup_path }}/latest/{{ ansible_env.METAX_DATABASE | default(default_db_name) }}_backup_{{ timestamp.stdout }}.dump"
 
   become_user: postgres
+
+# - name: Check if a reboot is required
+#   shell: "[ -f /var/run/reboot-required ]"
+#   failed_when: False
+#   register: reboot_required
+#   changed_when: reboot_required.rc == 0
+#   notify: reboot
+#   when: deployment_environment_id != 'local_development' and deployment_environment_id != 'playground'

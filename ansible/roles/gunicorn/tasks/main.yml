@@ -1,0 +1,32 @@
+---
+
+- name: Copy gunicorn config file
+  template: src=templates/gunicorn_conf.py dest=/etc/gunicorn.py
+
+- block:
+
+    - name: Create gunicorn logging directory
+      file: path=/var/log/gunicorn state=directory owner={{ django_user }} group=www-data
+
+    - name: Create gunicorn log files and ensure file permissions
+      copy: content="" dest=/var/log/gunicorn/{{ item }}.log force=no owner={{ django_user }} group=www-data mode=0755
+      with_items:
+        - gunicorn
+        - gunicorn_error
+
+    - name: Create {{ metax_base_path }}/gunicorn for Gunicorn socket and PID
+      file: path={{ metax_base_path }}/gunicorn state=directory owner={{ django_user }} group=www-data mode=770
+
+    - name: Copy gunicorn service file
+      template: src=templates/gunicorn.service dest=/etc/systemd/system/gunicorn.service
+
+    - name: Copy gunicorn socket file
+      template: src=templates/gunicorn.socket dest=/etc/systemd/system/gunicorn.socket
+
+    - name: Systemctl daemon-reload
+      shell: "systemctl daemon-reload"
+
+    - name: Restart gunicorn
+      service: name=gunicorn state=restarted enabled=yes
+
+  when: deployment_environment_id != 'local_development'

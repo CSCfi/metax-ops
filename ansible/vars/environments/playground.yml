@@ -1,4 +1,6 @@
+server_certificate_name: nginx-selfsigned
 project_repo_branch: playground
 default_user: cloud-user
 django_user: metax-user
 server_domain_name: 193.166.24.134
+nginx_proxy_pass: http://unix:{{ metax_base_path }}/gunicorn/socket
