@@ -31,8 +31,14 @@
       command: mv {{ item }} {{ metax_db_backup_path }}/archive
       with_items: "{{ latest_backup.stdout_lines }}"
 
-    - name: Backup database
-      command: "pg_dump {{ metax_database }} -f {{ metax_db_backup_path }}/latest/{{ metax_database }}_backup_{{ timestamp.stdout }}.dump"
+    # Backing up of the database should be done so that the backups go to some more permanent location than the local machine
+    - name: Source global env vars and backup database
+      shell: "{{ item }}"
+      args:
+        executable: /bin/bash
+      with_items:
+        - source /etc/environment
+        - pg_dump -f {{ metax_db_backup_path }}/latest/metax_db_{{ deployment_environment_id }}_backup_{{ timestamp.stdout }}.dump
 
   become_user: postgres
 

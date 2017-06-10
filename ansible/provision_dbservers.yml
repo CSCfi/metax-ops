@@ -6,6 +6,12 @@
     - "vars/common.yml"
     - "vars/environments/{{ deployment_environment_id }}.yml"
     - "vars/environments/{{ deployment_environment_id }}_sec.yml"
+  pre_tasks:
+    - name: Place database name into target VM env vars. Related to backing up of database - remove as soon as backing up is done properly.
+      lineinfile:
+        dest: /etc/environment
+        state: present
+        line: 'PGDATABASE="{{ metax_database }}"'
   roles:
     - os-base
     - postgres
