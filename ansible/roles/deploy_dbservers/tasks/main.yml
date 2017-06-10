@@ -32,7 +32,7 @@
       with_items: "{{ latest_backup.stdout_lines }}"
 
     - name: Backup database
-      command: "pg_dump {{ ansible_env.METAX_DATABASE | default(default_db_name) }} -f {{ metax_db_backup_path }}/latest/{{ ansible_env.METAX_DATABASE | default(default_db_name) }}_backup_{{ timestamp.stdout }}.dump"
+      command: "pg_dump {{ metax_database }} -f {{ metax_db_backup_path }}/latest/{{ metax_database }}_backup_{{ timestamp.stdout }}.dump"
 
   become_user: postgres
 

@@ -23,7 +23,7 @@
     - name: Add new admin user for RabbitMQ
       rabbitmq_user:
         user: admin
-        password: "{{ ansible_env.RABBITMQ_ADMIN_PASSWORD | default(default_rabbitmq_password) }}"
+        password: "{{ rabbitmq_admin_password }}"
         tags: administrator,admin
         vhost: /
         configure_priv: .*

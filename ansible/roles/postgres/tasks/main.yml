@@ -132,22 +132,22 @@
 
 - block:
     - name: Ensure Metax database is present
-      postgresql_db: template=template0 db={{ ansible_env.METAX_DATABASE | default(default_db_name) }} state=present encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
+      postgresql_db: template=template0 db={{ metax_database }} state=present encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
 
     - name: Ensure Metax database is present
-      postgresql_db: db={{ ansible_env.METAX_DATABASE | default(default_db_name) }} state=present
+      postgresql_db: db={{ metax_database }} state=present
 
     - name: Remove unnecessary privileges from others
-      postgresql_privs: db={{ ansible_env.METAX_DATABASE | default(default_db_name) }} role=PUBLIC type=database priv=ALL state=absent
+      postgresql_privs: db={{ metax_database }} role=PUBLIC type=database priv=ALL state=absent
 
     - name: Ensure Metax database user exists, set privileges and roles
-      postgresql_user: db={{ ansible_env.METAX_DATABASE | default(default_db_name) }} name={{ ansible_env.METAX_DATABASE_USER | default(default_db_user) }} password={{ ansible_env.METAX_DATABASE_PASSWORD | default(default_db_password) }} priv=ALL role_attr_flags=NOSUPERUSER,CREATEDB,NOCREATEROLE state=present
+      postgresql_user: db={{ metax_database }} name={{ metax_database_user }} password={{ metax_database_password }} priv=ALL role_attr_flags=NOSUPERUSER,CREATEDB,NOCREATEROLE state=present
 
     - name: Make Metax database user the owner of the database
-      postgresql_db: name="{{ ansible_env.METAX_DATABASE | default(default_db_name) }}" owner={{ ansible_env.METAX_DATABASE_USER | default(default_db_user) }}
+      postgresql_db: name="{{ metax_database }}" owner={{ metax_database_user }}
 
     - name: Install uuid-ossp postgresql-extension to be able to generate uuid values
-      postgresql_ext: name=uuid-ossp db="{{ ansible_env.METAX_DATABASE | default(default_db_name) }}" state=present
+      postgresql_ext: name=uuid-ossp db="{{ metax_database }}" state=present
 
   become_user: postgres
 
@@ -158,15 +158,15 @@
 
 # - block:
 #     - name: Create PostGIS tables and functions
-#       command: psql -d {{ ansible_env.METAX_DATABASE | default(default_db_name) }} -f /usr/share/postgresql/9.6/contrib/postgis-2.3/postgis.sql
+#       command: psql -d {{ metax_database }} -f /usr/share/postgresql/9.6/contrib/postgis-2.3/postgis.sql
 #
 #     - name: Populate PostGIS spatial reference table
-#       command: psql -d {{ ansible_env.METAX_DATABASE | default(default_db_name) }} -f /usr/share/postgresql/9.6/contrib/postgis-2.3/spatial_ref_sys.sql
+#       command: psql -d {{ metax_database }} -f /usr/share/postgresql/9.6/contrib/postgis-2.3/spatial_ref_sys.sql
 #
 #     - name: Change spatial view owner
-#       command: psql -d {{ ansible_env.METAX_DATABASE | default(default_db_name) }} -c 'ALTER VIEW geometry_columns OWNER TO {{ ansible_env.METAX_DATABASE_USER | default(default_db_user) }};'
+#       command: psql -d {{ metax_database }} -c 'ALTER VIEW geometry_columns OWNER TO {{ metax_database_user }};'
 #
 #     - name: Change spatial table owner
-#       command: psql -d {{ ansible_env.METAX_DATABASE | default(default_db_name) }} -c 'ALTER TABLE spatial_ref_sys OWNER TO {{ ansible_env.METAX_DATABASE_USER | default(default_db_user) }};'
+#       command: psql -d {{ metax_database }} -c 'ALTER TABLE spatial_ref_sys OWNER TO {{ metax_database_user }};'
 #
 #   become_user: postgres

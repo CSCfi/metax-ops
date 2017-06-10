@@ -5,6 +5,7 @@
   vars_files:
     - "vars/common.yml"
     - "vars/environments/{{ deployment_environment_id }}.yml"
+    - "vars/environments/{{ deployment_environment_id }}_sec.yml"
   roles:
     - os-base
     - postgres
