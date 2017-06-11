@@ -11,7 +11,7 @@
   become_user: "{{ django_user }}"
 
 - name: Create directory for static files
-  file: path={{ static_root }} state=directory
+  file: path={{ static_root }} state=directory owner={{ django_user }} group=metax
 
 - name: Create django app logging directory
   file: path=/var/log/metax-api state=directory owner={{ django_user }} group=metax

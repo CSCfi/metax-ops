@@ -49,6 +49,12 @@
   when: deployment_environment_id != 'local_development'
   notify: restart sshd
 
+- name: Install aptitude
+  apt: pkg=aptitude state=latest
+
+- include_role:
+    name: update_packages
+
 - name: Ensure os common packages
   apt: pkg={{ item }} state=latest
   with_items:
@@ -61,7 +67,6 @@
     - unzip
     - curl
     - vim
-    - aptitude
     - tcl
     - ntp
     - tree
@@ -75,6 +80,3 @@
 - name: Set timezone to Europe/Helsinki
   timezone:
     name: Europe/Helsinki
-
-- include_role:
-    name: update_packages
