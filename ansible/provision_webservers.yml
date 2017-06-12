@@ -6,9 +6,6 @@
     - "vars/common.yml"
     - "vars/environments/{{ deployment_environment_id }}.yml"
     - "vars/environments/{{ deployment_environment_id }}_sec.yml"
-  pre_tasks:
-    - name: Copy app config to target VM
-      copy: src=vars/environments/{{ deployment_environment_id }}_sec.yml dest=/home/{{ django_user }}/app_config owner={{ django_user }} group=metax mode=0440
   roles:
     - os-base
     - python

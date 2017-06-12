@@ -1,3 +1,6 @@
+- name: Copy app config to target VM
+  copy: src=vars/environments/{{ deployment_environment_id }}_sec.yml dest=/home/{{ django_user }}/app_config owner={{ django_user }} group=metax mode=0440
+
 - name: Create folder {{ metax_app_base_path }}
   file: path={{ metax_app_base_path }} state=directory owner={{ django_user }} group=metax mode=0755
 

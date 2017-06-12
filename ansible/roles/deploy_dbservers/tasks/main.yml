@@ -3,19 +3,8 @@
 - include_role:
     name: update_packages
 
-- name: Create db backup directories
-  file: owner=postgres group=postgres mode=0750 state=directory path={{ item }}
-  with_items:
-    - "{{ metax_db_backup_path }}"
-    - "{{ metax_db_backup_path }}/latest"
-    - "{{ metax_db_backup_path }}/archive"
-
-- name: Find latest backup
-  command: "find {{ metax_db_backup_path }}/latest -type f"
-  register: latest_backup
-
-- name: Find archived backups
-  command: "find {{ metax_db_backup_path }}/archive -type f -mtime +5"
+- name: Find database backups older than 10 days
+  command: "find {{ metax_db_backup_path }}/archive -type f -mtime +10"
   register: archived_backups
 
 - name: Get current timestamp
@@ -23,22 +12,14 @@
   register: timestamp
 
 - block:
-    - name: Delete old db backups
+    - name: Delete the old database backups
       file: state=absent path={{ item }}
       with_items: "{{ archived_backups.stdout_lines }}"
 
-    - name: Move previous db backup to archive
-      command: mv {{ item }} {{ metax_db_backup_path }}/archive
-      with_items: "{{ latest_backup.stdout_lines }}"
-
-    # Backing up of the database should be done so that the backups go to some more permanent location than the local machine
-    - name: Source global env vars and backup database
-      shell: "{{ item }}"
+    - name: Backup database
+      shell: "pg_dump -f {{ metax_db_backup_path }}/archive/metax_db_{{ deployment_environment_id }}_backup_{{ timestamp.stdout }}.dump"
       args:
         executable: /bin/bash
-      with_items:
-        - source /etc/environment
-        - pg_dump -f {{ metax_db_backup_path }}/latest/metax_db_{{ deployment_environment_id }}_backup_{{ timestamp.stdout }}.dump
 
   become_user: postgres
 

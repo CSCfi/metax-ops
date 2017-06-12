@@ -6,7 +6,6 @@
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
 
 - name: Add PostgreSQL official APT repository
-  become: yes
   apt_repository:
     repo: "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main"
 
@@ -133,9 +132,6 @@
 - block:
     - name: Ensure Metax database is present
       postgresql_db: template=template0 db={{ metax_database }} state=present encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
-
-    - name: Ensure Metax database is present
-      postgresql_db: db={{ metax_database }} state=present
 
     - name: Remove unnecessary privileges from others
       postgresql_privs: db={{ metax_database }} role=PUBLIC type=database priv=ALL state=absent
