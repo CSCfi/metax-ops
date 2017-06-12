@@ -7,7 +7,7 @@
     - "vars/environments/{{ deployment_environment_id }}.yml"
     - "vars/environments/{{ deployment_environment_id }}_sec.yml"
   pre_tasks:
-    - name: Place database name into target VM env vars. Related to backing up of database - remove as soon as backing up is done properly.
+    - name: Place database name into target VM env vars
       lineinfile:
         dest: /etc/environment
         state: present
@@ -15,6 +15,7 @@
   roles:
     - os-base
     - postgres
+    - { role: backup, when: deployment_environment_id != 'local_development' }
   handlers:
     - name: restart sshd
       service: name=sshd state=restarted

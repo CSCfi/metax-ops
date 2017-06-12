@@ -41,7 +41,7 @@
         state: present
         line: "aliases"
 
-  when: deployment_environment_id == 'local_development' or deployment_environment_id == 'playground' or deployment_environment_id == 'staging'
+  when: deployment_environment_id == 'local_development' or deployment_environment_id == 'playground'
 
 - debug:
     msg: "Local dev environment successfully set up. Run commands 'sudo -su {{ django_user }}' and 'runserver' to run the app."

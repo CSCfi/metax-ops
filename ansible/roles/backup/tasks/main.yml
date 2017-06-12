@@ -1,0 +1,44 @@
+---
+
+- name: Create database backup directories
+  file: path={{ item }} state=directory owner=postgres group=postgres mode=0770
+  with_items:
+    - "{{ metax_db_backup_path }}"
+    - "{{ metax_db_backup_path }}/archive"
+
+- name: Copy backup script in place
+  template: src=templates/metax_backup.sh dest={{ metax_db_backup_path }} owner=postgres group=postgres mode=0770
+
+- name: Create cronjob for running backup script
+  cron:
+    name: "Backup data"
+    minute: "30"
+    hour: "2"
+    job: "{{ metax_db_backup_path }}/metax_backup.sh > /dev/null 2>&1"
+    state: present
+    user: postgres
+
+  # Change the below sync tasks to apply only in production as soon as it exists
+
+- block:
+    - name: Add Nextcloud apt repository
+      apt_repository:
+        repo: ppa:nextcloud-devs/client
+        update_cache: yes
+
+    - name: Install Nextcloud client for backups
+      apt: name=nextcloud-client state=present
+
+    - name: Copy backup sync script in place
+      template: src=templates/metax_backup_sync.sh dest={{ metax_db_backup_path }} owner=root group=postgres mode=0740
+
+    - name: Create cronjob for running backup sync script
+      cron:
+        name: "Sync backup data"
+        minute: "00"
+        hour: "4"
+        job: "{{ metax_db_backup_path }}/metax_backup_sync.sh > /dev/null 2>&1"
+        state: present
+        user: root
+
+  when: deployment_environment_id == 'staging'
