@@ -1,10 +1,9 @@
 ---
 
-- include_role:
-    name: update_packages
+- include_role: name=update_packages
 
 - name: Find database backups older than 10 days
-  command: "find {{ metax_db_backup_path }}/archive -type f -mtime +10"
+  command: "find {{ metax_db_backup_archive_path }} -type f -mtime +10"
   register: archived_backups
 
 - name: Get current timestamp
@@ -17,7 +16,7 @@
       with_items: "{{ archived_backups.stdout_lines }}"
 
     - name: Backup database
-      shell: "pg_dump -f {{ metax_db_backup_path }}/archive/metax_db_{{ deployment_environment_id }}_backup_{{ timestamp.stdout }}.dump"
+      shell: "pg_dump $METAX_DATABASE_NAME -f {{ metax_db_backup_archive_path }}/metax_db_{{ deployment_environment_id }}_backup_{{ timestamp.stdout }}.dump"
       args:
         executable: /bin/bash
 

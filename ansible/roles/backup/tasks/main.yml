@@ -4,7 +4,7 @@
   file: path={{ item }} state=directory owner=postgres group=postgres mode=0770
   with_items:
     - "{{ metax_db_backup_path }}"
-    - "{{ metax_db_backup_path }}/archive"
+    - "{{ metax_db_backup_archive_path }}"
 
 - name: Copy backup script in place
   template: src=templates/metax_backup.sh dest={{ metax_db_backup_path }} owner=postgres group=postgres mode=0770

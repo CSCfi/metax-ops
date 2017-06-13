@@ -12,7 +12,7 @@ ansible/site.retry
 
 ubuntu*.log
 local_settings.py
-ansible/vars/environments/*_sec.yml
+ansible/sec/
 
 # Mac stuff
 .DS_Store
