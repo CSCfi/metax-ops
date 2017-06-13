@@ -2,7 +2,7 @@
   copy: src=sec/vars/{{ deployment_environment_id }}.yml dest=/home/{{ django_user }}/app_config owner={{ django_user }} group=metax mode=0440
 
 - name: Create folder {{ metax_app_base_path }}
-  file: path={{ metax_app_base_path }} state=directory owner={{ django_user }} group=metax mode=0754
+  file: path={{ metax_app_base_path }} state=directory owner={{ django_user }} group=metax mode=0755
 
 - name: Clone project repo from branch {{ project_repo_branch }} to {{ metax_app_base_path }}
   git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
@@ -20,7 +20,7 @@
   file: path=/var/log/metax-api state=directory owner={{ django_user }} group=metax
 
 - name: Create django app log file and ensure file permissions
-  copy: content="" dest=/var/log/{{ project_name }}/metax_api.log force=no owner={{ django_user }} group=metax mode=0754
+  copy: content="" dest=/var/log/{{ project_name }}/metax_api.log force=no owner={{ django_user }} group=metax mode=0755
 
 - name: Symlink pre-commit hook in .githooks/ to .git/hooks/
   shell: cd {{ metax_app_base_path }}/.git/hooks; ln -sfn ../../.githooks/pre-commit pre-commit

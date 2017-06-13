@@ -17,7 +17,7 @@
     - python-psycopg2
 
 - name: Create database data and config directories
-  file: path={{ item }} state=directory owner=postgres group=postgres mode=770
+  file: path={{ item }} state=directory owner=postgres group=postgres mode=700
   with_items:
     - "{{ metax_db_data_path }}"
     - "{{ metax_db_config_path }}"

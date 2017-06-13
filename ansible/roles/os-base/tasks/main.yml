@@ -22,7 +22,7 @@
   group: name=metax state=present
 
 - name: Create /srv/metax base directory
-  file: path=/srv/metax state=directory owner={{ default_user }} group=metax mode=0754
+  file: path=/srv/metax state=directory owner={{ default_user }} group=metax mode=0755
 
 - name: Disable SSH password authentication
   lineinfile:
