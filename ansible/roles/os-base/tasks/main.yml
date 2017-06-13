@@ -21,25 +21,8 @@
 - name: Make sure we have a 'metax' group in OS
   group: name=metax state=present
 
-- name: Add {{ django_user }} user to OS and to 'metax' and 'wheel' groups
-  user: name={{ django_user }} groups=metax,wheel state=present createhome=yes
-
-- name: Add env variables for {{ django_user }}
-  lineinfile:
-    path: /home/{{ django_user }}/.bashrc
-    line: 'export LC_ALL=C'
-
 - name: Create /srv/metax base directory
-  file: path=/srv/metax state=directory owner={{ django_user }} group=metax mode=0755
-
-- block:
-    - name: Add .ssh folder to metax-user home
-      file: path=/home/{{ django_user }}/.ssh state=directory owner={{ django_user }} group=metax
-
-    - name: Create empty authorized_keys for metax-user
-      file: path=/home/{{ django_user }}/.ssh/authorized_keys state=touch owner={{ django_user }} group=metax
-
-  when: deployment_environment_id != 'local_development' and deployment_environment_id != 'playground'
+  file: path=/srv/metax state=directory owner={{ default_user }} group=metax mode=0754
 
 - name: Disable SSH password authentication
   lineinfile:
@@ -52,8 +35,7 @@
 - name: Install aptitude
   apt: pkg=aptitude state=latest
 
-- include_role:
-    name: update_packages
+- include_role: name=update_packages
 
 - name: Ensure os common packages
   apt: pkg={{ item }} state=latest
@@ -80,3 +62,17 @@
 - name: Set timezone to Europe/Helsinki
   timezone:
     name: Europe/Helsinki
+
+- include_role: name=users
+
+- block:
+    - name: Copy bash aliases to {{ default_user }} user home dir
+      template: src=templates/bash_aliases dest=/home/{{ default_user }}/.bash_aliases
+
+    - name: Add printing of bash aliases to {{ default_user }} profile
+      lineinfile:
+        dest: "/home/{{ default_user }}/.profile"
+        state: present
+        line: "aliases"
+
+  when: deployment_environment_id == 'local_development' or deployment_environment_id == 'playground'

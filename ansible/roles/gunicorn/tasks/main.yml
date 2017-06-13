@@ -9,7 +9,7 @@
       file: path=/var/log/gunicorn state=directory owner={{ django_user }} group=www-data
 
     - name: Create gunicorn log files and ensure file permissions
-      copy: content="" dest=/var/log/gunicorn/{{ item }}.log force=no owner={{ django_user }} group=www-data mode=0755
+      copy: content="" dest=/var/log/gunicorn/{{ item }}.log force=no owner={{ django_user }} group=www-data mode=0754
       with_items:
         - gunicorn
         - gunicorn_error
