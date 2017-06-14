@@ -13,6 +13,7 @@ ansible/site.retry
 ubuntu*.log
 local_settings.py
 ansible/sec/
+*.pem
 
 # Mac stuff
 .DS_Store

@@ -2,24 +2,14 @@
 
 - include_role: name=update_packages
 
-- name: Find database backups older than 10 days
-  command: "find {{ metax_db_backup_archive_path }} -type f -mtime +10"
-  register: archived_backups
-
 - name: Get current timestamp
   shell: date +%Y%m%d%H%M%S
   register: timestamp
 
-- block:
-    - name: Delete the old database backups
-      file: state=absent path={{ item }}
-      with_items: "{{ archived_backups.stdout_lines }}"
-
-    - name: Backup database
-      shell: "pg_dump $METAX_DATABASE_NAME -f {{ metax_db_backup_archive_path }}/metax_db_{{ deployment_environment_id }}_backup_{{ timestamp.stdout }}.dump"
-      args:
-        executable: /bin/bash
-
+- name: Backup database
+  shell: "pg_dump --format=custom $METAX_DATABASE_NAME -f {{ metax_db_backup_archive_path }}/metax_db_{{ deployment_environment_id }}_backup_{{ timestamp.stdout }}.dump"
+  args:
+    executable: /bin/bash
   become_user: postgres
 
 # - name: Check if a reboot is required
