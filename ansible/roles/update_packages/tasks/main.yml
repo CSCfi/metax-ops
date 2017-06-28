@@ -1,2 +1,2 @@
 - name: Update apt-get cache and safe upgrade apt-get packages
-  apt: upgrade=safe update_cache=yes
+  shell: DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
