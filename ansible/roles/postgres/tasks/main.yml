@@ -136,6 +136,9 @@
     - name: Remove unnecessary privileges from others
       postgresql_privs: db={{ metax_database }} role=PUBLIC type=database priv=ALL state=absent
 
+    - name: Ensure Metax database user exists
+      postgresql_user: name={{ metax_database_user }} password={{ metax_database_password }} state=present
+
     - name: Make Metax database user the owner of the database
       postgresql_db: name="{{ metax_database }}" owner={{ metax_database_user }}
 
