@@ -1,9 +1,8 @@
 ---
 
-- name: Check if Redis has been installed
-  stat: path=/etc/systemd/system/redis.service
-  register: redis
-
+- name: Check if Redis is installed as service
+  stat: path=/etc/init.d/redis-server
+  register: service_status
 
 - block:
     - name: Place net.core.somaxconn config to /etc/rc.local
@@ -36,70 +35,26 @@
     - name: Set vm.overcommit_memory = 1
       command: sysctl vm.overcommit_memory=1
 
-    - name: Create directory for extracting Redis package
-      file:
-        path: /tmp/redis-stable
-        state: directory
-        recurse: yes
-
-    - name: Fetch latest stable Redis package
-      get_url:
-        url: http://download.redis.io/redis-stable.tar.gz
-        dest: /tmp/redis-stable.tar.gz
-
-    - name: Unarchive Redis package
-      unarchive:
-        src: /tmp/redis-stable.tar.gz
-        dest: /tmp
-        remote_src: yes
-
-    - name: Make Redis
-      make: chdir=/tmp/redis-stable
-
-    # - name: Test Redis make
-    #   make: chdir=/tmp/redis-stable target=test
-
-    - name: Install Redis
-      make: chdir=/tmp/redis-stable target=install
-
-    - name: Add redis user to OS
-      user: name=redis state=present createhome=no system=yes group=metax
-
-    - name: Create /etc/redis for storing Redis configuration
-      file: path=/etc/redis state=directory owner=redis group=metax mode=750
+    - name: Install Redis server
+      apt: pkg=redis-server state=latest
 
     - name: Copy Redis configuration to its place
-      copy: src=redis.conf dest=/etc/redis/redis.conf owner=redis group=metax mode=750
+      copy: src=redis.conf dest=/etc/redis/redis.conf owner=redis group=redis mode=640
 
-    - name: Create /var/lib/redis for Redis persistent data
-      file: path=/var/lib/redis state=directory owner=redis group=metax mode=750
+    - name: Add {{ django_user }} user to redis group
+      user: name={{ django_user }} shell=/bin/bash groups=redis append=yes
 
-    - name: Create /var/log/redis for Redis logs
-      file: path=/var/log/redis state=directory owner=redis group=metax mode=750
+    - name: Modify systemd redis.service to get rid of errors on startup
+      lineinfile:
+        path: /etc/systemd/system/redis.service
+        insertafter: '^PrivateTmp'
+        line: LimitNOFILE=64000
+        state: present
 
-    - name: Create log file for Redis logs
-      file: path=/var/log/redis/redis.log state=touch owner=redis group=metax mode=750
+    - name: Reload systemctl daemon
+      command: systemctl daemon-reload
 
-    - name: Create /run/redis for Redis socket
-      file: path=/run/redis state=directory owner=redis group=metax mode=750
-
-    - name: Install Redis systemd service
-      copy:
-        dest: /etc/systemd/system/redis.service
-        content: |
-          [Unit]
-          Description=Redis In-Memory Data Store
-          After=network.target
-          [Service]
-          User=redis
-          Group=metax
-          ExecStart=/usr/local/bin/redis-server /etc/redis/redis.conf
-          ExecStop=/usr/local/bin/redis-cli shutdown
-          Restart=always
-          [Install]
-          WantedBy=multi-user.target
-
-  when: redis.stat.exists == False
+  when: not service_status.stat.exists
 
 - name: Start Redis service
   service: name=redis state=restarted enabled=yes
