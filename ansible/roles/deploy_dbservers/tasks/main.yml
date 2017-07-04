@@ -12,6 +12,16 @@
     executable: /bin/bash
   become_user: postgres
 
+- block:
+  - name: Drop current metax database
+    postgresql_db: db={{ metax_database }} state=absent
+
+  - name: Recreate metax database
+    postgresql_db: template=template0 db={{ metax_database }} owner={{ metax_database_user }} state=present encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
+
+  become_user: postgres
+  when: deployment_environment_id in ['local_development', 'playground', 'staging']
+
 # - name: Check if a reboot is required
 #   shell: "[ -f /var/run/reboot-required ]"
 #   failed_when: False
