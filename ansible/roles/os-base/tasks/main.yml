@@ -64,15 +64,3 @@
     name: Europe/Helsinki
 
 - include_role: name=users
-
-- block:
-    - name: Copy bash aliases to {{ default_user }} user home dir
-      template: src=templates/bash_aliases dest=/home/{{ default_user }}/.bash_aliases
-
-    - name: Add printing of bash aliases to {{ default_user }} profile
-      lineinfile:
-        dest: "/home/{{ default_user }}/.profile"
-        state: present
-        line: "aliases"
-
-  when: deployment_environment_id == 'local_development' or deployment_environment_id == 'playground'

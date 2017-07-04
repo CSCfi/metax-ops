@@ -2,6 +2,19 @@
 
 - include_role: name=update_packages
 
+- block:
+
+  - name: Copy bash aliases to {{ django_user }} user home dir
+    template: src=templates/bash_aliases dest=/home/{{ django_user }}/.bash_aliases owner={{ django_user }} group={{ django_user }}
+
+  - name: Add printing of bash aliases to {{ django_user }} profile
+    lineinfile:
+      dest: "/home/{{ django_user }}/.profile"
+      state: present
+      line: "aliases"
+
+  when: deployment_environment_id in ['local_development', 'playground', 'staging']
+
 - name: Pull latest data from project repo branch {{ project_repo_branch }}
   git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
   become_user: "{{ django_user }}"
@@ -31,7 +44,7 @@
   when: deployment_environment_id != 'local_development'
 
 - debug:
-    msg: "Local dev environment successfully set up. Run commands 'sudo -su {{ django_user }}' and 'runserver' to run the app."
+    msg: "Local dev environment successfully set up. Run commands 'sudo su {{ django_user }}' and 'runserver' to run the app."
   when: deployment_environment_id == 'local_development'
 
 # - name: Check if a reboot is required
