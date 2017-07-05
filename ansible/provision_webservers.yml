@@ -12,7 +12,6 @@
     - python
     - nginx
     - redis
-    - rabbitmq
     - provision_django
   handlers:
     - name: restart sshd

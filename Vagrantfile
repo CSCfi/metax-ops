@@ -39,7 +39,7 @@ Vagrant.configure("2") do |config|
     server.vm.provider "virtualbox" do |vbox|
         vbox.name = "metax_local_development"
         vbox.gui = false
-        vbox.memory = 2048
+        vbox.memory = 3096
         vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
     end
   end

@@ -1,0 +1,4 @@
+---
+
+- src: https://github.com/elastic/ansible-elasticsearch.git
+  path: roles/

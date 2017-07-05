@@ -1,0 +1,26 @@
+---
+
+- hosts: dataservers
+  become: yes
+  vars_files:
+    - "vars/common.yml"
+    - "vars/environments/{{ deployment_environment_id }}.yml"
+    - "sec/vars/{{ deployment_environment_id }}.yml"
+    - "sec/vars/dataservers.yml"
+  roles:
+    - os-base
+    - python
+    - rabbitmq
+    - { role: ansible-elasticsearch, es_instance_name: "node1", es_version: "5.4.3", es_api_port: "{{ es_port }}",
+      es_config: {
+          node.name: "node1",
+          cluster.name: metax-elasticsearch-cluster,
+          http.port: 7600,
+          node.data: false,
+          node.master: true,
+          http.cors.enabled : true,
+          http.cors.allow-origin : "{{ es_cors_allow_origin }}",
+          http.cors.allow-methods : "OPTIONS, HEAD, GET, POST, PUT, DELETE",
+          http.cors.allow-headers : "X-Requested-With,X-Auth-Token,Content-Type, Content-Length"
+      }
+   }
