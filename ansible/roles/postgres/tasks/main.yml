@@ -130,20 +130,14 @@
   service: name=postgresql state=restarted
 
 - block:
+    - name: Ensure Metax database user exists
+      postgresql_user: name={{ metax_database_user }} password={{ metax_database_password }} state=present role_attr_flags=CREATEDB
+
     - name: Ensure Metax database is present
-      postgresql_db: template=template0 db={{ metax_database }} state=present encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
+      postgresql_db: template=template0 db={{ metax_database }} state=present owner={{ metax_database_user }} encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
 
     - name: Remove unnecessary privileges from others
       postgresql_privs: db={{ metax_database }} role=PUBLIC type=database priv=ALL state=absent
-
-    - name: Ensure Metax database user exists
-      postgresql_user: name={{ metax_database_user }} password={{ metax_database_password }} state=present
-
-    - name: Make Metax database user the owner of the database
-      postgresql_db: name="{{ metax_database }}" owner={{ metax_database_user }}
-
-    - name: Install uuid-ossp postgresql-extension to be able to generate uuid values
-      postgresql_ext: name=uuid-ossp db="{{ metax_database }}" state=present
 
   become_user: postgres
 
