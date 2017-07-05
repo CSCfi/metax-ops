@@ -1,7 +1,7 @@
 ---
 
 - name: Add users to OS
-  user: name={{ item }} groups=wheel,metax state=present createhome=yes
+  user: name={{ item }} groups=wheel,metax append=yes state=present createhome=yes
   with_items: "{{ os_users }}"
 
 - name: Create .ssh folders to users' home folders in cloud environment
