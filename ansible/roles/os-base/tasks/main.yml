@@ -53,6 +53,7 @@
     - ntp
     - tree
     - zile
+    - python-passlib
 
 - name: Install fi_FI local_development
   locale_gen:
