@@ -24,3 +24,4 @@ primary_dbserver_external_ip=86.50.169.34
 primary_webserver_external_ip=193.166.24.98
 primary_webserver_internal_ip=192.168.1.11
 primary_dataserver_external_ip=193.166.25.31
+primary_dataserver_internal_ip=192.168.1.8

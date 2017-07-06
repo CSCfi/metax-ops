@@ -15,6 +15,7 @@ local_settings.py
 ansible/sec/
 *.pem
 ansible/roles/ansible-elasticsearch/
+*.tar.gz
 
 # Mac stuff
 .DS_Store
