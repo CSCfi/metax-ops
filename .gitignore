@@ -14,6 +14,7 @@ ubuntu*.log
 local_settings.py
 ansible/sec/
 *.pem
+ansible/roles/ansible-elasticsearch/
 
 # Mac stuff
 .DS_Store
