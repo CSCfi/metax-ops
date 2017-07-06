@@ -1,6 +1,8 @@
 ---
 
 - hosts: dataservers
+  vars:
+    is_provision: yes
   become: yes
   vars_files:
     - "vars/common.yml"
@@ -11,11 +13,10 @@
     - os-base
     - python
     - rabbitmq
-    - { role: ansible-elasticsearch, es_instance_name: "node1", es_version: "5.4.3", es_api_port: "{{ es_port }}",
+    - { role: ansible-elasticsearch, es_instance_name: "node1", es_version: "5.4.3",
       es_config: {
           node.name: "node1",
           cluster.name: metax-elasticsearch-cluster,
-          http.port: 7600,
           node.data: false,
           node.master: true,
           http.cors.enabled : true,

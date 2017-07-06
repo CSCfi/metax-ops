@@ -1,2 +1,7 @@
-- name: Update apt-get cache and safe upgrade apt-get packages
+- name: Update apt-get cache and safe upgrade apt-get packages by using ansible apt module
+  apt: upgrade=safe update_cache=yes
+  when: is_provision
+
+- name: Update apt-get cache and safe upgrade apt-get packages by using shell command
   shell: DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
+  when: not is_provision
