@@ -13,11 +13,15 @@
   become_user: postgres
 
 - block:
-  - name: Drop current metax database
-    postgresql_db: db={{ metax_database }} state=absent
+    - name: Drop current metax database
+      shell: "psql -c 'DROP DATABASE '\"$METAX_DATABASE_NAME\"';'"
+      args:
+        executable: /bin/bash
 
-  - name: Recreate metax database
-    postgresql_db: template=template0 db={{ metax_database }} owner={{ metax_database_user }} state=present encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
+    - name: Recreate metax database
+      shell: "psql -c 'CREATE DATABASE '\"$METAX_DATABASE_NAME\"' WITH OWNER='\"$METAX_DATABASE_USER\"' TEMPLATE=template0 ENCODING=\"'\"UTF8\"'\" LC_COLLATE=\"'\"fi_FI.UTF-8\"'\" LC_CTYPE=\"'\"fi_FI.UTF-8\"'\";'"
+      args:
+        executable: /bin/bash
 
   become_user: postgres
   when: deployment_environment_id in ['local_development', 'playground', 'staging']

@@ -65,3 +65,16 @@
     name: Europe/Helsinki
 
 - include_role: name=users
+
+- block:
+
+    - name: Copy bash aliases to {{ django_user }} user home dir
+      template: src=templates/bash_aliases dest=/home/{{ django_user }}/.bash_aliases owner={{ django_user }} group={{ django_user }}
+
+    - name: Add printing of bash aliases to {{ django_user }} profile
+      lineinfile:
+        dest: "/home/{{ django_user }}/.profile"
+        state: present
+        line: "aliases"
+
+  when: deployment_environment_id in ['local_development', 'playground', 'staging']

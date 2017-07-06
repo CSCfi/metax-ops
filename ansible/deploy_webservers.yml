@@ -7,7 +7,6 @@
   vars_files:
     - "vars/common.yml"
     - "vars/environments/{{ deployment_environment_id }}.yml"
-    - "sec/vars/{{ deployment_environment_id }}.yml"
   roles:
     - deploy_webservers
   handlers:

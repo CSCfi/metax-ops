@@ -10,7 +10,7 @@ alias tail-log='tail -f -n 200 /var/log/{{ project_name }}/metax_api.log'
 # Drop and create db
 alias drop-metax-db='sudo -su postgres psql -c '"'"'drop database {{ metax_database }};'"'"
 alias create-metax-db='sudo -su postgres psql -c '"'"'create database {{ metax_database }};'"'"
-alias alter-metax-db='sudo -su postgres psql -c '"'"'alter database metax_db owner to {{ metax_database_user }};'"'"
+alias alter-metax-db='sudo -su postgres psql -c '"'"'alter database {{ metax_database }} owner to {{ metax_database_user }};'"'"
 
 # django-specific aliases
 alias rm-migrations='cd {{ metax_django_base_path }};rm -rf metax_api/migrations/*;cd -'
