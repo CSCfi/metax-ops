@@ -17,7 +17,7 @@
       es_config: {
           node.name: "node1",
           cluster.name: metax-elasticsearch-cluster,
-          node.data: false,
+          node.data: true,
           node.master: true,
           http.cors.enabled : true,
           http.cors.allow-origin : "{{ es_cors_allow_origin }}",
