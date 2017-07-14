@@ -23,6 +23,6 @@
           http.cors.allow-origin : "{{ es_cors_allow_origin }}",
           http.cors.allow-methods : "OPTIONS, HEAD, GET, POST, PUT, DELETE",
           http.cors.allow-headers : "X-Requested-With,X-Auth-Token,Content-Type, Content-Length",
-          network.host: 0.0.0.0
+          network.host: "_local_"
       }
    }
