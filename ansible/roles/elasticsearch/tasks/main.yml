@@ -22,7 +22,7 @@
 
   - name: Install indexing script dependencies
     pip: requirements=/srv/refdata_indexer/requirements.txt virtualenv={{ python_virtualenv_path }}
-    become: "{{ django_user }}"
+    become_user: "{{ django_user }}"
 
   - name: Create cronjob for running reindexing script
     cron:

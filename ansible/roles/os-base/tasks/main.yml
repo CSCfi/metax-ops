@@ -60,6 +60,11 @@
     name: fi_FI.UTF-8
     state: present
 
+- name: Set default locale as LC_ALL to fi_FI.UTF-8
+  lineinfile: dest=/etc/default/locale
+    regexp="LC_ALL"
+    line="LC_ALL=\"fi_FI.UTF-8\""
+
 - name: Set timezone to Europe/Helsinki
   timezone:
     name: Europe/Helsinki
