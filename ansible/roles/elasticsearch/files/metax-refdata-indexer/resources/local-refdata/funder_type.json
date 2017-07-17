@@ -1,0 +1,13 @@
+[
+  {"id": "academy-of-finland", "label": {"fi": "Suomen Akatemia", "en": "Academy of Finland"}},
+  {"id": "tekes", "label": {"fi": "Tekes", "en": "Tekes"}},
+  {"id": "tekes-shok", "label": {"fi": "Tekes SHOK", "en": "Tekes SHOK"}},
+  {"id": "eu-framework-programme", "label": {"fi": "EU puiteohjelmat", "en": "EU Framework Programme"}},
+  {"id": "eu-eakr", "label": {"fi": "EU Euroopan aluekehitysrahasto EAKR", "en": "EU Regional Development Fund EAKR"}},
+  {"id": "eu-esr", "label": {"fi": "EU Euroopan sosiaalirahasto ESR", "en": "EU European Social Fund ESR"}},
+  {"id": "eu-other", "label": {"fi": "EU muu rahoitus", "en": "EU other funding"}},
+  {"id": "finnish-fof", "label": {"fi": "Kotimainen rahasto tai säätiö", "en": "Finnish fund or foundation"}},
+  {"id": "foreign-fof", "label": {"fi": "Ulkomainen rahasto tai säätiö", "en": "Foreign fund or foundation"}},
+  {"id": "other-public", "label": {"fi": "Muu julkinen rahoitus", "en": "Other public funding"}},
+  {"id": "commercial", "label": {"fi": "Yritys", "en": "Commercial"}}
+]

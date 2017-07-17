@@ -1,0 +1,9 @@
+[
+{"id": "restricted_access_permit", "label": {"fi": "Vaatii luvan", "en": "Requires permission"}},
+{"id": "restricted_access_research", "label": {"fi": "Vain tutkimukseen", "en": "Only for research"}},
+{"id": "resticted_access_research_education_studying", "label": {"fi": "Vain opetukseen, tutkimukseen ja opiskeluun", "en": "Only for teaching, research and studying"}},
+{"id": "restricted_access_registration", "label": {"fi": "Vaatii rekisteröitymisen", "en": "Requires registration"}},
+{"id": "open_access", "label": {"fi": "Avoin", "en": "Open"}},
+{"id": "embargoed_access", "label": {"fi": "Embargo", "en": "Embargo"}},
+{"id": "closed_access", "label": {"fi": "Maksullinen", "en": "Chargeable"}}
+]

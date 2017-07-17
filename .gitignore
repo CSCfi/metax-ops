@@ -16,6 +16,7 @@ ansible/sec/
 *.pem
 ansible/roles/ansible-elasticsearch/
 *.tar.gz
+__pycache__
 
 # Mac stuff
 .DS_Store
