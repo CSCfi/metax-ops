@@ -1,13 +1,5 @@
 ---
 
-# - name: Setup alternate SSH port
-#   lineinfile:
-#     dest: "/etc/ssh/sshd_config"
-#     regexp: "^Port"
-#     line: "Port 2222"
-#   when: deployment_environment_id != 'local_development'
-#   notify: restart sshd
-
 - name: Make sure we have a 'wheel' group
   group: name=wheel state=present
 

@@ -27,5 +27,3 @@
   handlers:
     - name: restart sshd
       service: name=sshd state=restarted
-    - name: restart postgres
-      service: name=postgresql state=restarted
