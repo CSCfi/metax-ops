@@ -1,6 +1,6 @@
 ---
 
-- hosts: dbservers
+- hosts: dataservers
   vars:
     is_provision: false
   become: yes
@@ -8,7 +8,7 @@
     - "vars/common.yml"
     - "vars/environments/{{ deployment_environment_id }}.yml"
   roles:
-    - deploy_dbservers
+    - deploy_dataservers
     - { role: reboot,
-        when: deployment_environment_id != 'local_development' and deployment_environment_id != 'playground'
+        when: deployment_environment_id != 'local_development'
       }
