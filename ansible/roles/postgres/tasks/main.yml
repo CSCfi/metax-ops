@@ -1,0 +1,161 @@
+---
+
+- name: Install Postgresql repository
+  yum_repository:
+    name: postgresql
+    description: Postresql
+    baseurl: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7.3-x86_64/
+    gpgcheck: no
+    state: present
+
+- name: Install PostgreSQL 9 and python psycopg2
+  yum: name={{ item }} state=present
+  with_items:
+    - postgresql96
+    - postgresql96-server
+    - python-psycopg2
+
+- name: Create database data and config directories
+  file: path={{ item }} state=directory owner=postgres group=postgres mode=700
+  with_items:
+    - "{{ metax_db_data_path }}"
+
+- name: Initialize Postgres database cluster
+  command: /usr/pgsql-9.6/bin/pg_ctl initdb -D {{ metax_db_data_path }} creates={{ metax_db_data_path }}/postgresql.conf
+  become_user: postgres
+
+- name: Copy Postgres host based authentication configuration
+  template: src=templates/pg_hba.conf dest={{ metax_db_data_path }}/pg_hba.conf owner=postgres group=postgres
+
+- name: Install metaxdb service
+  copy:
+    dest: /etc/systemd/system/metaxdb.service
+    content: |
+      .include /lib/systemd/system/postgresql-9.6.service
+      [Service]
+      Environment=PGDATA={{ metax_db_data_path }}
+
+- name: Shutdown Metax database
+  service: name=metaxdb state=stopped
+
+- name: Copy Postgres host based authentication configuration
+  template: src=templates/pg_hba.conf dest={{ metax_db_data_path }}/pg_hba.conf owner=postgres group=postgres
+
+- name: Change Postgres configuration listen_address to all
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "listen_addresses ="
+    line: "listen_addresses = '*'"
+
+- name: Change Postgres configuration log_timezone to Finnish locale
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "log_timezone ="
+    line: "log_timezone = 'Europe/Helsinki'"
+
+- name: Change Postgres configuration default_transaction_isolation to Django recommended value
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "default_transaction_isolation ="
+    line: "default_transaction_isolation = 'read committed'"
+
+- name: Change Postgres configuration timezone to Finnish locale
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "timezone ="
+    line: "timezone = 'Europe/Helsinki'"
+
+- name: Change Postgres configuration client_encoding UTF8
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "client_encoding ="
+    line: "client_encoding = 'UTF8'"
+
+- name: Change Postgres configuration lc_messages to Finnish locale UTF8
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "lc_messages ="
+    line: "lc_messages = 'en_US.utf8'"
+
+- name: Change Postgres configuration lc_monetary to Finnish locale UTF8
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "lc_monetary ="
+    line: "lc_monetary = 'fi_FI.utf8'"
+
+- name: Change Postgres configuration lc_numeric to Finnish locale UTF8
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "lc_numeric ="
+    line: "lc_numeric = 'fi_FI.utf8'"
+
+- name: Change Postgres configuration lc_time to Finnish locale UTF8
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "lc_time ="
+    line: "lc_time = 'fi_FI.utf8'"
+
+- name: Change Postgres configuration default_text_search_config to Finnish
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "default_text_search_config ="
+    line: "default_text_search_config = 'pg_catalog.finnish'"
+
+- name: Optimize Postgres configuration shared_buffers
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "shared_buffers ="
+    line: "shared_buffers = '{{ (ansible_memtotal_mb*0.25) | int }}MB'"
+
+- name: Optimize Postgres configuration effective_cache_size
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "effective_cache_size ="
+    line: "effective_cache_size = '{{ (ansible_memtotal_mb*0.75) | int }}MB'"
+
+- name: Start Metax database
+  service: name=metaxdb state=restarted
+
+- block:
+    - name: Ensure Metax database user exists
+      postgresql_user: name={{ metax_database_user }} password={{ metax_database_password }} state=present role_attr_flags=CREATEDB
+
+    - name: Ensure Metax database is present
+      postgresql_db: template=template0 db={{ metax_database }} state=present owner={{ metax_database_user }} encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
+
+    - name: Remove unnecessary privileges from others
+      postgresql_privs: db={{ metax_database }} role=PUBLIC type=database priv=ALL state=absent
+
+  become_user: postgres
+
+# DO NOT DELETE (THE BELOW STUFF IS FOR UBUNTU)
+# - name: Install PostGIS
+#   apt: name=postgresql-9.6-postgis-2.3 state=present
+#
+
+# - block:
+#     - name: Create PostGIS tables and functions
+#       command: psql -d {{ metax_database }} -f /usr/share/postgresql/9.6/contrib/postgis-2.3/postgis.sql
+#
+#     - name: Populate PostGIS spatial reference table
+#       command: psql -d {{ metax_database }} -f /usr/share/postgresql/9.6/contrib/postgis-2.3/spatial_ref_sys.sql
+#
+#     - name: Change spatial view owner
+#       command: psql -d {{ metax_database }} -c 'ALTER VIEW geometry_columns OWNER TO {{ metax_database_user }};'
+#
+#     - name: Change spatial table owner
+#       command: psql -d {{ metax_database }} -c 'ALTER TABLE spatial_ref_sys OWNER TO {{ metax_database_user }};'
+#
+#   become_user: postgres

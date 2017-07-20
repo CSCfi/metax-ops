@@ -9,28 +9,23 @@
 $script = <<SCRIPT
 if [ ! -f /vagrant_bootstrap_done.info ]; then
   sudo yum update
-  sudo yum -y install epel-release
-  sudo yum -y upgrade ca-certificates --disablerepo=epel
-  sudo yum -y install python-devel python-pip gcc libffi-devel openssl-devel
+  sudo yum -y install epel-release python-devel libffi-devel openssl-devel
+  sudo yum -y install python-pip
   sudo pip install pip --upgrade
-  sudo pip install setuptools --upgrade
-  sudo pip install markupsafe ansible paramiko
-  sudo pip install urllib3
-  sudo pip install pyopenssl
-  sudo pip install ndg-httpsclient
-  sudo pip install pyasn1
+  sudo pip install ansible
+  cd /metax/ansible
+  ansible-playbook site_provision.yml
+  #ansible-playbook site_deploy.yml
   sudo touch /vagrant_bootstrap_done.info
 fi
-cd /metax/ansible
-ansible-playbook site.yml
+
 SCRIPT
 
-#exec "vagrant plugin install vagrant-vbguest;vagrant #{ARGV.join(" ")}" unless Vagrant.has_plugin? vagrant-vbguest || ARGV[0] == 'plugin'
 
-required_plugins = %w( vagrant-vbguest )
-required_plugins.each do |plugin|
-   exec "vagrant plugin install #{plugin};vagrant #{ARGV.join(" ")}" unless Vagrant.has_plugin? plugin || ARGV[0] == 'plugin'
-end
+# required_plugins = %w( vagrant-vbguest )
+# required_plugins.each do |plugin|
+#    exec "vagrant plugin install #{plugin};vagrant #{ARGV.join(" ")}" unless Vagrant.has_plugin? plugin || ARGV[0] == 'plugin'
+# end
 
 Vagrant.configure("2") do |config|
   config.vm.define "metax_local_dev_env" do |server|
@@ -43,7 +38,7 @@ Vagrant.configure("2") do |config|
         server.vm.synced_folder "./", "/metax", :mount_options => ["dmode=755","fmode=644"]
     else
         # Basic VM synced folder mount
-        server.vm.synced_folder "", "/metax"
+        server.vm.synced_folder "", "/metax", :mount_options => ["dmode=777,fmode=777"]
     end
 
     server.vm.provision "shell", inline: $script
@@ -51,7 +46,7 @@ Vagrant.configure("2") do |config|
     server.vm.provider "virtualbox" do |vbox|
         vbox.name = "metax_local_development"
         vbox.gui = false
-        vbox.memory = 2048
+        vbox.memory = 4096
         vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
     end
   end

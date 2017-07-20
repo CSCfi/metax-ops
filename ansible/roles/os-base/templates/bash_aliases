@@ -1,0 +1,24 @@
+
+# ALIASES TO USE FOR DEVELOPMENT
+
+# Generally useful
+alias aliases='cat ~/.bash_aliases'
+alias metax-src='cd {{ metax_django_base_path }}'
+alias source-pyvenv='source {{ python_virtualenv_path }}/bin/activate'
+alias tail-log='tail -f -n 200 /var/log/{{ project_name }}/metax_api.log'
+
+# Drop and create db
+alias drop-metax-db='sudo -su postgres psql -c '"'"'drop database {{ metax_database }};'"'"
+alias create-metax-db='sudo -su postgres psql -c '"'"'create database {{ metax_database }};'"'"
+alias alter-metax-db='sudo -su postgres psql -c '"'"'alter database {{ metax_database }} owner to {{ metax_database_user }};'"'"
+
+# django-specific aliases
+alias rm-migrations='cd {{ metax_django_base_path }};rm -rf metax_api/migrations/*;cd -'
+alias makemigrations='cd {{ metax_django_base_path }};python manage.py makemigrations metax_api;cd -'
+alias migrate='cd {{ metax_django_base_path }};python manage.py migrate metax_api;cd -'
+alias loaddata='cd {{ metax_django_base_path }};python manage.py loaddata metax_api/tests/testdata/test_data.json;cd -'
+alias runserver='cd {{ metax_django_base_path }};{{ python_virtualenv_path }}/bin/gunicorn --bind localhost:8000 --access-logfile - --error-logfile - --config /etc/gunicorn.py --reload metax_api.wsgi:application'
+alias runtests='cd {{ metax_django_base_path }};python manage.py test --failfast;cd -'
+
+# in one command: completely drop and recreate db, delete django migration files, and recreate tables
+alias recreate-db='drop-metax-db && create-metax-db && alter-metax-db && rm-migrations && makemigrations && migrate'

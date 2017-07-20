@@ -1,0 +1,182 @@
+[
+  {
+    "id": "CC0-1.0",
+    "label": {"default": "CC0 1.0"},
+    "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+  },
+  {
+    "id": "CC-BY-4.0",
+    "label": {"default": "Creative Commons Attribution 4.0"},
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  {
+    "id": "CC-BY-SA-4.0",
+    "label": {"default": "Creative Commons Attribution Share-Alike 4.0"},
+    "url": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  {
+    "id": "CC-BY-NC-4.0",
+    "label": {"default": "Creative Commons Attribution-NonCommercial 4.0"},
+    "url": "https://creativecommons.org/licenses/by-nc/4.0/"
+  },
+  {
+    "id": "ODC-PDDL-1.0",
+    "label": {"default": "Open Data Commons Public Domain Dedication and License 1.0"},
+    "url": "http://www.opendefinition.org/licenses/odc-pddl"
+  },
+  {
+    "id": "ODbL-1.0",
+    "label": {"default": "Open Data Commons Open Database License 1.0"},
+    "url": "http://www.opendefinition.org/licenses/odc-odbl"
+  },
+  {
+    "id": "ODC-BY-1.0",
+    "label": {"default": "Open Data Commons Attribution License 1.0"},
+    "url": "http://www.opendefinition.org/licenses/odc-by"
+  },
+  {
+    "id": "GFDL-1.3-no-cover-texts-no-invariant-sections",
+    "label": {"default": "GNU Free Documentation License 1.3 with no cover texts and no invariant sections"},
+    "url": "http://www.opendefinition.org/licenses/gfdl"
+  },
+  {
+    "id": "CC-BY-3.0",
+    "label": {"default": "Creative Commons Attribution 3.0"},
+    "url": "https://creativecommons.org/licenses/by/3.0/"
+  },
+  {
+    "id": "CC-BY-SA-3.0",
+    "label": {"default": "Creative Commons Attribution Share-Alike 3.0"},
+    "url": "https://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  {
+    "id": "CC-BY-NC-3.0",
+    "label": {"default": "Creative Commons Attribution-NonCommercial 3.0"},
+    "url": "https://creativecommons.org/licenses/by-nc/3.0/"
+  },
+  {
+    "id": "CC-BY-2.0",
+    "label": {"default": "Creative Commons Attribution 2.0"},
+    "url": "https://creativecommons.org/licenses/by/2.0/"
+  },
+  {
+    "id": "CC-BY-SA-2.0",
+    "label": {"default": "Creative Commons Attribution Share-Alike 2.0"},
+    "url": "https://creativecommons.org/licenses/by-sa/2.0/"
+  },
+  {
+    "id": "CC-BY-NC-2.0",
+    "label": {"default": "Creative Commons Attribution-NonCommercial 2.0"},
+    "url": "https://creativecommons.org/licenses/by-nc/2.0/"
+  },
+  {
+    "id": "CC-BY-1.0",
+    "label": {"default": "Creative Commons Attribution 1.0"},
+    "url": "https://creativecommons.org/licenses/by/1.0/"
+  },
+  {
+    "id": "CC-BY-SA-1.0",
+    "label": {"default": "Creative Commons Attribution Share-Alike 1.0"},
+    "url": "https://creativecommons.org/licenses/by-sa/1.0/"
+  },
+  {
+    "id": "CC-BY-NC-1.0",
+    "label": {"default": "Creative Commons Attribution-NonCommercial 1.0"},
+    "url": "https://creativecommons.org/licenses/by-nc/1.0/"
+  },
+  {
+    "id": "other",
+    "label": {"default": "Other"},
+    "url": ""
+  },
+  {
+    "id": "other-open",
+    "label": {"default": "Other (Open)"},
+    "url": ""
+  },
+  {
+    "id": "other-pd",
+    "label": {"default": "Other (Public Domain)"},
+    "url": ""
+  },
+  {
+    "id": "other-at",
+    "label": {"default": "Other (Attribution)"},
+    "url": ""
+  },
+   {
+    "id": "other-nc",
+    "label": {"default": "Other (Non-Commercial)"},
+    "url": ""
+  },
+{
+    "id": "other-closed",
+    "label": {"default": "Other (Not Open)"},
+    "url": ""
+  },
+  {
+    "id": "notspecified",
+    "label": {"default": "License Not Specified"},
+    "url": ""
+  },
+  {
+    "id": "Apache-2.0",
+    "label": {"default": "Apache Software License 2.0"},
+    "url": "http://www.opensource.org/licenses/Apache-2.0"
+  },
+  {
+    "id": "ClarinPUB-1.0",
+    "label": {"default": "CLARIN PUB (Public) End-User License 1.0"},
+    "url": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/ClarinEulaPub"
+  },
+  {
+    "id": "ClarinACA-1.0",
+    "label": {"default": "CLARIN ACA (Academic) End-User License 1.0"},
+    "url": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/ClarinEulaAca"
+  },
+  {
+    "id": "ClarinACA+NC-1.0",
+    "label": {"default": "CLARIN ACA+NC (Academic, Non-Commercial) End-User License 1.0"},
+    "url": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/ClarinEulaAcaNCDep"
+  },
+  {
+    "id": "ClarinRES-1.0",
+    "label": {"default": "CLARIN RES (Restricted) End-User License 1.0"},
+    "url": "https://kitwiki.csc.fi/twiki/bin/view/FinCLARIN/ClarinEulaRes"
+  },
+  {
+    "id": "CC-BY-ND-3.0",
+    "label": {"default": "Creative Commons Attribution-NoDerivatives 3.0"},
+    "url": "https://creativecommons.org/licenses/by-nd/3.0/"
+  },
+  {
+    "id": "CC-BY-ND-4.0",
+    "label": {"default": "Creative Commons Attribution-NoDerivatives 4.0"},
+    "url": "https://creativecommons.org/licenses/by-nd/4.0/"
+  },
+  {
+    "id": "CC-BY-NC-SA-3.0",
+    "label": {"default": "Creative Commons Attribution-NonCommercial-ShareAlike 3.0"},
+    "url": "https://creativecommons.org/licenses/by-nc-sa/3.0/"
+  },
+  {
+    "id": "CC-BY-NC-SA-4.0",
+    "label": {"default": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0"},
+    "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+  },
+    {
+    "id": "CC-BY-NC-ND-3.0",
+    "label": {"default": "Creative Commons Attribution-NonCommercial-NoDerivatives 3.0"},
+    "url": "https://creativecommons.org/licenses/by-nc-nd/3.0/"
+  },
+  {
+    "id": "CC-BY-NC-ND-4.0",
+    "label": {"default": "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0"},
+    "url": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+  },
+  {
+    "id": "undernegotiation",
+    "label": {"default": "Under negotiation"},
+    "url": ""
+  }
+]

@@ -1,0 +1,39 @@
+---
+
+- name: Check if Rabbitmq has been installed
+  stat: path=/usr/lib/rabbitmq/bin/rabbitmq-server
+  register: rabbitmq
+
+- block:
+    - name: Install Erlang package
+      yum: name=erlang state=latest
+
+    - name: Add RabbitMQ repository
+      command: rpm --import https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
+
+    - name: Install RabbitMQ server
+      yum: name=http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.10/rabbitmq-server-3.6.10-1.el7.noarch.rpm state=present
+
+    - name: Start RabbitMQ server
+      service: name=rabbitmq-server enabled=yes state=started
+
+    - name: Enable RabbitMQ management plugin (access it via <ip_address>:15672)
+      rabbitmq_plugin: names=rabbitmq_management state=enabled
+
+    - name: Add new admin user for RabbitMQ
+      rabbitmq_user:
+        user: admin
+        password: "{{ rabbitmq_admin_password }}"
+        tags: administrator,admin
+        vhost: /
+        configure_priv: .*
+        write_priv: .*
+        read_priv: .*
+
+    - name: Remove default admin user
+      rabbitmq_user: user=guest state=absent
+
+  when: rabbitmq.stat.exists == False
+
+- name: Restart RabbitMQ
+  service: name=rabbitmq-server state=restarted

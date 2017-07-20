@@ -1,7 +1,16 @@
 project_name: metax-api
+django_app_name: metax_api
 project_repo: https://github.com/CSCfi/metax-api
 
 metax_base_path: /srv/metax
 python_virtualenv_path: "{{ metax_base_path }}/pyenv"
-metax_db_data_path: "{{ metax_base_path }}/db"
+
+metax_db_base_path: "{{ metax_base_path }}/db"
+metax_db_data_path: "{{ metax_db_base_path }}/data"
+metax_db_backup_path: "{{ metax_db_base_path }}/backup"
+metax_db_backup_archive_path: "{{ metax_db_backup_path }}/archive"
+metax_db_config_path: "{{ metax_db_base_path }}/config"
+
 metax_app_base_path: "{{ metax_base_path }}/{{ project_name }}"
+metax_django_base_path: "{{ metax_app_base_path }}/src"
+static_root: "{{ metax_django_base_path }}/static"

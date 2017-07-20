@@ -1,0 +1,34 @@
+---
+
+  - include_role:
+      name: ansible-elasticsearch
+    vars:
+      es_instance_name: "node1"
+      es_version: "5.5.0"
+      es_config: {
+        node.name: "node1",
+        cluster.name: metax-elasticsearch-cluster,
+        node.data: true,
+        node.master: true,
+        http.cors.enabled : true,
+        http.cors.allow-origin : "{{ es_cors_allow_origin }}",
+        http.cors.allow-methods : "OPTIONS, HEAD, GET, POST, PUT, DELETE",
+        http.cors.allow-headers : "X-Requested-With,X-Auth-Token,Content-Type, Content-Length",
+        network.host: [_local_, _site_]
+      }
+
+  - name: Copy reference and organization data indexing script
+    copy: src=metax-refdata-indexer/ dest=/srv/refdata_indexer owner={{ django_user}} group=metax mode=740
+
+  - name: Install indexing script dependencies
+    pip: requirements=/srv/refdata_indexer/requirements.txt virtualenv={{ python_virtualenv_path }}
+    become_user: "{{ django_user }}"
+
+  - name: Create cronjob for running reindexing script
+    cron:
+      name: "Reindex reference and organization data"
+      minute: "00"
+      hour: "3"
+      job: "/srv/refdata_indexer/reindex_all.sh > /dev/null 2>&1"
+      state: present
+      user: "{{ django_user }}"

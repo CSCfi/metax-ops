@@ -1,0 +1,50 @@
+- name: Is python 3 installed?
+  command: /usr/local/bin/python3.6
+  register: command_result
+  ignore_errors: yes
+  become_user: "{{ django_user }}"
+
+- block:
+    - name: Yum builddep
+      command: yum-builddep -y python
+
+    - name: Create python source folders
+      file: path=/tmp/python3 state=directory mode=0755
+
+    - name: Fetch Python 3 sources
+      get_url:
+        url: https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tgz
+        dest: /tmp/python3
+
+    - name: Unarchive Python 3 sources
+      unarchive: src=/tmp/python3/Python-3.6.1.tgz dest=/tmp/python3 copy=no
+
+    - name: Configure Python 3
+      command: ./configure  --prefix=/usr/local --enable-unicode=ucs4 --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib" chdir=/tmp/python3/Python-3.6.1
+
+    - name: Compile Python 3
+      command: make chdir=/tmp/python3/Python-3.6.1
+
+    - name: Install Python 3
+      command: make altinstall chdir=/tmp/python3/Python-3.6.1
+
+    - name: Link libraries
+      file: src="/usr/local/lib/{{ item }}" dest="/usr/lib64/{{ item }}" state=link
+      with_items:
+        - "libpython3.6m.so.1.0"
+        - "libpython3.so"
+
+    - name: Create virtual environment directory for Python {{ python_virtualenv_path }}
+      file: path={{ python_virtualenv_path }} state=directory owner={{ django_user }} group=metax mode=0755
+
+    - name: Install virtual environment for Python
+      command: /usr/local/bin/python3.6 -m venv {{ python_virtualenv_path }}
+
+  when: command_result.rc != 0
+
+- name: Set owner of pyvenv to {{ django_user }} user
+  file: path={{ python_virtualenv_path }} owner={{ django_user }} group=metax recurse=yes mode=0755
+
+- name: install wheel package to enable using pip for installing requirements as {{ django_user }}
+  pip: name=wheel virtualenv={{ python_virtualenv_path }}
+  become_user: "{{ django_user }}"

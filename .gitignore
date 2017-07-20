@@ -1,4 +1,22 @@
-*.retry
-ubuntu*.log
-metax-api/
+# Ignore swap files
+*.swp
+
+# Ignore vagrant cache directory
 .vagrant/
+
+# ignore metax-api because it is another git-repo
+metax-api/
+
+# ansible retry-file
+ansible/site.retry
+
+ubuntu*.log
+local_settings.py
+ansible/sec/
+*.pem
+ansible/roles/ansible-elasticsearch/
+*.tar.gz
+__pycache__
+
+# Mac stuff
+.DS_Store

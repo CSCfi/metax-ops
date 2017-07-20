@@ -1,10 +1,29 @@
 ---
 
 - name: NGINX | Install NGINX
-  yum: pkg=nginx state=latest
+  yum: name=nginx state=latest
 
-- name: NGINX | Configure NGINX
-  copy: src=templates/metax_nginx.conf dest=/etc/nginx/
+- name: NGINX | Replace NGINX conf file
+  template: src=templates/metax_nginx.conf dest=/etc/nginx/nginx.conf
 
-- name: NGINX | Start NGINX
-  service: name=nginx enabled=yes state=started
+- name: NGINX | Create directory for ssl certificates
+  file: path=/etc/nginx/ssl_certs state=directory
+
+- include_role: name=certificates
+
+- name: NGINX | Generate Diffie-Hellman PFS (Perfect Forward Secrecy) group (this is going to take a while)
+  command: openssl dhparam -out /etc/nginx/ssl_certs/dhparam.pem 2048 creates=/etc/nginx/ssl_certs/dhparam.pem
+
+- name: NGINX | Create basic auth file for elasticsearch
+  htpasswd:
+    path: /etc/nginx/es_auth
+    name: "{{ item.username }}"
+    password: "{{ item.password }}"
+    owner: root
+    group: nginx
+    state: present
+    mode: 0640
+  with_items: "{{ es_users }}"
+
+- name: NGINX | Restart NGINX
+  service: name=nginx enabled=yes state=restarted

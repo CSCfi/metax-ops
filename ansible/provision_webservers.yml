@@ -1,10 +1,20 @@
 ---
 
 - hosts: webservers
+  vars:
+    is_provision: true
   become: yes
   vars_files:
     - "vars/common.yml"
     - "vars/environments/{{ deployment_environment_id }}.yml"
-    - "{{ secrets_file_path }}"
+    - "sec/vars/{{ deployment_environment_id }}.yml"
+    - "sec/vars/webservers.yml"
   roles:
+    - os-base
+    - python
     - nginx
+    - redis
+    - provision_django
+  handlers:
+    - name: restart sshd
+      service: name=sshd state=restarted
