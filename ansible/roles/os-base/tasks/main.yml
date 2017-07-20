@@ -27,6 +27,12 @@
 - name: Install aptitude
   apt: pkg=aptitude state=latest
 
+- name: Update pip
+  pip: name={{ item }} state=latest
+  with_items:
+    - pip
+    - pur
+
 - include_role: name=update_packages
 
 - name: Ensure os common packages
