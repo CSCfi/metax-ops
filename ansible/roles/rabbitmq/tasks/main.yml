@@ -9,7 +9,7 @@
       yum: name=erlang state=latest
 
     - name: Add RabbitMQ repository
-      command: rpm --import https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
+      rpm_key: state=present key=https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
 
     - name: Install RabbitMQ server
       yum: name=http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.10/rabbitmq-server-3.6.10-1.el7.noarch.rpm state=present

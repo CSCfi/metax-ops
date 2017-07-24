@@ -13,9 +13,10 @@
   with_items:
     - postgresql96
     - postgresql96-server
+    - postgresql96-contrib
     - python-psycopg2
 
-- name: Create database data and config directories
+- name: Create database data directory
   file: path={{ item }} state=directory owner=postgres group=postgres mode=700
   with_items:
     - "{{ metax_db_data_path }}"
@@ -24,19 +25,15 @@
   command: /usr/pgsql-9.6/bin/pg_ctl initdb -D {{ metax_db_data_path }} creates={{ metax_db_data_path }}/postgresql.conf
   become_user: postgres
 
-- name: Copy Postgres host based authentication configuration
-  template: src=templates/pg_hba.conf dest={{ metax_db_data_path }}/pg_hba.conf owner=postgres group=postgres
+- name: Shutdown Postgresql
+  systemd: name=postgresql-9.6 enabled=yes state=stopped
 
-- name: Install metaxdb service
-  copy:
-    dest: /etc/systemd/system/metaxdb.service
-    content: |
-      .include /lib/systemd/system/postgresql-9.6.service
-      [Service]
-      Environment=PGDATA={{ metax_db_data_path }}
-
-- name: Shutdown Metax database
-  service: name=metaxdb state=stopped
+- name: Add correct PGDATA to postgresql service
+  lineinfile:
+    dest: /usr/lib/systemd/system/postgresql-9.6.service
+    state: present
+    regexp: "^Environment=PGDATA"
+    line: "Environment=PGDATA={{ metax_db_data_path }}"
 
 - name: Copy Postgres host based authentication configuration
   template: src=templates/pg_hba.conf dest={{ metax_db_data_path }}/pg_hba.conf owner=postgres group=postgres
@@ -125,8 +122,8 @@
     regexp: "effective_cache_size ="
     line: "effective_cache_size = '{{ (ansible_memtotal_mb*0.75) | int }}MB'"
 
-- name: Start Metax database
-  service: name=metaxdb state=restarted
+- name: Restart Postgresql
+  systemd: name=postgresql-9.6 state=restarted daemon_reload=yes
 
 - block:
     - name: Ensure Metax database user exists
