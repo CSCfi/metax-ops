@@ -27,10 +27,15 @@
 - name: Install aptitude
   apt: pkg=aptitude state=latest
 
-- name: Update pip
-  pip: name={{ item }} state=latest
+- name: Install pip
+  apt: pkg=python-pip state=latest
+  when: deployment_environment_id != 'local_development'
+
+- name: Update pip and install setuptools and pur
+  pip: name={{ item }} state=latest executable=/usr/local/bin/pip
   with_items:
     - pip
+    - setuptools
     - pur
 
 - include_role: name=update_packages
