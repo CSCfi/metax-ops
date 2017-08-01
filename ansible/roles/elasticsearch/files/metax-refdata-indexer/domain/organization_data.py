@@ -10,15 +10,15 @@ class OrganizationData(IndexableData):
     def __init__(
         self,
         org_id,
-        uri='',
         label,
+        uri='',
         parent_id='',
         parent_label=''):
 
         super(OrganizationData, self).__init__(org_id, OrganizationData.DATA_TYPE_ORGANIZATION)
 
-        self.uri = uri
         self.label = label # { 'fi': 'value1', 'en': 'value2',..., 'default': 'default_value' }
+        self.uri = uri
         self.parent_id = parent_id
         self.parent_label = parent_label
 
