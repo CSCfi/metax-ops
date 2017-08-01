@@ -20,9 +20,9 @@ class OrganizationService:
             data = json.load(org_data_file)
 
         for org in data:
-            broader_id = org.get('broader_id', '')
-            broader_label = org.get('broader_label', '')
-            index_data_models.append(OrganizationData(org['org_id'], org['label'], broader_id, broader_label))
+            parent_id = org.get('parent_id', '')
+            parent_label = org.get('parent_label', '')
+            index_data_models.append(OrganizationData(org['org_id'], org['label'], '', parent_id, parent_label))
 
         # if len(index_data_models) > 0:
         #     for ref in index_data_models:

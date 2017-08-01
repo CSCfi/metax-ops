@@ -56,19 +56,19 @@ class FintoDataService:
                     is_parsing_model_elem = True
                     uri = elem.attrib[self.RDF_NS + 'about']
                     label = {}
-                    broader_ids = []
-                    narrower_ids = []
-                    has_narrower = False
+                    parent_ids = []
+                    child_ids = []
+                    has_children = False
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'prefLabel':
                     label[elem.attrib[self.XML_NS + 'lang']] = elem.text
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'broader':
-                    broader_ids.append(self._get_data_id(data_type, self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource'])))
+                    parent_ids.append(self._get_data_id(data_type, self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource'])))
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'narrower':
-                    narrower_ids.append(self._get_data_id(data_type, self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource'])))
+                    child_ids.append(self._get_data_id(data_type, self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource'])))
             elif event == 'end' and elem.tag == model_elem:
                 is_parsing_model_elem = False
-                if(len(narrower_ids) > 0):
-                    has_narrower = True
+                if(len(child_ids) > 0):
+                    has_children = True
 
                 if len(label) > 0:
                     if 'fi' in label:
@@ -83,9 +83,9 @@ class FintoDataService:
                                                         data_type,
                                                         uri,
                                                         label,
-                                                        broader_ids,
-                                                        narrower_ids,
-                                                        has_narrower))
+                                                        parent_ids,
+                                                        child_ids,
+                                                        has_children))
 
         return index_data_models
 

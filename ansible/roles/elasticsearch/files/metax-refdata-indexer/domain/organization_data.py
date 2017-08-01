@@ -10,21 +10,24 @@ class OrganizationData(IndexableData):
     def __init__(
         self,
         org_id,
+        uri='',
         label,
-        broader_id='',
-        broader_label=''):
+        parent_id='',
+        parent_label=''):
 
         super(OrganizationData, self).__init__(org_id, OrganizationData.DATA_TYPE_ORGANIZATION)
 
+        self.uri = uri
         self.label = label # { 'fi': 'value1', 'en': 'value2',..., 'default': 'default_value' }
-        self.broader_id = broader_id
-        self.broader_label = broader_label
+        self.parent_id = parent_id
+        self.parent_label = parent_label
 
     def __str__(self):
         return (
             "{" +
-                "\"org_id\":\"" + self.doc_id + "\","
+                "\"id\":\"" + self.doc_id + "\","
+                "\"uri\":\"" + self.uri + "\","
                 "\"label\":\"" + str(self.label) + "\","
-                "\"broader_id\":\"" + self.broader_id + "\","
-                "\"broader_label\":\"" + self.broader_label + "\""
+                "\"parent_id\":\"" + self.parent_id + "\","
+                "\"parent_label\":\"" + self.parent_label + "\""
             "}")

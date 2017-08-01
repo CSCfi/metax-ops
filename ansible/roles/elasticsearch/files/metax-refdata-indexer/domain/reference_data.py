@@ -11,10 +11,10 @@ class ReferenceData(IndexableData):
     DATA_TYPE_KEYWORD = 'keyword'
 
     DATA_TYPE_ACCESS_TYPE = 'access_type'
-    DATA_TYPE_CHECKSUM_TYPE = 'checksum_type'
-    DATA_TYPE_DATACITE_FILE_TYPE = 'datacite_file_type'
+    DATA_TYPE_CHECKSUM_ALGORITHM_TYPE = 'checksum_algorithm_type'
+    DATA_TYPE_RESOURCE_TYPE = 'resource_type'
     DATA_TYPE_MIME_TYPE = 'mime_type'
-    DATA_TYPE_PID_TYPE = 'pid_type'
+    DATA_TYPE_IDENTIFIER_TYPE = 'identifier_type'
     DATA_TYPE_ACCESS_RESTRICTION_GROUNDS_TYPE = 'access_restriction_grounds_type'
     DATA_TYPE_CONTRIBUTOR_ROLE_TYPE = 'contributor_role_type'
     DATA_TYPE_FUNDER_TYPE = 'funder_type'
@@ -29,10 +29,10 @@ class ReferenceData(IndexableData):
 
     LOCAL_REFERENCE_DATA_TYPES = [
         DATA_TYPE_ACCESS_TYPE,
-        DATA_TYPE_CHECKSUM_TYPE,
-        DATA_TYPE_DATACITE_FILE_TYPE,
+        DATA_TYPE_CHECKSUM_ALGORITHM_TYPE,
+        DATA_TYPE_RESOURCE_TYPE,
         DATA_TYPE_MIME_TYPE,
-        DATA_TYPE_PID_TYPE,
+        DATA_TYPE_IDENTIFIER_TYPE,
         DATA_TYPE_ACCESS_RESTRICTION_GROUNDS_TYPE,
         DATA_TYPE_CONTRIBUTOR_ROLE_TYPE,
         DATA_TYPE_FUNDER_TYPE,
@@ -45,17 +45,17 @@ class ReferenceData(IndexableData):
         data_type,
         uri='',
         label={},
-        broader_ids=[],
-        narrower_ids=[],
-        has_narrower=False):
+        parent_ids=[],
+        child_ids=[],
+        has_children=False):
 
         super(ReferenceData, self).__init__(data_id, data_type)
 
         self.uri = uri
         self.label = label # { 'fi': 'value1', 'en': 'value2',..., 'default': 'default_value' }
-        self.broader_ids = broader_ids # [ 'id1', 'id2', ... ]
-        self.narrower_ids = narrower_ids # [ 'id1', 'id2', ... ]
-        self.has_narrower = has_narrower # True or False
+        self.parent_ids = parent_ids # [ 'id1', 'id2', ... ]
+        self.child_ids = child_ids # [ 'id1', 'id2', ... ]
+        self.has_children = has_children # True or False
 
     def __str__(self):
         return (
@@ -64,7 +64,7 @@ class ReferenceData(IndexableData):
                 "\"type\":\"" + self.doc_type + "\","
                 "\"uri\":\"" + self.uri + "\","
                 "\"label\":\"" + str(self.label) + "\","
-                "\"broader_ids\":\"" + str(self.broader_ids) + "\","
-                "\"narrower_ids\":\"" + str(self.narrower_ids) + "\","
-                "\"has_narrower\":\"" + str(self.has_narrower) + "\""
+                "\"parent_ids\":\"" + str(self.parent_ids) + "\","
+                "\"child_ids\":\"" + str(self.child_ids) + "\","
+                "\"has_children\":\"" + str(self.has_children) + "\""
             "}")

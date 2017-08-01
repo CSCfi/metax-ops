@@ -26,15 +26,15 @@
       "type": "keyword",
       "index": "false"
     },
-    "broader_ids": {
+    "parent_ids": {
       "type": "keyword",
       "index": false
     },
-    "narrower_ids": {
+    "child_ids": {
       "type": "keyword",
       "index": false
     },
-    "has_narrower": {
+    "has_children": {
       "type": "boolean"
     }
   }
