@@ -10,6 +10,8 @@ class ReferenceData(IndexableData):
     DATA_TYPE_LOCATION = 'location'
     DATA_TYPE_KEYWORD = 'keyword'
 
+    DATA_TYPE_RESEARCH_INFRA = 'research_infra'
+
     DATA_TYPE_ACCESS_TYPE = 'access_type'
     DATA_TYPE_CHECKSUM_ALGORITHM_TYPE = 'checksum_algorithm_type'
     DATA_TYPE_RESOURCE_TYPE = 'resource_type'
