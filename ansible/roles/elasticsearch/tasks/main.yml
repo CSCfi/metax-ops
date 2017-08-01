@@ -24,6 +24,10 @@
     pip: requirements=/srv/refdata_indexer/requirements.txt virtualenv={{ python_virtualenv_path }}
     become_user: "{{ django_user }}"
 
+  - name: Index reference and organization data
+    shell: cd /srv/refdata_indexer;./reindex_all.sh
+    become_user: "{{ django_user }}"
+
   - name: Create cronjob for running reindexing script
     cron:
       name: "Reindex reference and organization data"
