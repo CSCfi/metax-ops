@@ -4,7 +4,7 @@
       name: ansible-elasticsearch
     vars:
       es_instance_name: "node1"
-      es_version: "5.5.0"
+      es_version: "5.5.1"
       es_config: {
         node.name: "node1",
         cluster.name: metax-elasticsearch-cluster,
