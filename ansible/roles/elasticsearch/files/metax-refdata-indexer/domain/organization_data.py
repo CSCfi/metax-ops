@@ -18,7 +18,7 @@ class OrganizationData(IndexableData):
         super(OrganizationData, self).__init__(org_id, OrganizationData.DATA_TYPE_ORGANIZATION)
 
         self.label = label # { 'fi': 'value1', 'en': 'value2',..., 'default': 'default_value' }
-        self.uri = uri
+        self.uri = uri if uri else self.doc_id
         self.parent_id = parent_id
         self.parent_label = parent_label
 

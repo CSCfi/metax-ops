@@ -53,7 +53,7 @@ class ReferenceData(IndexableData):
 
         super(ReferenceData, self).__init__(data_id, data_type)
 
-        self.uri = uri
+        self.uri = uri if uri else self.doc_id
         self.label = label # { 'fi': 'value1', 'en': 'value2',..., 'default': 'default_value' }
         self.parent_ids = parent_ids # [ 'id1', 'id2', ... ]
         self.child_ids = child_ids # [ 'id1', 'id2', ... ]
