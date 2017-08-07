@@ -1,5 +1,14 @@
-- name: Copy app config to target VM
+- name: Check if sec directory is present
+  stat: path=sec
+  register: sec_directory
+
+- name: Copy public app config to target VM
+  copy: src=vars/environments/{{ deployment_environment_id }}.yml dest=/home/{{ django_user }}/app_config owner={{ django_user }} group=metax mode=0440
+  when: deployment_environment_id == 'local_development' or not sec_directory.stat.exists
+
+- name: Copy secret app config to target VM
   copy: src=sec/vars/{{ deployment_environment_id }}.yml dest=/home/{{ django_user }}/app_config owner={{ django_user }} group=metax mode=0440
+  when: sec_directory.stat.exists and deployment_environment_id != 'local_development'
 
 - name: Create folder {{ metax_app_base_path }}
   file: path={{ metax_app_base_path }} state=directory owner={{ django_user }} group=metax mode=0755

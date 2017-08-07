@@ -1,3 +1,16 @@
+# Variables related explicitly to Django app
+django_secret_key: ^pqn=v2i)%!w1oh=r!m_=wo_#w3)(@-#8%q_8&9z@slu+#q3+b
+debug: True
+
+# Variables related explicitly to Ansible
+rabbitmq_admin_password: KDzCnpMsHZFdr6Cc
+
+# Variables related to both Ansible and Django
+metax_database: metax_db
+metax_database_user: metax_db_user
+metax_database_password: YMDLekQMqrVKcs37
+metax_database_host: localhost
+
 server_certificate_name: nginx-selfsigned
 shared_folder_base_path: /metax
 metax_app_base_path: "{{ shared_folder_base_path }}/{{ project_name }}"
@@ -7,6 +20,15 @@ django_user: metax-user
 server_domain_name: metax.csc.local
 nginx_proxy_pass: http://127.0.0.1:8000
 
+# Variables related to Elasticsearch
+es_cors_allow_origin: "*"
+# settings.py settings:
+ELASTICSEARCH:
+  HOSTS: ['localhost']
+  USER: False
+  PASSWORD: False
+
+# redis sentinel settings
 redis_sentinel_service: 'metax-master'
 redis_sentinel_quorum: 2 # how many sentinels need to agree before switching master
 redis_sentinel_listen_hosts: '127.0.0.1' # should be a list for other than local env
@@ -48,3 +70,14 @@ redis_sentinel_3:
   redis_sentinel_port: 5002
   redis_sentinel_number: 3
   common: "{{ redis_sentinel_common }}"
+
+# Redis settings.py settings:
+REDIS:
+  HOSTS: [
+    ['127.0.0.1', 5000],
+    ['127.0.0.1', 5001],
+    ['127.0.0.1', 5002]
+  ]
+  PASSWORD: 'password'
+  SERVICE: 'metax-master'
+  TEST_DB: 15
