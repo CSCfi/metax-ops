@@ -21,7 +21,6 @@
     },
     "uri": {
       "type": "keyword",
-      "index": "false"
     },
     "parent_id": {
       "type": "keyword"
