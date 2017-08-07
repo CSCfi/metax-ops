@@ -35,26 +35,105 @@
     - name: Set vm.overcommit_memory = 1
       command: sysctl vm.overcommit_memory=1
 
-    - name: Install Redis server
-      apt: pkg=redis-server state=latest
-
-    - name: Copy Redis configuration to its place
-      copy: src=redis.conf dest=/etc/redis/redis.conf owner=redis group=redis mode=640
+    - name: Install Redis server and sentinel
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - redis-server
+        - redis-sentinel
 
     - name: Add {{ django_user }} user to redis group
       user: name={{ django_user }} shell=/bin/bash groups=redis append=yes
 
-    - name: Modify systemd redis.service to get rid of errors on startup
-      lineinfile:
-        path: /etc/systemd/system/redis.service
-        insertafter: '^PrivateTmp'
-        line: LimitNOFILE=64000
-        state: present
-
-    - name: Reload systemctl daemon
-      command: systemctl daemon-reload
-
   when: not service_status.stat.exists
 
-- name: Start Redis service
-  service: name=redis state=restarted enabled=yes
+- block:
+
+  # install redis server and sentinel services
+
+  - name: Copy redis master/slave config files
+    template:
+      src: templates/redis.conf
+      dest: /etc/redis/redis-{{ item.redis_instance_number }}.conf
+      owner: redis
+      group: redis
+      force: yes
+      mode: 0640
+    with_items:
+      - "{{ redis_instance_1 }}"
+      - "{{ redis_instance_2 }}"
+
+  - name: Set a redis instance as slave in slave config file
+    lineinfile:
+      path: /etc/redis/redis-2.conf
+      insertafter: '# slaveof host port'
+      line: slaveof {{ redis_instance_master_host }} {{ redis_instance_master_port }}
+      state: present
+
+  - name: Install redis master/slave services
+    template:
+      src: templates/redis.service
+      dest: /etc/systemd/system/redis-server-{{ item.redis_instance_number }}.service
+      owner: root
+      group: root
+      force: yes
+      mode: 0644
+    with_items:
+      - "{{ redis_instance_1 }}"
+      - "{{ redis_instance_2 }}"
+
+  - name: Copy redis sentinel config files
+    template:
+      src: templates/sentinel.conf
+      dest: /etc/redis/sentinel-{{ item.redis_sentinel_number }}.conf
+      owner: redis
+      group: redis
+      force: yes
+      mode: 0640
+    with_items:
+      - "{{ redis_sentinel_1 }}"
+      - "{{ redis_sentinel_2 }}"
+      - "{{ redis_sentinel_3 }}"
+
+  - name: Install redis sentinel services
+    template:
+      src: templates/sentinel.service
+      dest: /etc/systemd/system/redis-sentinel-{{ item.redis_sentinel_number }}.service
+      owner: root
+      group: root
+      force: yes
+      mode: 0644
+    with_items:
+      - "{{ redis_sentinel_1 }}"
+      - "{{ redis_sentinel_2 }}"
+      - "{{ redis_sentinel_3 }}"
+
+  - stat: path=/etc/systemd/system/redis.service
+    register: redis_default_service
+
+  - name: Set default Redis service to not auto-restart
+    lineinfile:
+      path: /etc/systemd/system/redis.service
+      regexp: '^Restart=always'
+      line: 'Restart=no'
+    when: redis_default_service.stat.exists == True
+
+  - name: Stop default Redis server and sentinel services
+    service: name={{ item }} state=stopped enabled=no
+    with_items:
+      - redis-server
+      - redis-sentinel
+
+  - name: Start custom Redis server services
+    service: name=redis-server-{{ item.redis_instance_number }} state=started enabled=yes
+    with_items:
+      - "{{ redis_instance_1 }}"
+      - "{{ redis_instance_2 }}"
+
+  - name: Start custom Redis sentinel services
+    service: name=redis-sentinel-{{ item.redis_sentinel_number }} state=started enabled=yes
+    with_items:
+      - "{{ redis_sentinel_1 }}"
+      - "{{ redis_sentinel_2 }}"
+      - "{{ redis_sentinel_3 }}"
+
+  when: deployment_environment_id == 'local_development'
