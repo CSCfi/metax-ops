@@ -23,7 +23,7 @@
       "type": "keyword"
     },
     "uri": {
-      "type": "keyword",
+      "type": "keyword"
     },
     "parent_ids": {
       "type": "keyword",
@@ -34,7 +34,7 @@
       "index": false
     },
     "has_children": {
-      "type": "boolean"
+      "type": "boolean",
       "index": false
     }
   }

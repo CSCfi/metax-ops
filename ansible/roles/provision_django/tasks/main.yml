@@ -1,4 +1,3 @@
-
 - name: Copy public app config to target VM
   copy: src=vars/environments/{{ deployment_environment_id }}.yml dest=/home/{{ django_user }}/app_config owner={{ django_user }} group=metax mode=0440
   when: deployment_environment_id == 'local_development'

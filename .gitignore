@@ -1,5 +1,6 @@
-# Ignore swap files
+# Ignore swap and zip files
 *.swp
+*.zip
 
 # Ignore vagrant cache directory
 .vagrant/
