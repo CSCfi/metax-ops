@@ -1,0 +1,6 @@
+[{"id":"md5", "uri":"http://purl.org/att/es/reference_data/checksum_algorithm/checksum_algorithm_md5", "label":{"fi":"MD5"}},
+{"id":"sha-1", "uri":"http://purl.org/att/es/reference_data/checksum_algorithm/checksum_algorithm_sha-1", "label":{"fi":"SHA-1"}},
+{"id":"sha-224", "uri":"http://purl.org/att/es/reference_data/checksum_algorithm/checksum_algorithm_sha-224", "label":{"fi":"SHA-224"}},
+{"id":"sha-256", "uri":"http://purl.org/att/es/reference_data/checksum_algorithm/checksum_algorithm_sha-256", "label":{"fi":"SHA-256"}},
+{"id":"sha-384", "uri":"http://purl.org/att/es/reference_data/checksum_algorithm/checksum_algorithm_sha-384", "label":{"fi":"SHA-384"}},
+{"id":"sha-512", "uri":"http://purl.org/att/es/reference_data/checksum_algorithm/checksum_algorithm_sha-512", "label":{"fi":"SHA-512"}}]
