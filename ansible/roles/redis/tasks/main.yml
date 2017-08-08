@@ -135,5 +135,3 @@
       - "{{ redis_sentinel_1 }}"
       - "{{ redis_sentinel_2 }}"
       - "{{ redis_sentinel_3 }}"
-
-  when: deployment_environment_id == 'local_development'
