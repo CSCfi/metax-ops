@@ -20,7 +20,7 @@
       "type": "keyword"
     },
     "uri": {
-      "type": "keyword",
+      "type": "keyword"
     },
     "parent_id": {
       "type": "keyword"
