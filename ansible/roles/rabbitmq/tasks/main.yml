@@ -53,6 +53,18 @@
     read_priv: .*
     state: present
 
+- name: Add known consumer users for RabbitMQ
+  rabbitmq_user:
+    user: "{{ item.NAME }}"
+    password: "{{ item.PASSWORD }}"
+    vhost: "{{ item.VHOST }}"
+    configure_priv: "{{ item.PERMISSIONS.CONF }}"
+    write_priv: "{{ item.PERMISSIONS.WRITE }}"
+    read_priv: "{{ item.PERMISSIONS.READ }}"
+    state: present
+  with_items:
+    - "{{ RABBITMQ.CONSUMERS }}"
+
 - name: Remove default admin user
   rabbitmq_user: user=guest state=absent
 

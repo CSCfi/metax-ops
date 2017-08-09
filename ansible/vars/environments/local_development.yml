@@ -82,10 +82,24 @@ REDIS:
 rabbitmq_admin_user: admin
 rabbitmq_admin_password: KDzCnpMsHZFdr6Cc
 
-# settings.py. also used to add user in rabbitmq role
+# settings.py. also used to add user and consumers in rabbitmq role
 RABBITMQ:
   HOSTS: localhost
   PORT: 5672
+
+  # main user/publisher
   USER: metax-user
-  VHOST: metax
   PASSWORD: tai5ceiXlaeRieC6
+  VHOST: metax
+
+  # other known users / test users
+  CONSUMERS:
+
+    # test user for local dev
+    - NAME: testaaja
+      PASSWORD: testaaja
+      VHOST: metax
+      PERMISSIONS:
+        CONF: ^testaaja-.*$
+        WRITE: ^testaaja-.*$
+        READ: ^(datasets|testaaja-.*)$
