@@ -40,29 +40,39 @@ class MimeDataService:
         data_type = ReferenceData.DATA_TYPE_MIME_TYPE
         index_data_models = []
         print("Extracting relevant data from the fetched data")
+
         is_parsing_model_elem = False
-        is_invalid_file_elem = False
+        found_valid_file_elem = False
+        found_valid_name_elem = False
         for event, elem in ET.iterparse(self.TEMP_XML_FILENAME, events=("start", "end")):
             if event == 'start':
                 if elem.tag == (self.IANA_NS + 'registry') and elem.get('id') in self.MIME_TYPE_REGISTRY_IDS:
                     is_parsing_model_elem = True
+                    registry_name = elem.get('id')
+                if is_parsing_model_elem and elem.tag == (self.IANA_NS + 'name'):
+                    if elem.text:
+                        label = dict()
+                        found_valid_name_elem = True
+                        uri = 'https://www.iana.org/assignments/media-types/' + registry_name + "/" + elem.text
+                        label['fi'] = registry_name + "/" + elem.text
+                        label['en'] = registry_name + "/" + elem.text
+                        data_id = registry_name + "/" + elem.text
                 if is_parsing_model_elem and elem.tag == (self.IANA_NS + 'file') and elem.get('type') == 'template':
-                    label = {}
-                    same_as = []
-                    if not elem.text:
-                        is_invalid_file_elem = True
-                        continue
-                    uri = 'https://www.iana.org/assignments/media-types/' + elem.text
-                    label['fi'] = elem.text
-                    label['en'] = elem.text
-                    data_id = elem.text
+                    if elem.text:
+                        label = dict()
+                        found_valid_file_elem = True
+                        uri = 'https://www.iana.org/assignments/media-types/' + elem.text
+                        label['fi'] = elem.text
+                        label['en'] = elem.text
+                        data_id = elem.text
             elif event == 'end':
                 if elem.tag == self.IANA_NS + 'registry':
                     is_parsing_model_elem = False
-                if elem.tag == (self.IANA_NS + 'file'):
-                    if is_parsing_model_elem and not is_invalid_file_elem:
-                        index_data_models.append(ReferenceData(data_id, data_type, label, uri, same_as=same_as))
-                    is_invalid_file_elem = False
+                if is_parsing_model_elem and elem.tag == (self.IANA_NS + 'record'):
+                    if found_valid_file_elem or found_valid_name_elem:
+                        index_data_models.append(ReferenceData(data_id, data_type, label, uri))
+                    found_valid_file_elem = False
+                    found_valid_name_elem = False
 
         return index_data_models
 
