@@ -58,34 +58,23 @@ class FintoDataService:
                     label = {}
                     parent_ids = []
                     child_ids = []
-                    has_children = False
+                    same_as = []
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'prefLabel':
                     label[elem.attrib[self.XML_NS + 'lang']] = elem.text
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'broader':
-                    parent_ids.append(self._get_data_id(data_type, self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource'])))
+                    parent_ids.append(self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource']))
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'narrower':
-                    child_ids.append(self._get_data_id(data_type, self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource'])))
+                    child_ids.append(self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource']))
             elif event == 'end' and elem.tag == model_elem:
                 is_parsing_model_elem = False
-                if(len(child_ids) > 0):
-                    has_children = True
-
-                if len(label) > 0:
-                    if 'fi' in label:
-                        label['default'] = label['fi']
-                    elif 'en' in label:
-                        label['default'] = label['en']
-                    else:
-                        label['default'] = next(iter(label.values()))
-
-                data_id = self._get_data_id(data_type, self._get_uri_end_part(uri))
+                data_id = self._get_uri_end_part(uri)
                 index_data_models.append(ReferenceData(data_id,
                                                         data_type,
-                                                        uri,
                                                         label,
+                                                        uri,
                                                         parent_ids,
                                                         child_ids,
-                                                        has_children))
+                                                        same_as))
 
         return index_data_models
 
@@ -100,6 +89,3 @@ class FintoDataService:
 
     def _get_uri_end_part(self, uri):
         return uri[uri.rindex('/')+1:].strip()
-
-    def _get_data_id(self, part1, part2):
-        return part1 + "-" + part2
