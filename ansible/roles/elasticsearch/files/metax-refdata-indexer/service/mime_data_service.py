@@ -3,7 +3,6 @@ import requests
 import xml.etree.cElementTree as ET
 import os
 from domain.reference_data import ReferenceData
-from service.service_utils import set_default_label
 
 class MimeDataService:
     '''
@@ -11,10 +10,11 @@ class MimeDataService:
     so it is first fetched and parsed.
     '''
 
-    MIME_TYPE_REFERENCE_DATA_SOURCE_URL  'https://www.iana.org/assignments/media-types/media-types.xml'
-    MIME_TYPE_REGISTRY_IDS = [ 'application',
-                                'audio'
-                                'font'
+    IANA_NS = '{http://www.iana.org/assignments}'
+    MIME_TYPE_REFERENCE_DATA_SOURCE_URL = 'https://www.iana.org/assignments/media-types/media-types.xml'
+    MIME_TYPE_REGISTRY_IDS = [  'application',
+                                'audio',
+                                'font',
                                 'image',
                                 'message',
                                 'model',
@@ -24,9 +24,9 @@ class MimeDataService:
 
     TEMP_XML_FILENAME = '/tmp/data.xml'
 
-    def get_data(self, data_type):
+    def get_data(self):
         self._fetch_mime_data()
-        index_data_models = self._parse_mime_data(data_type)
+        index_data_models = self._parse_mime_data()
         os.remove(self.TEMP_XML_FILENAME)
 
         # i=0
@@ -36,30 +36,37 @@ class MimeDataService:
 
         return index_data_models
 
-    def _parse_mime_data(self, data_type):
+    def _parse_mime_data(self):
+        data_type = ReferenceData.DATA_TYPE_MIME_TYPE
         index_data_models = []
         print("Extracting relevant data from the fetched data")
+        is_parsing_model_elem = False
+        is_invalid_file_elem = False
         for event, elem in ET.iterparse(self.TEMP_XML_FILENAME, events=("start", "end")):
             if event == 'start':
-                if elem.tag == 'registry' and elem.attrib['id'] in self.MIME_TYPE_REGISTRY_IDS:
+                if elem.tag == (self.IANA_NS + 'registry') and elem.get('id') in self.MIME_TYPE_REGISTRY_IDS:
                     is_parsing_model_elem = True
-                elif is_parsing_model_elem and elem.tag == 'file' and elem.attrib['type'] == 'template':
+                if is_parsing_model_elem and elem.tag == (self.IANA_NS + 'file') and elem.get('type') == 'template':
                     label = {}
                     same_as = []
+                    if not elem.text:
+                        is_invalid_file_elem = True
+                        continue
                     uri = 'https://www.iana.org/assignments/media-types/' + elem.text
-                    label['fi'] == elem.text
-                    label['en'] == elem.text
+                    label['fi'] = elem.text
+                    label['en'] = elem.text
                     data_id = elem.text
             elif event == 'end':
-                if elem.tag == 'registry':
+                if elem.tag == self.IANA_NS + 'registry':
                     is_parsing_model_elem = False
-                elif is_parsing_model_elem and elem.tag == 'file':
-                    set_default_label(label)
-                    index_data_models.append(ReferenceData(data_id, data_type, uri, label, same_as=same_as))
+                if elem.tag == (self.IANA_NS + 'file'):
+                    if is_parsing_model_elem and not is_invalid_file_elem:
+                        index_data_models.append(ReferenceData(data_id, data_type, label, uri, same_as=same_as))
+                    is_invalid_file_elem = False
 
         return index_data_models
 
-    def _fetch_mime_data(self, data_type):
+    def _fetch_mime_data(self):
         url = self.MIME_TYPE_REFERENCE_DATA_SOURCE_URL
         print("Fetching data from url " + url)
         response = requests.get(url, stream=True)

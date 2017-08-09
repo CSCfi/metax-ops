@@ -36,14 +36,14 @@ class InfraDataService:
                     data_id = self._get_data_id(item['urn'])
                     data_type = ReferenceData.DATA_TYPE_RESEARCH_INFRA
                     uri = 'http://urn.fi/' + item['urn']
+                    same_as = []
                     label = {}
                     if item.get('name_FI'):
                         label['fi'] = item['name_FI']
-                        label['default'] = item['name_FI']
                     if item.get('name_EN'):
                         label['en'] = item['name_EN']
 
-                    index_data_models.append(ReferenceData(data_id, data_type, uri=uri, label=label))
+                    index_data_models.append(ReferenceData(data_id, data_type, label, uri, same_as=same_as))
 
         return index_data_models
 

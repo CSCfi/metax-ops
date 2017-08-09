@@ -76,10 +76,10 @@ def create_organization(org_id_str, org_name, parent_name=None, parent_id=None):
 	'''
 	org_dict = {}
 	org_dict['org_id'] = org_id_str
-	org_dict['label'] = {'fi': org_name, 'default': org_name}
+	org_dict['label'] = {'fi': org_name, 'en': org_name}
 
 	if parent_id and parent_name:
 		org_dict['parent_id'] = parent_id
-		org_dict['parent_label'] = parent_name
+		org_dict['parent_label'] = {'fi': parent_name, 'en': parent_name}
 
 	return org_dict
