@@ -2,9 +2,6 @@
 django_secret_key: ^pqn=v2i)%!w1oh=r!m_=wo_#w3)(@-#8%q_8&9z@slu+#q3+b
 debug: True
 
-# Variables related explicitly to Ansible
-rabbitmq_admin_password: KDzCnpMsHZFdr6Cc
-
 # Variables related to both Ansible and Django
 metax_database: metax_db
 metax_database_user: metax_db_user
@@ -25,8 +22,7 @@ es_cors_allow_origin: "*"
 # settings.py settings:
 ELASTICSEARCH:
   HOSTS: ['localhost']
-  USER: False
-  PASSWORD: False
+  USE_SSL: False
 
 # redis sentinel settings
 redis_sentinel_service: 'metax-master'
@@ -81,3 +77,15 @@ REDIS:
   PASSWORD: 'password'
   SERVICE: 'metax-master'
   TEST_DB: 15
+
+# Variables related to rabbitmq
+rabbitmq_admin_user: admin
+rabbitmq_admin_password: KDzCnpMsHZFdr6Cc
+
+# settings.py. also used to add user in rabbitmq role
+RABBITMQ:
+  HOSTS: localhost
+  PORT: 5672
+  USER: metax-user
+  VHOST: metax
+  PASSWORD: tai5ceiXlaeRieC6

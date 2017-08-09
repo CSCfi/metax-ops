@@ -20,20 +20,41 @@
     - name: Enable RabbitMQ management plugin (access it via <ip_address>:15672)
       rabbitmq_plugin: names=rabbitmq_management state=enabled
 
-    - name: Add new admin user for RabbitMQ
-      rabbitmq_user:
-        user: admin
-        password: "{{ rabbitmq_admin_password }}"
-        tags: administrator,admin
-        vhost: /
-        configure_priv: .*
-        write_priv: .*
-        read_priv: .*
-
-    - name: Remove default admin user
-      rabbitmq_user: user=guest state=absent
-
   when: rabbitmq.stat.exists == False
+
+- name: Add metax virtual host for RabbitMQ
+  rabbitmq_vhost:
+    name: "{{ RABBITMQ.VHOST }}"
+    state: present
+
+- name: Add new admin user for RabbitMQ
+  rabbitmq_user:
+    user: "{{ rabbitmq_admin_user }}"
+    password: "{{ rabbitmq_admin_password }}"
+    tags: administrator,admin
+    permissions:
+      - vhost: /
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+      - vhost: "{{ RABBITMQ.VHOST }}"
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+    state: present
+
+- name: Add metax-user for RabbitMQ
+  rabbitmq_user:
+    user: "{{ RABBITMQ.USER }}"
+    password: "{{ RABBITMQ.PASSWORD }}"
+    vhost: "{{ RABBITMQ.VHOST }}"
+    configure_priv: .*
+    write_priv: .*
+    read_priv: .*
+    state: present
+
+- name: Remove default admin user
+  rabbitmq_user: user=guest state=absent
 
 - name: Restart RabbitMQ
   service: name=rabbitmq-server state=restarted
