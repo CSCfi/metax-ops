@@ -1,20 +1,11 @@
 [dbservers]
-# Travis uses the below one for deployment
-metax-db-test ansible_host="{{ primary_dbserver_external_ip }}" ansible_connection=ssh ansible_user=metax-user
-# Use the below one for provisioning. Always do provisioning from a local environment.
-#metax-db-test ansible_host="{{ primary_dbserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user ansible_ssh_private_key_file=../metax-cloud-user.pem
+metax-db-test ansible_host="{{ primary_dbserver_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
 
 [webservers]
-# Travis uses the below one for deployment
-metax-web-test ansible_host="{{ primary_webserver_external_ip }}" ansible_connection=ssh ansible_user=metax-user
-# Use the below one for provisioning. Always do provisioning from a local environment.
-#metax-web-test ansible_host="{{ primary_webserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user ansible_ssh_private_key_file=../metax-cloud-user.pem
+metax-web-test ansible_host="{{ primary_webserver_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
 
 [dataservers]
-# Travis uses the below one for deployment
-metax-data-test ansible_host="{{ primary_dataserver_external_ip }}" ansible_connection=ssh ansible_user=metax-user
-# Use the below one for provisioning. Always do provisioning from a local environment.
-#metax-data-test ansible_host="{{ primary_dataserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user ansible_ssh_private_key_file=../metax-cloud-user.pem
+metax-data-test ansible_host="{{ primary_dataserver_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
 
 [staging:children]
 dbservers

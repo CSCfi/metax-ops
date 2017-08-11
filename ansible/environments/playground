@@ -1,11 +1,11 @@
 [dbservers]
-metax-playground ansible_host="{{ primary_dbserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user ansible_ssh_private_key_file=../metax-cloud-user.pem
+metax-playground ansible_host="{{ primary_dbserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user
 
 [webservers]
-metax-playground ansible_host="{{ primary_webserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user ansible_ssh_private_key_file=../metax-cloud-user.pem
+metax-playground ansible_host="{{ primary_webserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user
 
 [dataservers]
-metax-playground ansible_host="{{ primary_dataserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user ansible_ssh_private_key_file=../metax-cloud-user.pem
+metax-playground ansible_host="{{ primary_dataserver_external_ip }}" ansible_connection=ssh ansible_user=cloud-user
 
 [playground:children]
 dbservers
