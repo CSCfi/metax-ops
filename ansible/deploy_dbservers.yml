@@ -5,8 +5,7 @@
     is_provision: false
   become: yes
   vars_files:
-    - "vars/common.yml"
-    - "vars/environments/{{ deployment_environment_id }}.yml"
+    - "inventories/common_vars.yml"
   roles:
     - deploy_dbservers
     - { role: reboot,

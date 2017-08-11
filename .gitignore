@@ -13,7 +13,9 @@ ansible/site.retry
 
 ubuntu*.log
 local_settings.py
-ansible/sec/
+ansible/inventories/*
+!ansible/inventories/local_development/
+ansible/files/
 *.pem
 ansible/roles/ansible-elasticsearch/
 *.tar.gz

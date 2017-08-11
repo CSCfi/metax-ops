@@ -2,7 +2,7 @@
 
 - name: Check if Rabbitmq has been installed
   stat: path=/etc/init.d/rabbitmq-server
-  register: rabbitmq
+  register: rabbitmq_server
 
 - block:
     - name: Install Erlang package
@@ -20,24 +20,24 @@
     - name: Enable RabbitMQ management plugin (access it via <ip_address>:15672)
       rabbitmq_plugin: names=rabbitmq_management state=enabled
 
-  when: rabbitmq.stat.exists == False
+  when: rabbitmq_server.stat.exists == False
 
 - name: Add metax virtual host for RabbitMQ
   rabbitmq_vhost:
-    name: "{{ RABBITMQ.VHOST }}"
+    name: "{{ rabbitmq.vhost }}"
     state: present
 
 - name: Add new admin user for RabbitMQ
   rabbitmq_user:
-    user: "{{ rabbitmq_admin_user }}"
-    password: "{{ rabbitmq_admin_password }}"
+    user: "{{ rabbitmq.admin_user }}"
+    password: "{{ rabbitmq.admin_password }}"
     tags: administrator,admin
     permissions:
       - vhost: /
         configure_priv: .*
         read_priv: .*
         write_priv: .*
-      - vhost: "{{ RABBITMQ.VHOST }}"
+      - vhost: "{{ rabbitmq.vhost }}"
         configure_priv: .*
         read_priv: .*
         write_priv: .*
@@ -45,9 +45,9 @@
 
 - name: Add metax-user for RabbitMQ
   rabbitmq_user:
-    user: "{{ RABBITMQ.USER }}"
-    password: "{{ RABBITMQ.PASSWORD }}"
-    vhost: "{{ RABBITMQ.VHOST }}"
+    user: "{{ rabbitmq.user }}"
+    password: "{{ rabbitmq.password }}"
+    vhost: "{{ rabbitmq.vhost }}"
     configure_priv: .*
     write_priv: .*
     read_priv: .*
@@ -55,15 +55,15 @@
 
 - name: Add known consumer users for RabbitMQ
   rabbitmq_user:
-    user: "{{ item.NAME }}"
-    password: "{{ item.PASSWORD }}"
-    vhost: "{{ item.VHOST }}"
-    configure_priv: "{{ item.PERMISSIONS.CONF }}"
-    write_priv: "{{ item.PERMISSIONS.WRITE }}"
-    read_priv: "{{ item.PERMISSIONS.READ }}"
+    user: "{{ item.name }}"
+    password: "{{ item.password }}"
+    vhost: "{{ item.vhost }}"
+    configure_priv: "{{ item.permissions.conf }}"
+    write_priv: "{{ item.permissions.write }}"
+    read_priv: "{{ item.permissions.read }}"
     state: present
   with_items:
-    - "{{ RABBITMQ.CONSUMERS }}"
+    - "{{ rabbitmq.consumers }}"
 
 - name: Remove default admin user
   rabbitmq_user: user=guest state=absent

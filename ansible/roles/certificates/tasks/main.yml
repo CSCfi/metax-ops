@@ -8,14 +8,14 @@
       apt: name=dos2unix state=latest
 
     - name: Copy CA-signed primary certificate and private key
-      copy: src=sec/certificates/{{ item }} dest=/etc/nginx/ssl_certs/{{ item }} owner=root group=root mode=0644
+      copy: src=files/certificates/{{ item }} dest=/etc/nginx/ssl_certs/{{ item }} owner=root group=root mode=0644
       with_items:
         - "{{ server_certificate_name }}.crt"
         - "{{ server_certificate_name }}.key"
 
     - name: Concatenate intermediate certificate to primary certificate
       lineinfile:
-        line: "{{ lookup('file', 'sec/certificates/{{ intermediate_certificate_name }}') }}"
+        line: "{{ lookup('file', 'files/certificates/{{ intermediate_certificate_name }}') }}"
         dest: "/etc/nginx/ssl_certs/{{ server_certificate_name }}.crt"
         state: present
 
