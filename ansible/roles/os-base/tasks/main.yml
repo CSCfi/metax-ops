@@ -13,9 +13,6 @@
 - name: Make sure we have a 'metax' group in OS
   group: name=metax state=present
 
-- name: Create /srv/metax base directory
-  file: path=/srv/metax state=directory owner={{ default_user }} group=metax mode=0755
-
 - name: Disable SSH password authentication
   lineinfile:
     dest: "/etc/ssh/sshd_config"
@@ -73,6 +70,9 @@
     name: Europe/Helsinki
 
 - include_role: name=users
+
+- name: Create /srv/metax base directory
+  file: path=/srv/metax state=directory owner={{ django_user }} group=metax mode=0755
 
 - block:
 

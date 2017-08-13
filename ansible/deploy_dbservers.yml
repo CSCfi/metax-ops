@@ -4,8 +4,6 @@
   vars:
     is_provision: false
   become: yes
-  vars_files:
-    - "inventories/common_vars.yml"
   roles:
     - deploy_dbservers
     - { role: reboot,

@@ -1,0 +1,3 @@
+deployment_environment_id: playground
+project_repo_branch: playground
+nginx_gunicorn_proxy_pass: http://unix:{{ metax_base_path }}/gunicorn/socket

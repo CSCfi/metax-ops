@@ -4,19 +4,17 @@
   vars:
     is_provision: true
   become: yes
-  vars_files:
-    - "inventories/common_vars.yml"
   pre_tasks:
     - name: Place database name into target VM env vars
       lineinfile:
         dest: /etc/environment
         state: present
-        line: 'METAX_DATABASE_NAME="{{ metax_database }}"'
+        line: 'METAX_DATABASE_NAME="{{ metax_database.name }}"'
     - name: Place database user into target VM env vars
       lineinfile:
         dest: /etc/environment
         state: present
-        line: 'METAX_DATABASE_USER="{{ metax_database_user }}"'
+        line: 'METAX_DATABASE_USER="{{ metax_database.user }}"'
   roles:
     - os-base
     - postgres

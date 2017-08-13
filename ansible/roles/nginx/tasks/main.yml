@@ -29,7 +29,7 @@
     group: www-data
     state: present
     mode: 0640
-  with_items: "{{ es_users }}"
+  with_items: "{{ es_nginx_credentials }}"
 
 - name: NGINX | Restart NGINX
   service: name=nginx enabled=yes state=restarted

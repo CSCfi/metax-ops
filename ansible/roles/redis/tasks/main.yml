@@ -53,59 +53,59 @@
   - name: Copy redis master/slave config files
     template:
       src: templates/redis.conf
-      dest: /etc/redis/redis-{{ item.redis_instance_number }}.conf
+      dest: /etc/redis/redis-{{ item.number }}.conf
       owner: redis
       group: redis
       force: yes
       mode: 0640
     with_items:
-      - "{{ redis_instance_1 }}"
-      - "{{ redis_instance_2 }}"
+      - "{{ redis.instance_1 }}"
+      - "{{ redis.instance_2 }}"
 
   - name: Set a redis instance as slave in slave config file
     lineinfile:
       path: /etc/redis/redis-2.conf
       insertafter: '# slaveof host port'
-      line: slaveof {{ redis_instance_master_host }} {{ redis_instance_master_port }}
+      line: slaveof {{ redis.instance_common.master_host }} {{ redis.instance_common.master_port }}
       state: present
 
   - name: Install redis master/slave services
     template:
       src: templates/redis.service
-      dest: /etc/systemd/system/redis-server-{{ item.redis_instance_number }}.service
+      dest: /etc/systemd/system/redis-server-{{ item.number }}.service
       owner: root
       group: root
       force: yes
       mode: 0644
     with_items:
-      - "{{ redis_instance_1 }}"
-      - "{{ redis_instance_2 }}"
+      - "{{ redis.instance_1 }}"
+      - "{{ redis.instance_2 }}"
 
   - name: Copy redis sentinel config files
     template:
       src: templates/sentinel.conf
-      dest: /etc/redis/sentinel-{{ item.redis_sentinel_number }}.conf
+      dest: /etc/redis/sentinel-{{ item.number }}.conf
       owner: redis
       group: redis
       force: yes
       mode: 0640
     with_items:
-      - "{{ redis_sentinel_1 }}"
-      - "{{ redis_sentinel_2 }}"
-      - "{{ redis_sentinel_3 }}"
+      - "{{ redis.sentinel_1 }}"
+      - "{{ redis.sentinel_2 }}"
+      - "{{ redis.sentinel_3 }}"
 
   - name: Install redis sentinel services
     template:
       src: templates/sentinel.service
-      dest: /etc/systemd/system/redis-sentinel-{{ item.redis_sentinel_number }}.service
+      dest: /etc/systemd/system/redis-sentinel-{{ item.number }}.service
       owner: root
       group: root
       force: yes
       mode: 0644
     with_items:
-      - "{{ redis_sentinel_1 }}"
-      - "{{ redis_sentinel_2 }}"
-      - "{{ redis_sentinel_3 }}"
+      - "{{ redis.sentinel_1 }}"
+      - "{{ redis.sentinel_2 }}"
+      - "{{ redis.sentinel_3 }}"
 
   - stat: path=/etc/systemd/system/redis.service
     register: redis_default_service
@@ -124,14 +124,14 @@
       - redis-sentinel
 
   - name: Start custom Redis server services
-    service: name=redis-server-{{ item.redis_instance_number }} state=started enabled=yes
+    service: name=redis-server-{{ item.number }} state=started enabled=yes
     with_items:
-      - "{{ redis_instance_1 }}"
-      - "{{ redis_instance_2 }}"
+      - "{{ redis.instance_1 }}"
+      - "{{ redis.instance_2 }}"
 
   - name: Start custom Redis sentinel services
-    service: name=redis-sentinel-{{ item.redis_sentinel_number }} state=started enabled=yes
+    service: name=redis-sentinel-{{ item.number }} state=started enabled=yes
     with_items:
-      - "{{ redis_sentinel_1 }}"
-      - "{{ redis_sentinel_2 }}"
-      - "{{ redis_sentinel_3 }}"
+      - "{{ redis.sentinel_1 }}"
+      - "{{ redis.sentinel_2 }}"
+      - "{{ redis.sentinel_3 }}"

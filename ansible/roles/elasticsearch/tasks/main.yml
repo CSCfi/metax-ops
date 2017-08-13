@@ -3,15 +3,15 @@
   - include_role:
       name: ansible-elasticsearch
     vars:
-      es_instance_name: "node1"
+      es_instance_name: "{{ elasticsearch_instance.node_name }}"
       es_version: "5.5.1"
       es_config: {
-        node.name: "node1",
-        cluster.name: metax-elasticsearch-cluster,
-        node.data: true,
-        node.master: true,
+        node.name: "{{ elasticsearch_instance.node_name }}",
+        cluster.name: "{{ elasticsearch.cluster_name }}",
+        node.data: "{{ elasticsearch_instance.is_data_node }}",
+        node.master: "{{ elasticsearch_instance.is_master_node }}",
         http.cors.enabled : true,
-        http.cors.allow-origin : "{{ es_cors_allow_origin }}",
+        http.cors.allow-origin : "{{ elasticsearch_instance.allow_origin }}",
         http.cors.allow-methods : "OPTIONS, HEAD, GET, POST, PUT, DELETE",
         http.cors.allow-headers : "X-Requested-With,X-Auth-Token,Content-Type, Content-Length",
         network.host: [_local_, _site_]

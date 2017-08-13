@@ -1,0 +1,8 @@
+webserver_1_external_ip: 193.166.24.98
+dbserver_1_external_ip: 86.50.169.34
+dataserver_1_external_ip: 193.166.25.31
+cacheserver_1_external_ip: 193.166.24.98
+
+deployment_environment_id: staging
+project_repo_branch: staging
+nginx_gunicorn_proxy_pass: http://unix:{{ metax_base_path }}/gunicorn/socket

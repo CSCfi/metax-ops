@@ -2,26 +2,26 @@ DJANGO_SECRET_KEY: {{ django_secret_key }}
 DEBUG: {{ django_debug }}
 
 # Variables related to database
-METAX_DATABASE: {{ metax_database }}
-METAX_DATABASE_USER: {{ metax_database_user }}
-METAX_DATABASE_PASSWORD: {{ metax_database_password }}
-METAX_DATABASE_HOST: {{ metax_database_host }}
+METAX_DATABASE: {{ metax_database.name }}
+METAX_DATABASE_USER: {{ metax_database.user }}
+METAX_DATABASE_PASSWORD: {{ metax_database.password }}
+METAX_DATABASE_HOST: {{ dbserver_1_internal_ip }}
 
 # Variables related to elasticsearch
 ELASTICSEARCH:
-  HOSTS: ['{{ elasticsearch.hosts }}']
+  HOSTS: ['{{ elasticsearch.hosts}}']
   PORT: {{ elasticsearch.port }}
   USE_SSL: {{ elasticsearch.use_ssl }}
 
 # Variables related to redis
 REDIS:
   HOSTS: [
-    ['127.0.0.1', 5000],
-    ['127.0.0.1', 5001],
-    ['127.0.0.1', 5002]
+    ['{{ redis.sentinel_common.listen_hosts }}', {{ redis.sentinel_1.port }}],
+    ['{{ redis.sentinel_common.listen_hosts }}', {{ redis.sentinel_2.port }}],
+    ['{{ redis.sentinel_common.listen_hosts }}', {{ redis.sentinel_3.port }}]
   ]
-  PASSWORD: '{{ redis_password }}'
-  SERVICE: 'metax-master'
+  PASSWORD: '{{ redis.instance_common.password }}'
+  SERVICE: '{{ redis.sentinel_common.service_name }}'
   TEST_DB: 15
 
 # Variables related to rabbitmq
