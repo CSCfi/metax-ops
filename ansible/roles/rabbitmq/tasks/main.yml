@@ -57,7 +57,7 @@
   rabbitmq_user:
     user: "{{ item.name }}"
     password: "{{ item.password }}"
-    vhost: "{{ item.vhost }}"
+    vhost: "{{ rabbitmq.vhost }}"
     configure_priv: "{{ item.permissions.conf }}"
     write_priv: "{{ item.permissions.write }}"
     read_priv: "{{ item.permissions.read }}"

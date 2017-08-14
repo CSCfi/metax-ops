@@ -77,24 +77,27 @@ redis:
     port: 5002
 
 
+rabbitmq_test_user: testaaja
+rabbitmq_test_password: testaaja
+
 rabbitmq:
-  admin_user: admin
-  admin_password: KDzCnpMsHZFdr6Cc
   hosts: localhost
   port: 5672
+  vhost: metax
+
+  # admin user
+  admin_user: admin
+  admin_password: KDzCnpMsHZFdr6Cc
 
   # main user/publisher
   user: metax-user
   password: tai5ceiXlaeRieC6
-  vhost: metax
 
-  # other known users / test users
   consumers:
 
-    # test user for local dev
-    - name: testaaja
-      password: testaaja
-      vhost: metax
+    # test user
+    - name: "{{ rabbitmq_test_user }}"
+      password: "{{ rabbitmq_test_password }}"
       permissions:
         conf: ^testaaja-.*$
         write: ^testaaja-.*$
