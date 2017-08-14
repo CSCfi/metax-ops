@@ -14,8 +14,14 @@ class IndexableData:
 
         self.doc_type = doc_type
         self.doc_id = self._create_es_document_id(doc_id)
-        self.label = label if label else '' # { 'fi': 'value1', 'en': 'value2',..., 'default': 'default_value' }
-        set_default_label(label)
+        self.label = {} # { 'fi': 'value1', 'en': 'value2',..., 'default': 'default_value' }
+
+        # Replace quotes with corresponding html entity not to break outbound json
+        if label:
+            for key, val in label.items():
+                self.label[key] = val.replace("'", "&quot;")
+                
+        set_default_label(self.label)
         self.uri = uri if uri else ''
 
     def to_es_document(self):

@@ -36,12 +36,6 @@ class FintoDataService:
         self._fetch_finto_data(data_type)
         index_data_models = self._parse_finto_data(data_type)
         os.remove(self.TEMP_XML_FILENAME)
-
-        # i=0
-        # while i < 10:
-        #     print(index_data_models[i], sep='\n\n')
-        #     i = i+1
-
         return index_data_models
 
     def _parse_finto_data(self, data_type):
@@ -60,7 +54,8 @@ class FintoDataService:
                     child_ids = []
                     same_as = []
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'prefLabel':
-                    label[elem.attrib[self.XML_NS + 'lang']] = elem.text
+                    if elem.text:
+                        label[elem.attrib[self.XML_NS + 'lang']] = elem.text
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'broader':
                     parent_ids.append(self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource']))
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'narrower':
