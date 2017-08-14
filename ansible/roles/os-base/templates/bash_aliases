@@ -13,7 +13,7 @@ alias create-metax-db='sudo -su postgres psql -c '"'"'create database {{ metax_d
 alias alter-metax-db='sudo -su postgres psql -c '"'"'alter database {{ metax_database.name }} owner to {{ metax_database.user }};'"'"
 
 # django-specific aliases
-alias rm-migrations='cd {{ metax_django_base_path }};rm -rf metax_api/migrations/*;cd -'
+alias rm-migrations='cd /metax/metax-api/src/metax_api/migrations;find . -type f ! -name '"'"'*__keep*'"'"' -delete;cd -'
 alias makemigrations='cd {{ metax_django_base_path }};python manage.py makemigrations metax_api;cd -'
 alias migrate='cd {{ metax_django_base_path }};python manage.py migrate metax_api;cd -'
 alias loaddata='cd {{ metax_django_base_path }};python manage.py loaddata metax_api/tests/testdata/test_data.json;cd -'
