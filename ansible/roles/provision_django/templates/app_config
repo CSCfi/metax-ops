@@ -33,5 +33,4 @@ RABBITMQ:
   PASSWORD: {{ rabbitmq.password }}
   VHOST: {{ rabbitmq.vhost }}
 
-  TEST_USER: {{ rabbitmq_test_user }}
-  TEST_PASSWORD: {{ rabbitmq_test_password }}
+  CONSUMERS: {{ rabbitmq_consumers | to_nice_json }}

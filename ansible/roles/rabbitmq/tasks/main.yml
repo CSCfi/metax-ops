@@ -22,7 +22,7 @@
 
   when: rabbitmq_server.stat.exists == False
 
-- name: Add metax virtual host for RabbitMQ
+- name: Add main virtual host for RabbitMQ
   rabbitmq_vhost:
     name: "{{ rabbitmq.vhost }}"
     state: present
@@ -63,7 +63,7 @@
     read_priv: "{{ item.permissions.read }}"
     state: present
   with_items:
-    - "{{ rabbitmq.consumers }}"
+    - "{{ rabbitmq_consumers }}"
 
 - name: Remove default admin user
   rabbitmq_user: user=guest state=absent
