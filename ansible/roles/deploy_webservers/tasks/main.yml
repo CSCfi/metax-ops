@@ -17,7 +17,9 @@
   become_user: "{{ django_user }}"
 
 - name: Delete old Django migration files
-  file: path={{ metax_django_base_path }}/{{ django_app_name }}/migrations state=absent
+  shell: rm -rf __pycache__/;find . ! -name "*__keep*" -delete
+  args:
+    chdir: "{{ metax_django_base_path }}/{{ django_app_name }}/migrations"
   when: deployment_environment_id in ['local_development', 'playground', 'staging']
 
 - name: Django makemigrations
