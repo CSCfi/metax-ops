@@ -1,8 +1,6 @@
 - name: Is python 3 installed?
-  command: /usr/local/bin/python3.6
+  stat: path=/usr/local/bin/python3.6
   register: command_result
-  ignore_errors: yes
-  become_user: "{{ django_user }}"
 
 - block:
     - name: Yum builddep
@@ -40,7 +38,7 @@
     - name: Install virtual environment for Python
       command: /usr/local/bin/python3.6 -m venv {{ python_virtualenv_path }}
 
-  when: command_result.rc != 0
+  when: not command_result.stat.exists
 
 - name: Set owner of pyvenv to {{ django_user }} user
   file: path={{ python_virtualenv_path }} owner={{ django_user }} group=metax recurse=yes mode=0755

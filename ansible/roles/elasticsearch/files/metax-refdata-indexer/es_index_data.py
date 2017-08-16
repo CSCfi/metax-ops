@@ -5,6 +5,8 @@ from service.elasticsearch_service import ElasticSearchService
 from service.finto_data_service import FintoDataService
 from service.local_data_service import LocalDataService
 from service.organization_service import OrganizationService
+from service.infra_data_service import InfraDataService
+from service.mime_data_service import MimeDataService
 
 def main():
     '''
@@ -15,8 +17,8 @@ def main():
     REMOVE_AND_RECREATE_INDEX = 'remove_and_recreate_index'
     TYPES_TO_REINDEX = 'types_to_reindex'
 
-    instructions = """\nRun the program using 'python es_index_data.py remove_and_recreate_index=INDEX types_to_reindex=TYPE', where either or both of the arguments should be provided with one of the following values per argument:\n\nINDEX:\n{indices}\n\nTYPE:\n{types}"""
-    instructions = instructions.format(indices=str([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME]), types=str([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, OrganizationData.DATA_TYPE_ORGANIZATION] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES))
+    instructions = """\nRun the program as metax-user with pyenv activated using 'python es_index_data.py remove_and_recreate_index=INDEX types_to_reindex=TYPE', where either or both of the arguments should be provided with one of the following values per argument:\n\nINDEX:\n{indices}\n\nTYPE:\n{types}"""
+    instructions = instructions.format(indices=str([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME]), types=str([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, OrganizationData.DATA_TYPE_ORGANIZATION] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]))
 
     run_args = dict([arg.split('=', maxsplit=1) for arg in sys.argv[1:]])
     remove_and_recreate_index = None
@@ -34,7 +36,7 @@ def main():
 
     if TYPES_TO_REINDEX in run_args:
         types_to_reindex = run_args[TYPES_TO_REINDEX]
-        if types_to_reindex not in ([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES):
+        if types_to_reindex not in ([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]):
             print(instructions)
             sys.exit(1)
 
@@ -49,6 +51,12 @@ def main():
     if types_to_reindex in [ALL, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME]:
         org_service = OrganizationService()
 
+    if types_to_reindex in ([ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA]):
+        infra_service = InfraDataService()
+
+    if types_to_reindex in ([ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_MIME_TYPE]):
+        mime_service = MimeDataService()
+
     if remove_and_recreate_index in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME]:
         es.delete_index(ElasticSearchService.REFERENCE_DATA_INDEX_NAME)
 
@@ -60,7 +68,7 @@ def main():
         es.create_index(ElasticSearchService.REFERENCE_DATA_INDEX_NAME,
             ElasticSearchService.REFERENCE_DATA_INDEX_FILENAME)
 
-        for doc_type in ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES:
+        for doc_type in ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]:
             es.create_type_mapping(ElasticSearchService.REFERENCE_DATA_INDEX_NAME,
                 doc_type,
                 ElasticSearchService.REFERENCE_DATA_TYPE_MAPPING_FILENAME)
@@ -91,6 +99,14 @@ def main():
     # Reindexing organizations
     if types_to_reindex in [ALL, OrganizationData.DATA_TYPE_ORGANIZATION]:
         es.delete_and_update_indexable_data(ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME, OrganizationData.DATA_TYPE_ORGANIZATION, org_service.get_data())
+
+    # Reindexing Infras
+    if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA]:
+        es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA, infra_service.get_data())
+
+    # Reindexing MIME types
+    if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_MIME_TYPE]:
+        es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_MIME_TYPE, mime_service.get_data())
 
     print("Done")
     sys.exit(0)

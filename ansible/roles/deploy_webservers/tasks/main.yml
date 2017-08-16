@@ -11,13 +11,15 @@
   shell: pur --force --requirement {{ metax_app_base_path }}/requirements.txt
   become_user: "{{ django_user }}"
   when: deployment_environment_id == 'local_development'
-  
+
 - name: Install app python package requirements
   pip: requirements={{ metax_app_base_path }}/requirements.txt virtualenv={{ python_virtualenv_path }}
   become_user: "{{ django_user }}"
 
 - name: Delete old Django migration files
-  file: path={{ metax_django_base_path }}/{{ django_app_name }}/migrations state=absent
+  shell: rm -rf __pycache__/;find . ! -name "*__keep*" -delete
+  args:
+    chdir: "{{ metax_django_base_path }}/{{ django_app_name }}/migrations"
   when: deployment_environment_id in ['local_development', 'playground', 'staging']
 
 - name: Django makemigrations
@@ -45,5 +47,5 @@
   when: deployment_environment_id != 'local_development'
 
 - debug:
-    msg: "Local dev environment successfully set up. Run commands 'sudo su {{ django_user }}' and 'runserver' to run the app."
+    msg: "Local dev environment successfully set up. Run commands 'sudo su - {{ django_user }}' and 'runserver' to run the app."
   when: deployment_environment_id == 'local_development'

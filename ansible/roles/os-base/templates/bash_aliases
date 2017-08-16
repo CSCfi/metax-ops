@@ -8,12 +8,12 @@ alias source-pyvenv='source {{ python_virtualenv_path }}/bin/activate'
 alias tail-log='tail -f -n 200 /var/log/{{ project_name }}/metax_api.log'
 
 # Drop and create db
-alias drop-metax-db='sudo -su postgres psql -c '"'"'drop database {{ metax_database }};'"'"
-alias create-metax-db='sudo -su postgres psql -c '"'"'create database {{ metax_database }};'"'"
-alias alter-metax-db='sudo -su postgres psql -c '"'"'alter database {{ metax_database }} owner to {{ metax_database_user }};'"'"
+alias drop-metax-db='sudo -su postgres psql -c '"'"'drop database {{ metax_database.name }};'"'"
+alias create-metax-db='sudo -su postgres psql -c '"'"'create database {{ metax_database.name }};'"'"
+alias alter-metax-db='sudo -su postgres psql -c '"'"'alter database {{ metax_database.name }} owner to {{ metax_database.user }};'"'"
 
 # django-specific aliases
-alias rm-migrations='cd {{ metax_django_base_path }};rm -rf metax_api/migrations/*;cd -'
+alias rm-migrations='cd /metax/metax-api/src/metax_api/migrations;rm -rf __pycache__/;find . ! -name '"'"'*__keep*'"'"' -delete;cd -'
 alias makemigrations='cd {{ metax_django_base_path }};python manage.py makemigrations metax_api;cd -'
 alias migrate='cd {{ metax_django_base_path }};python manage.py migrate metax_api;cd -'
 alias loaddata='cd {{ metax_django_base_path }};python manage.py loaddata metax_api/tests/testdata/test_data.json;cd -'

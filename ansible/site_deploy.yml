@@ -1,5 +1,5 @@
 ---
 
 - include: deploy_dbservers.yml
-- include: deploy_webservers.yml
 - include: deploy_dataservers.yml
+- include: deploy_webservers.yml

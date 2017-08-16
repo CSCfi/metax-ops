@@ -23,19 +23,19 @@
       "type": "keyword"
     },
     "uri": {
-      "type": "keyword",
-      "index": "false"
+      "type": "keyword"
     },
-    "broader_ids": {
-      "type": "keyword",
-      "index": false
-    },
-    "narrower_ids": {
+    "parent_ids": {
       "type": "keyword",
       "index": false
     },
-    "has_narrower": {
-      "type": "boolean"
+    "child_ids": {
+      "type": "keyword",
+      "index": false
+    },
+    "has_children": {
+      "type": "boolean",
+      "index": false
     }
   }
 }

@@ -13,9 +13,6 @@
 - name: Make sure we have a 'metax' group in OS
   group: name=metax state=present
 
-- name: Create /srv/metax base directory
-  file: path=/srv/metax state=directory owner={{ default_user }} group=metax mode=0755
-
 - name: Disable SSH password authentication
   lineinfile:
     dest: "/etc/ssh/sshd_config"
@@ -24,13 +21,18 @@
   when: deployment_environment_id != 'local_development'
   notify: restart sshd
 
-- include_role: name=update_packages
+- name: Install pip
+  yum: name=python-pip state=latest
+  when: deployment_environment_id != 'local_development'
 
-- name: Update pip
+- name: Update pip and install setuptools and pur
   pip: name={{ item }} state=latest
   with_items:
     - pip
+    - setuptools
     - pur
+
+- include_role: name=update_packages
 
 - name: Ensure os common packages
   yum: name={{ item }} state=latest
@@ -53,6 +55,7 @@
   selinux: state=permissive policy=targeted
 
 # It seems at least in local dev centos 7 the fi_FI locale is already present!
+# Make sure it is so also in other envs!
 # - name: Install fi_FI locale
 #   locale_gen:
 #     name: fi_FI.UTF-8
@@ -76,6 +79,9 @@
 
 - include_role: name=users
 
+- name: Create /srv/metax base directory
+  file: path=/srv/metax state=directory owner={{ django_user }} group=metax mode=0755
+
 - block:
 
     - name: Copy bash aliases to {{ django_user }} user home dir
@@ -85,6 +91,9 @@
       lineinfile:
         dest: "/home/{{ django_user }}/.bash_profile"
         state: present
-        line: "aliases"
+        line: "{{ item }}"
+      with_items:
+        - "source .bash_aliases"
+        - "aliases"
 
   when: deployment_environment_id in ['local_development', 'playground', 'staging']

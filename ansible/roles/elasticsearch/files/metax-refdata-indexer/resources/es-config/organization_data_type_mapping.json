@@ -16,14 +16,17 @@
     }
   ],
   "properties": {
-    "org_id": {
+    "id": {
       "type": "keyword"
     },
-    "broader_id": {
+    "uri": {
       "type": "keyword"
     },
-    "broader_label": {
-      "type": "keyword",
+    "parent_id": {
+      "type": "keyword"
+    },
+    "parent_label": {
+      "type": "text",
       "index": false
     }
   }

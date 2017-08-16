@@ -18,10 +18,10 @@
       file: path={{ metax_base_path }}/gunicorn state=directory owner={{ django_user }} group=nginx mode=770
 
     - name: Copy gunicorn service file
-      template: src=templates/gunicorn.service dest=/etc/systemd/system/gunicorn.service
+      template: src=templates/gunicorn.service dest=/usr/lib/systemd/system/gunicorn.service
 
     - name: Copy gunicorn socket file
-      template: src=templates/gunicorn.socket dest=/etc/systemd/system/gunicorn.socket
+      template: src=templates/gunicorn.socket dest=/usr/lib/systemd/system/gunicorn.socket
 
     - name: Systemctl daemon-reload
       shell: "systemctl daemon-reload"

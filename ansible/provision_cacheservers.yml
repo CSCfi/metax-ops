@@ -1,0 +1,13 @@
+---
+
+- hosts: webservers
+  vars:
+    is_provision: true
+  become: yes
+  roles:
+    - os-base
+    - python
+    - redis
+  handlers:
+    - name: restart sshd
+      service: name=sshd state=restarted

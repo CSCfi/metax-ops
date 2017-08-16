@@ -1,5 +1,5 @@
 - name: Copy app config to target VM
-  copy: src=sec/vars/{{ deployment_environment_id }}.yml dest=/home/{{ django_user }}/app_config owner={{ django_user }} group=metax mode=0440
+  template: src=templates/app_config dest=/home/{{ django_user }}/app_config owner={{ django_user }} group=metax mode=0440
 
 - name: Create folder {{ metax_app_base_path }}
   file: path={{ metax_app_base_path }} state=directory owner={{ django_user }} group=metax mode=0755
@@ -27,3 +27,12 @@
   when: deployment_environment_id == 'local_development'
 
 - include_role: name=gunicorn
+
+- name: Create cronjob for updating reference data in local cache
+  cron:
+    name: "Update reference and organization data in local cache"
+    minute: "00"
+    hour: "4"
+    job: "{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path}}/metax_api/cron/update_reference_data.py >> /var/log/{{ project_name }}/update_reference_data.log"
+    state: present
+    user: "{{ django_user }}"

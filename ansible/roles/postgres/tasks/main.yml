@@ -127,13 +127,13 @@
 
 - block:
     - name: Ensure Metax database user exists
-      postgresql_user: name={{ metax_database_user }} password={{ metax_database_password }} state=present role_attr_flags=CREATEDB
+      postgresql_user: name={{ metax_database.user }} password={{ metax_database.password }} state=present role_attr_flags=CREATEDB
 
     - name: Ensure Metax database is present
-      postgresql_db: template=template0 db={{ metax_database }} state=present owner={{ metax_database_user }} encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
+      postgresql_db: template=template0 db={{ metax_database.name }} state=present owner={{ metax_database.user }} encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
 
     - name: Remove unnecessary privileges from others
-      postgresql_privs: db={{ metax_database }} role=PUBLIC type=database priv=ALL state=absent
+      postgresql_privs: db={{ metax_database.name }} role=PUBLIC type=database priv=ALL state=absent
 
   become_user: postgres
 
