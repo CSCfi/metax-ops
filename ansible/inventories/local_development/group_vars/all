@@ -4,9 +4,14 @@ metax_app_base_path: "{{ shared_folder_base_path }}/{{ project_name }}"
 os_users:
   - "{{ django_user }}"
 
-es_nginx_credentials:
+nginx_credentials:
   - { username: metax, password: test-metax }
   - { username: qvain, password: test-qvain }
+  - { username: ida, password: test-ida }
+  - { username: tpas, password: test-tpas }
+
+nginx_whitelisted_ip_addresses_for_metax_api_writes:
+  - 20.20.20.1
 
 webserver_1_internal_ip: 127.0.0.1
 dbserver_1_internal_ip: 127.0.0.1

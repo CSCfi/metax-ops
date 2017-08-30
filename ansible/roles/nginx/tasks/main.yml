@@ -16,14 +16,14 @@
 
 - name: NGINX | Create basic auth file for elasticsearch
   htpasswd:
-    path: /etc/nginx/es_auth
+    path: /etc/nginx/nginx_auth
     name: "{{ item.username }}"
     password: "{{ item.password }}"
     owner: root
     group: nginx
     state: present
     mode: 0640
-  with_items: "{{ es_nginx_credentials }}"
+  with_items: "{{ nginx_credentials }}"
 
 - name: NGINX | Restart NGINX
   service: name=nginx enabled=yes state=restarted
