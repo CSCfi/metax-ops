@@ -32,12 +32,14 @@ def parse_csv():
 					#unit_main_code = row.get('unit_main_code', '')
 					unit_sub_code = row.get('unit_sub_code', '')
 					unit_name = row.get('unit_name', '').rstrip()
+					org_isni = row.get('org_isni', '')
+					org_csc = row.get('org_csc', '')
 
 					if govern(row):
 						# save parent ids to parent_organizations dict
 						# and create a root level organization
 						if not org_code in root_orgs:
-							root_org_dict = create_organization(org_code, org_name)
+							root_org_dict = create_organization(org_code, org_name, org_isni=org_isni, org_csc=org_csc)
 							root_orgs[org_code] = root_org_dict.get('org_id', None)
 							output_orgs.append(root_org_dict)
 
@@ -70,7 +72,7 @@ def govern(row):
 		return False
 
 
-def create_organization(org_id_str, org_name, parent_name=None, parent_id=None):
+def create_organization(org_id_str, org_name, org_isni=None, org_csc=None, parent_name=None, parent_id=None):
 	'''
 		create organization data_dict that is suitable for ES indexing
 	'''
@@ -81,5 +83,11 @@ def create_organization(org_id_str, org_name, parent_name=None, parent_id=None):
 	if parent_id and parent_name:
 		org_dict['parent_id'] = parent_id
 		org_dict['parent_label'] = {'fi': parent_name, 'en': parent_name}
+
+	if org_isni:
+		org_dict['same_as'] = [org_isni]
+
+	if org_csc:
+		org_dict['org_csc'] = org_csc
 
 	return org_dict

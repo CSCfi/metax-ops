@@ -51,12 +51,11 @@ class ReferenceData(IndexableData):
         child_ids=[],
         same_as=[]):
 
-        super(ReferenceData, self).__init__(data_id, data_type, label, uri)
+        super(ReferenceData, self).__init__(data_id, data_type, label, uri, same_as)
 
         self.parent_ids = []
         self.child_ids = []
         self.has_children = False
-        self.same_as = same_as
 
         if len(parent_ids) > 0:
             self.parent_ids = [self._create_es_document_id(p_id) for p_id in parent_ids]

@@ -16,16 +16,16 @@ class OrganizationData(IndexableData):
         label,
         parent_id='',
         parent_label='',
-        same_as=[]):
+        same_as=[],
+        org_csc=''):
 
-        super(OrganizationData, self).__init__(org_id, OrganizationData.DATA_TYPE_ORGANIZATION, label, '')
+        super(OrganizationData, self).__init__(org_id, OrganizationData.DATA_TYPE_ORGANIZATION, label, OrganizationData.ORGANIZATION_PURL_BASE_URL + '/' + org_id, same_as)
         self.parent_id = ''
         if parent_id:
             self.parent_id = self._create_es_document_id(parent_id)
         self.parent_label = parent_label
         set_default_label(self.parent_label)
-        self.same_as = same_as
-        self.uri = self.ORGANIZATION_PURL_BASE_URL + '/' + self.doc_id
+        self.org_csc = org_csc
 
     def __str__(self):
         return (
@@ -36,5 +36,6 @@ class OrganizationData(IndexableData):
                 "\"label\":\"" + str(self.label) + "\","
                 "\"parent_id\":\"" + self.parent_id + "\","
                 "\"parent_label\":\"" + str(self.parent_label) + "\","
-                "\"same_as\":\"" + str(self.same_as) + "\""
+                "\"same_as\":\"" + str(self.same_as) + "\","
+                "\"org_csc\":\"" + self.org_csc + "\""
             "}")

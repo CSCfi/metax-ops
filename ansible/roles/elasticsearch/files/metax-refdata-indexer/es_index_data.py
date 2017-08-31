@@ -36,7 +36,7 @@ def main():
 
     if TYPES_TO_REINDEX in run_args:
         types_to_reindex = run_args[TYPES_TO_REINDEX]
-        if types_to_reindex not in ([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]):
+        if types_to_reindex not in ([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, OrganizationData.DATA_TYPE_ORGANIZATION] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]):
             print(instructions)
             sys.exit(1)
 
@@ -48,7 +48,7 @@ def main():
     if types_to_reindex in ([ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME] + ReferenceData.LOCAL_REFERENCE_DATA_TYPES):
         local_service = LocalDataService()
 
-    if types_to_reindex in [ALL, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME]:
+    if types_to_reindex in [ALL, OrganizationData.DATA_TYPE_ORGANIZATION]:
         org_service = OrganizationService()
 
     if types_to_reindex in ([ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA]):
