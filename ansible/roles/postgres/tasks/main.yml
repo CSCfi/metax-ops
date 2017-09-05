@@ -28,12 +28,16 @@
 - name: Shutdown Postgresql
   systemd: name=postgresql-9.6 enabled=yes state=stopped
 
-- name: Add correct PGDATA to postgresql service
-  lineinfile:
-    dest: /usr/lib/systemd/system/postgresql-9.6.service
-    state: present
-    regexp: "^Environment=PGDATA"
-    line: "Environment=PGDATA={{ metax_db_data_path }}"
+- name: Create custom Postgres service file that refers to the original one and set correct PGDATA location
+  copy:
+    dest: /etc/systemd/system/postgresql-9.6.service
+    content: |
+      .include /lib/systemd/system/postgresql-9.6.service
+      [Service]
+      Environment=PGDATA={{ metax_db_data_path }}
+
+- name: Systemctl daemon-reload
+  shell: "systemctl daemon-reload"
 
 - name: Copy Postgres host based authentication configuration
   template: src=templates/pg_hba.conf dest={{ metax_db_data_path }}/pg_hba.conf owner=postgres group=postgres
