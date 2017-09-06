@@ -34,3 +34,6 @@ RABBITMQ:
   VHOST: {{ rabbitmq.vhost }}
 
   CONSUMERS: {{ rabbitmq_consumers | to_nice_json }}
+
+# Variables related to api credentials
+API_USERS: {{ nginx_credentials | to_nice_json }}
