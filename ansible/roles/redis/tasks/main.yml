@@ -41,6 +41,9 @@
     - name: Add {{ django_user }} user to redis group
       user: name={{ django_user }} shell=/bin/bash groups=redis append=yes
 
+    - name: Create /run/redis folder
+      file: path=/run/redis state=directory owner=redis group=redis mode=0755
+
   when: not service_status.stat.exists
 
 - block:
@@ -49,8 +52,8 @@
 
   - name: Create folder for redis configs
     file: path=/etc/redis owner=redis group=redis mode=0755 state=directory
-  - name: Copy redis master/slave config files
 
+  - name: Copy redis master/slave config files
     template:
       src: templates/redis.conf
       dest: /etc/redis/redis-{{ item.number }}.conf
