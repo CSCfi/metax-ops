@@ -17,6 +17,7 @@ class IndexableData:
         self.doc_id = self._create_es_document_id(doc_id)
         self.label = {} # { 'fi': 'value1', 'en': 'value2',..., 'default': 'default_value' }
         self.same_as = same_as
+        self.code = doc_id
 
         # Replace quotes with corresponding html entity not to break outbound json
         if label:

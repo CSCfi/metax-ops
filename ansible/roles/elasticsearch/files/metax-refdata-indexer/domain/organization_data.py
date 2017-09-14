@@ -31,6 +31,7 @@ class OrganizationData(IndexableData):
         return (
             "{" +
                 "\"id\":\"" + self.get_es_document_id() + "\","
+                "\"code\":\"" + self.code + "\","
                 "\"type\":\"" + self.DATA_TYPE_ORGANIZATION + "\","
                 "\"uri\":\"" + self.uri + "\","
                 "\"label\":\"" + str(self.label) + "\","

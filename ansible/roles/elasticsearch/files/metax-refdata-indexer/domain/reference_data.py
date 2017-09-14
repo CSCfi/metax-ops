@@ -69,6 +69,7 @@ class ReferenceData(IndexableData):
         return (
             "{" +
                 "\"id\":\"" + self.get_es_document_id() + "\","
+                "\"code\":\"" + self.code + "\","
                 "\"type\":\"" + self.doc_type + "\","
                 "\"uri\":\"" + self.uri + "\","
                 "\"label\":\"" + str(self.label) + "\","
