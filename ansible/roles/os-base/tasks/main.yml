@@ -51,6 +51,7 @@
     - zile
     - python-passlib
     - xqilla
+    - xqilla-devel
 
 - name: Disable SELinux (A better approach should be come up with!)
   selinux: state=permissive policy=targeted
