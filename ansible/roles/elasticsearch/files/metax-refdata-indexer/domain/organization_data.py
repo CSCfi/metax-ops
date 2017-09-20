@@ -8,7 +8,7 @@ class OrganizationData(IndexableData):
     '''
 
     DATA_TYPE_ORGANIZATION = 'organization'
-    ORGANIZATION_PURL_BASE_URL = 'http://purl.org/att/es/' + ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME + "/" + DATA_TYPE_ORGANIZATION
+    ORGANIZATION_PURL_BASE_URL = 'http://purl.org/att/es/' + ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME + "/" + DATA_TYPE_ORGANIZATION + '/organization_'
 
     def __init__(
         self,
@@ -19,7 +19,7 @@ class OrganizationData(IndexableData):
         same_as=[],
         org_csc=''):
 
-        super(OrganizationData, self).__init__(org_id, OrganizationData.DATA_TYPE_ORGANIZATION, label, OrganizationData.ORGANIZATION_PURL_BASE_URL + '/' + org_id, same_as)
+        super(OrganizationData, self).__init__(org_id, OrganizationData.DATA_TYPE_ORGANIZATION, label, OrganizationData.ORGANIZATION_PURL_BASE_URL + org_id, same_as)
         self.parent_id = ''
         if parent_id:
             self.parent_id = self._create_es_document_id(parent_id)
@@ -31,6 +31,7 @@ class OrganizationData(IndexableData):
         return (
             "{" +
                 "\"id\":\"" + self.get_es_document_id() + "\","
+                "\"code\":\"" + self.code + "\","
                 "\"type\":\"" + self.DATA_TYPE_ORGANIZATION + "\","
                 "\"uri\":\"" + self.uri + "\","
                 "\"label\":\"" + str(self.label) + "\","

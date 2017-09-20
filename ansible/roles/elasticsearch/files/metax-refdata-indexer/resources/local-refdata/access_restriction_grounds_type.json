@@ -1,13 +1,13 @@
 [
-{"id": "1", "uri":"http://purl.org/att/reference_data/access_restriction_grounds_type_1", "label": {"fi": "Saatavuutta rajoitettu sopimuksen perusteella, esim. luottamuksellisen kaupallisen tai teollisen toiminnan perusteella"}},
-{"id": "2", "uri":"http://purl.org/att/reference_data/access_restriction_grounds_type_2", "label": {"fi": "Saatavuutta rajoitettu luottamuksellisiin henkilötietoihin perustuen"}},
-{"id": "3", "uri":"http://purl.org/att/reference_data/access_restriction_grounds_type_3", "label": {"fi": "Saatavuutta rajoitettu tietoja antaneen henkilön etuun tai suojaan perustuen tai esim. luovutussopimuksen perusteella"}},
-{"id": "4", "uri":"http://purl.org/att/reference_data/access_restriction_grounds_type_4", "label": {"fi": "Saatavuutta rajoitettu kansainvälisiin suhteisiin, yleiseen turvallisuuteen tai kansalliseen puolustukseen perustuen"}},
-{"id": "5", "uri":"http://purl.org/att/reference_data/access_restriction_grounds_type_5", "label": {"fi": "Saatavuutta rajoitettu tuomioistuinkäsittelyn tai oikeudenkäyntiin perustuen"}},
-{"id": "6", "uri":"http://purl.org/att/reference_data/access_restriction_grounds_type_6", "label": {"fi": "Saatavuutta rajoitettu luonnonsuojelun perusteella"}},
-{"id": "7", "uri":"http://purl.org/att/reference_data/access_restriction_grounds_type_7", "label": {"fi": "Saatavuutta rajoitettu tekijäoikeuden perusteella"}},
-{"id": "8", "uri":"http://purl.org/att/reference_data/access_restriction_grounds_type_8", "label": {"fi": "Saatavuutta rajoitettu kulttuuriperinnön tai alkuperäiskansojen suojelun perusteella"}},
-{"id": "9", "uri":"http://purl.org/att/reference_data/access_restriction_grounds_type_9", "label": {"fi": "Saatavuutta rajoitettu muulla perusteella"}},
-{"id": "10", "uri":"http://purl.org/att/reference_data/access_restriction_grounds_type_10", "label": {"fi": "Avoin ei tiedossa olevia rajoituksia"}},
-{"id": "11", "uri":"http://purl.org/att/reference_data/access_restriction_grounds_type_11", "label": {"fi": "Avoin, tekijänoikeudet rauenneet"}}
+{"id": "1", "uri":"http://purl.org/att/es/reference_data/access_restriction_grounds_type_1", "label": {"fi": "Saatavuutta rajoitettu sopimuksen perusteella, esim. luottamuksellisen kaupallisen tai teollisen toiminnan perusteella"}},
+{"id": "2", "uri":"http://purl.org/att/es/reference_data/access_restriction_grounds_type_2", "label": {"fi": "Saatavuutta rajoitettu luottamuksellisiin henkilötietoihin perustuen"}},
+{"id": "3", "uri":"http://purl.org/att/es/reference_data/access_restriction_grounds_type_3", "label": {"fi": "Saatavuutta rajoitettu tietoja antaneen henkilön etuun tai suojaan perustuen tai esim. luovutussopimuksen perusteella"}},
+{"id": "4", "uri":"http://purl.org/att/es/reference_data/access_restriction_grounds_type_4", "label": {"fi": "Saatavuutta rajoitettu kansainvälisiin suhteisiin, yleiseen turvallisuuteen tai kansalliseen puolustukseen perustuen"}},
+{"id": "5", "uri":"http://purl.org/att/es/reference_data/access_restriction_grounds_type_5", "label": {"fi": "Saatavuutta rajoitettu tuomioistuinkäsittelyn tai oikeudenkäyntiin perustuen"}},
+{"id": "6", "uri":"http://purl.org/att/es/reference_data/access_restriction_grounds_type_6", "label": {"fi": "Saatavuutta rajoitettu luonnonsuojelun perusteella"}},
+{"id": "7", "uri":"http://purl.org/att/es/reference_data/access_restriction_grounds_type_7", "label": {"fi": "Saatavuutta rajoitettu tekijäoikeuden perusteella"}},
+{"id": "8", "uri":"http://purl.org/att/es/reference_data/access_restriction_grounds_type_8", "label": {"fi": "Saatavuutta rajoitettu kulttuuriperinnön tai alkuperäiskansojen suojelun perusteella"}},
+{"id": "9", "uri":"http://purl.org/att/es/reference_data/access_restriction_grounds_type_9", "label": {"fi": "Saatavuutta rajoitettu muulla perusteella"}},
+{"id": "10", "uri":"http://purl.org/att/es/reference_data/access_restriction_grounds_type_10", "label": {"fi": "Avoin ei tiedossa olevia rajoituksia"}},
+{"id": "11", "uri":"http://purl.org/att/es/reference_data/access_restriction_grounds_type_11", "label": {"fi": "Avoin, tekijänoikeudet rauenneet"}}
 ]
