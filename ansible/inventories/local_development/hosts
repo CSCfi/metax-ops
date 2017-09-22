@@ -1,11 +1,11 @@
 [dbservers]
-localhost ansible_host=127.0.0.1 ansible_connection=local ansible_user=ubuntu
+localhost ansible_host=127.0.0.1 ansible_connection=local ansible_user=vagrant
 
 [webservers]
-localhost ansible_host=127.0.0.1 ansible_connection=local ansible_user=ubuntu
+localhost ansible_host=127.0.0.1 ansible_connection=local ansible_user=vagrant
 
 [dataservers]
-localhost ansible_host=127.0.0.1 ansible_connection=local ansible_user=ubuntu
+localhost ansible_host=127.0.0.1 ansible_connection=local ansible_user=vagrant
 
 [cacheservers]
-localhost ansible_host=127.0.0.1 ansible_connection=local ansible_user=ubuntu
+localhost ansible_host=127.0.0.1 ansible_connection=local ansible_user=vagrant
