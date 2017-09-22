@@ -9,7 +9,7 @@
 $script = <<SCRIPT
 if [ ! -f /vagrant_bootstrap_done.info ]; then
   sudo yum update
-  sudo yum -y install epel-release python-devel libffi-devel openssl-devel
+  sudo yum -y install epel-release python-devel libffi-devel openssl-devel git
   sudo yum -y install python-pip
   sudo pip install pip --upgrade
   sudo pip install ansible

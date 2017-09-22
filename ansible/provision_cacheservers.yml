@@ -1,6 +1,6 @@
 ---
 
-- hosts: webservers
+- hosts: cacheservers
   vars:
     is_provision: true
   become: yes
