@@ -44,6 +44,9 @@
     - name: Create /run/redis folder
       file: path=/run/redis state=directory owner=redis group=redis mode=0755
 
+    - name: Copy tmpfiles.d conf to persist /var/run/redis between reboots
+      copy: src=templates/redis_tmpfiles.d.conf dest=/etc/tmpfiles.d/redis.conf
+
   when: not service_status.stat.exists
 
 - block:
