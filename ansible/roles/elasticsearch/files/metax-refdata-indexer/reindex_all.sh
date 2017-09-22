@@ -4,7 +4,7 @@
 
 if [ "$USER" != "metax-user" ]; then
     echo "Run this as metax-user"
-    exit 1
+    su metax-user
 fi
 
 source /srv/metax/pyenv/bin/activate
