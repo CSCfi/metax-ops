@@ -24,4 +24,4 @@
         executable: /bin/bash
 
   become_user: postgres
-  when: deployment_environment_id in ['local_development', 'playground', 'staging']
+  when: deployment_environment_id in ['local_development', 'playground', 'test']

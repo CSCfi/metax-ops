@@ -101,4 +101,4 @@
         - "source .bash_aliases"
         - "aliases"
 
-  when: deployment_environment_id in ['local_development', 'playground', 'staging']
+  when: deployment_environment_id in ['local_development', 'playground', 'test']

@@ -20,7 +20,7 @@
   shell: rm -rf __pycache__/;find . ! -name "*__keep*" -delete
   args:
     chdir: "{{ metax_django_base_path }}/{{ django_app_name }}/migrations"
-  when: deployment_environment_id in ['local_development', 'playground', 'staging']
+  when: deployment_environment_id in ['local_development', 'playground', 'test']
 
 - name: Django makemigrations
   django_manage: command="makemigrations --noinput {{ django_app_name }}" app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
@@ -37,7 +37,7 @@
 - name: Load Django testdata to database
   django_manage: command=loaddata fixtures=metax_api/tests/testdata/test_data.json app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
   become_user: "{{ django_user }}"
-  when: deployment_environment_id in ['local_development', 'playground', 'staging']
+  when: deployment_environment_id in ['local_development', 'playground', 'test']
 
 - name: Make sure nginx server is running
   service: name=nginx state=started enabled=yes

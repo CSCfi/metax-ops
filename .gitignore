@@ -14,8 +14,8 @@ ansible/site.retry
 ubuntu*.log
 local_settings.py
 ansible/inventories/playground/group_vars/playground
-ansible/inventories/staging/group_vars/staging
-ansible/inventories/staging/host_vars
+ansible/inventories/test/group_vars/test
+ansible/inventories/test/host_vars
 
 ansible/files/
 *.pem
