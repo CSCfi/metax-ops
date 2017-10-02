@@ -3,6 +3,8 @@ import requests
 import xml.etree.cElementTree as ET
 import os
 from domain.reference_data import ReferenceData
+import rdflib
+from rdflib import URIRef
 
 class FintoDataService:
     '''
@@ -32,6 +34,13 @@ class FintoDataService:
 
     TEMP_XML_FILENAME = '/tmp/data.xml'
 
+    WKT_FILENAME = './resources/uri_to_wkt.json'
+
+    # Use this to decide whether to read location coordinates from a file
+    # or whether to read coordinates from wikidata and paikkatiedot.fi and
+    # at the same time writing the coordinates to a file
+    READ_COORDINATES_FROM_FILE = True
+
     def get_data(self, data_type):
         self._fetch_finto_data(data_type)
         index_data_models = self._parse_finto_data(data_type)
@@ -44,6 +53,14 @@ class FintoDataService:
 
         print("Extracting relevant data from the fetched data")
         is_parsing_model_elem = False
+
+        if self.READ_COORDINATES_FROM_FILE:
+            with open(self.WKT_FILENAME) as c:
+                coordinates = json.load(c)
+        else:
+            with open(self.WKT_FILENAME, 'w') as outfile:
+                outfile.write('{\n')
+
         for event, elem in ET.iterparse(self.TEMP_XML_FILENAME, events=("start", "end")):
             if event == 'start':
                 if elem.tag == model_elem:
@@ -53,6 +70,7 @@ class FintoDataService:
                     parent_ids = []
                     child_ids = []
                     same_as = []
+                    wkt = ''
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'prefLabel':
                     if elem.text:
                         label[elem.attrib[self.XML_NS + 'lang']] = elem.text
@@ -60,6 +78,13 @@ class FintoDataService:
                     parent_ids.append(self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource']))
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'narrower':
                     child_ids.append(self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource']))
+                if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'closeMatch' and not len(wkt):
+                    if self.READ_COORDINATES_FROM_FILE:
+                        wkt = coordinates.get(uri, '')
+                    else:
+                        wkt = self._get_coordinates_for_location_from_url(elem.attrib[self.RDF_NS + 'resource'])
+                        with open(self.WKT_FILENAME, 'a') as outfile:
+                            outfile.write("\"" + uri + "\":\"" + wkt + '\",\n')
             elif event == 'end' and elem.tag == model_elem:
                 is_parsing_model_elem = False
                 data_id = self._get_uri_end_part(uri)
@@ -69,8 +94,13 @@ class FintoDataService:
                                                         uri,
                                                         parent_ids,
                                                         child_ids,
-                                                        same_as))
+                                                        same_as,
+                                                        wkt))
 
+        if not self.READ_COORDINATES_FROM_FILE:
+            with open(self.WKT_FILENAME, 'a') as outfile:
+                outfile.write('}')
+        print("Done with all")
         return index_data_models
 
     def _fetch_finto_data(self, data_type):
@@ -84,3 +114,37 @@ class FintoDataService:
 
     def _get_uri_end_part(self, uri):
         return uri[uri.rindex('/')+1:].strip()
+
+    def _get_coordinates_for_location_from_url(self, url):
+        output = ''
+        if 'wikidata' in url:
+           g=rdflib.Graph()
+           try:
+               g.parse(url + '.rdf')
+               subject = URIRef(url)
+               predicate = URIRef('http://www.wikidata.org/prop/direct/P625')
+               for o in g.objects(subject, predicate):
+                   return str(o).upper()
+           except:
+               print("Unable to read wikidata, skipping..")
+
+        elif 'paikkatiedot' in url:
+            response = requests.get(url +'.jsonld')
+            if response.status_code == requests.codes.ok:
+                data_as_str = self._find_between(response.text, '<script type="application/ld+json">', '</script>')
+                if data_as_str:
+                    data = json.loads(data_as_str)
+                    if data and data.get('geo', False) and data.get('geo').get('latitude', False) and data.get('geo').get('longitude', False):
+                        output = 'POINT(' + str(data['geo']['longitude']) + ' ' + str(data['geo']['latitude']) + ')'
+
+        return output
+
+    def _find_between(self, s, first, last):
+        try:
+            if s:
+                start = s.index(first) + len(first)
+                end = s.index(last, start)
+                return s[start:end]
+        except Exception:
+            pass
+        return None

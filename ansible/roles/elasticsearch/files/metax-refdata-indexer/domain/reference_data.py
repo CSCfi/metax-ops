@@ -1,4 +1,5 @@
 from domain.indexable_data import IndexableData
+import json
 
 class ReferenceData(IndexableData):
     '''
@@ -49,9 +50,10 @@ class ReferenceData(IndexableData):
         uri,
         parent_ids=[],
         child_ids=[],
-        same_as=[]):
+        same_as=[],
+        wkt=''):
 
-        super(ReferenceData, self).__init__(data_id, data_type, label, uri, same_as)
+        super(ReferenceData, self).__init__(data_id, data_type, label, uri, same_as, wkt)
 
         self.parent_ids = []
         self.child_ids = []
@@ -72,9 +74,10 @@ class ReferenceData(IndexableData):
                 "\"code\":\"" + self.code + "\","
                 "\"type\":\"" + self.doc_type + "\","
                 "\"uri\":\"" + self.uri + "\","
-                "\"label\":\"" + str(self.label) + "\","
-                "\"parent_ids\":\"" + str(self.parent_ids) + "\","
-                "\"child_ids\":\"" + str(self.child_ids) + "\","
-                "\"has_children\":\"" + str(self.has_children) + "\","
-                "\"same_as\":\"" + str(self.same_as) + "\""
+                "\"wkt\":\"" + self.wkt + "\","
+                "\"label\":" + json.dumps(self.label) + ","
+                "\"parent_ids\":" + json.dumps(self.parent_ids) + ","
+                "\"child_ids\":" + json.dumps(self.child_ids) + ","
+                "\"has_children\":" + json.dumps(self.has_children) + ","
+                "\"same_as\":" + json.dumps(self.same_as) +
             "}")

@@ -44,7 +44,7 @@ class ElasticSearchService:
             self._delete_all_documents_from_index_with_type(index, doc_type)
             bulk_update_str = "\n".join(map(lambda idx_data: self._create_bulk_update_row_for_indexable_data(index, doc_type, idx_data), indexable_data_list))
             print("Trying to bulk update reference data with type " + doc_type + " to index " + index)
-            return self._operation_ok(self.es.bulk(body=bulk_update_str))
+            return self._operation_ok(self.es.bulk(body=bulk_update_str, request_timeout=30))
         return None
 
     def _delete_all_documents_from_index(self, index):
