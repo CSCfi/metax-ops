@@ -24,10 +24,6 @@
     },
     "parent_id": {
       "type": "keyword"
-    },
-    "parent_label": {
-      "type": "text",
-      "index": false
     }
   }
 }

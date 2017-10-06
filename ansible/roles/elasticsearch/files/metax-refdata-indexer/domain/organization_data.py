@@ -16,7 +16,6 @@ class OrganizationData(IndexableData):
         org_id,
         label,
         parent_id='',
-        parent_label='',
         same_as=[],
         org_csc='',
         wkt=''):
@@ -25,8 +24,6 @@ class OrganizationData(IndexableData):
         self.parent_id = ''
         if parent_id:
             self.parent_id = self._create_es_document_id(parent_id)
-        self.parent_label = parent_label
-        set_default_label(self.parent_label)
         self.org_csc = org_csc
 
     def __str__(self):
@@ -39,7 +36,6 @@ class OrganizationData(IndexableData):
                 "\"org_csc\":\"" + self.org_csc + "\","
                 "\"parent_id\":\"" + self.parent_id + "\","
                 "\"wkt\":\"" + self.wkt + "\","
-                "\"parent_label\":" + json.dumps(self.parent_label) + ","
                 "\"label\":" + json.dumps(self.label) + ","
                 "\"same_as\":" + json.dumps(self.same_as) +
             "}")
