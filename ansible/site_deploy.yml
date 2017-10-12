@@ -1,5 +1,5 @@
 ---
 
-- import_playbook: deploy_dbservers.yml
-- import_playbook: deploy_dataservers.yml
-- import_playbook: deploy_webservers.yml
+- include: deploy_dbservers.yml
+- include: deploy_dataservers.yml
+- include: deploy_webservers.yml

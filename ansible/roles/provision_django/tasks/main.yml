@@ -1,5 +1,4 @@
-- name: Copy app config to target VM
-  template: src=templates/app_config dest=/home/{{ django_user }}/app_config owner={{ django_user }} group=metax mode=0440
+- include_role: name=app_config
 
 - name: Create folder {{ metax_app_base_path }}
   file: path={{ metax_app_base_path }} state=directory owner={{ django_user }} group=metax mode=0755
@@ -22,8 +21,15 @@
 - name: Create django app log file and ensure file permissions
   copy: content="" dest=/var/log/{{ project_name }}/metax_api.log force=no owner={{ django_user }} group=metax mode=0755
 
-- name: Symlink pre-commit hook in .githooks/ to .git/hooks/
-  shell: cd {{ metax_app_base_path }}/.git/hooks; ln -sfn ../../.githooks/pre-commit pre-commit
+- block:
+
+    - name: Symlink pre-commit hook in .githooks/ to .git/hooks/
+      shell: cd {{ metax_app_base_path }}/.git/hooks; ln -sfn ../../.githooks/pre-commit pre-commit
+
+    - name: Update app python package requirements to their latest versions
+      shell: pur --force --requirement {{ metax_app_base_path }}/requirements.txt
+      become_user: "{{ django_user }}"
+
   when: deployment_environment_id == 'local_development'
 
 - include_role: name=gunicorn

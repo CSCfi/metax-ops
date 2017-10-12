@@ -2,10 +2,32 @@
 
 - include_role: name=update_packages
 
-- name: Pull latest data from project repo branch {{ project_repo_branch }}
-  git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
-  become_user: "{{ django_user }}"
-  ignore_errors: yes
+- block:
+
+    - name: Pull latest data from project repo branch {{ project_repo_branch }}
+      git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
+      become_user: "{{ django_user }}"
+      ignore_errors: yes
+
+  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
+
+- block:
+
+    - include_role: name=app_config
+
+    - name: Copy deployment script to remote
+      template: src=templates/update_metax_api_with_tags.sh dest=/tmp/update_metax_api_with_tags.sh owner={{ django_user }} mode=500
+
+    - name: Fetch tags, checkout the tag {{ metax_api_tag }}
+      shell: /tmp/update_metax_api_with_tags.sh {{ metax_api_tag }}
+      register: shell_result
+      become_user: "{{ django_user }}"
+
+    - name: Print script output
+      debug:
+        var: shell_result.stdout_lines
+
+  when: deployment_environment_id in ['staging', 'production']
 
 - name: Update app python package requirements to their latest versions
   shell: pur --force --requirement {{ metax_app_base_path }}/requirements.txt
@@ -20,7 +42,6 @@
   shell: rm -rf __pycache__/;find . ! -name "*__keep*" -delete
   args:
     chdir: "{{ metax_django_base_path }}/{{ django_app_name }}/migrations"
-  when: deployment_environment_id in ['local_development', 'playground', 'test']
 
 - name: Django makemigrations
   django_manage: command="makemigrations --noinput {{ django_app_name }}" app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
@@ -37,10 +58,10 @@
 - name: Load Django testdata to database
   django_manage: command=loaddata fixtures=metax_api/tests/testdata/test_data.json app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
   become_user: "{{ django_user }}"
-  when: deployment_environment_id in ['local_development', 'playground', 'test']
+  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
 
-- name: Make sure nginx server is running
-  service: name=nginx state=started enabled=yes
+- name: Make sure nginx server is restarted
+  service: name=nginx state=restarted enabled=yes
 
 - name: Make sure gunicorn service is restarted
   service: name=gunicorn state=restarted enabled=yes

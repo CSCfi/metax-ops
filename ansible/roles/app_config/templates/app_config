@@ -1,0 +1,40 @@
+DJANGO_SECRET_KEY: {{ django_secret_key }}
+DEBUG: {{ django_debug }}
+ALLOWED_HOSTS: {{ django_allowed_hosts | to_nice_json }}
+
+# Variables related to database
+METAX_DATABASE: {{ metax_database.name }}
+METAX_DATABASE_USER: {{ metax_database.user }}
+METAX_DATABASE_PASSWORD: {{ metax_database.password }}
+METAX_DATABASE_HOST: {{ dbserver_1_internal_ip }}
+
+# Variables related to elasticsearch
+ELASTICSEARCH:
+  HOSTS: ['{{ elasticsearch.hosts}}']
+  PORT: {{ elasticsearch.port }}
+  USE_SSL: {{ elasticsearch.use_ssl }}
+
+# Variables related to redis
+REDIS:
+  HOSTS: [
+    ['{{ redis.sentinel_common.listen_hosts }}', {{ redis.sentinel_1.port }}],
+    ['{{ redis.sentinel_common.listen_hosts }}', {{ redis.sentinel_2.port }}],
+    ['{{ redis.sentinel_common.listen_hosts }}', {{ redis.sentinel_3.port }}]
+  ]
+  PASSWORD: '{{ redis.instance_common.password }}'
+  SERVICE: '{{ redis.sentinel_common.service_name }}'
+  TEST_DB: 15
+
+# Variables related to rabbitmq
+RABBITMQ:
+  HOSTS: {{ rabbitmq.hosts }}
+  PORT: {{ rabbitmq.port }}
+
+  USER: {{ rabbitmq.user }}
+  PASSWORD: {{ rabbitmq.password }}
+  VHOST: {{ rabbitmq.vhost }}
+
+  CONSUMERS: {{ rabbitmq_consumers | to_nice_json }}
+
+# Variables related to api credentials
+API_USERS: {{ nginx_credentials | to_nice_json }}
