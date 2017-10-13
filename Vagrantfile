@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
     case RUBY_PLATFORM
     when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
         # Fix Windows file rights, otherwise Ansible tries to execute files
-        server.vm.synced_folder "./", "/metax", :mount_options => ["dmode=755","fmode=644"]
+        server.vm.synced_folder "./", "/metax", :mount_options => ["dmode=777,fmode=777"]
     else
         # Basic VM synced folder mount
         server.vm.synced_folder "", "/metax", :mount_options => ["dmode=777,fmode=777"]
