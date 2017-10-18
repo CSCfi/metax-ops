@@ -15,6 +15,10 @@
 
     - include_role: name=app_config
 
+  when: deployment_environment_id in ['local_development', 'playground', 'staging', 'production']
+
+- block:
+
     - name: Copy deployment script to remote
       template: src=templates/update_metax_api_with_tags.sh dest=/tmp/update_metax_api_with_tags.sh owner={{ django_user }} mode=500
 
