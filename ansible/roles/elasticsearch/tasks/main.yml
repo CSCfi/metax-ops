@@ -7,7 +7,7 @@
       es_version: "5.5.1"
       es_config: {
         node.name: "{{ elasticsearch_instance.node_name }}",
-        cluster.name: "{{ elasticsearch.cluster_name }}",
+        cluster.name: "{{ elasticsearch_instance.cluster_name }}",
         node.data: "{{ elasticsearch_instance.is_data_node }}",
         node.master: "{{ elasticsearch_instance.is_master_node }}",
         http.cors.enabled : true,

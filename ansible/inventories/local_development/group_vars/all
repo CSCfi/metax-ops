@@ -44,13 +44,12 @@ elasticsearch_instance:
   allow_origin: "*"
   is_master_node: "true"
   is_data_node: "true"
+  cluster_name: metax-es-cluster
 
 elasticsearch:
-  allow_origin: "*"
   hosts: 127.0.0.1
   port: 9200
   use_ssl: False
-  cluster_name: metax-es-cluster
 
 redis:
   instance_common:
