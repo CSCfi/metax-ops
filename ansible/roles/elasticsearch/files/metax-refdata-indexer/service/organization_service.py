@@ -4,10 +4,11 @@ from organization_csv_parser import OUTPUT_FILE as PARSER_OUTPUT_FILE_PATH
 from domain.organization_data import OrganizationData
 import organization_csv_parser as org_parser
 
+
 class OrganizationService:
-    '''
+    """
     Service for getting organization data for elasticsearch index
-    '''
+    """
 
     INPUT_FILE = PARSER_OUTPUT_FILE_PATH
 

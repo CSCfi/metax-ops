@@ -78,7 +78,7 @@ def create_organization(org_id_str, org_name, org_isni=None, org_csc=None, paren
 	'''
 	org_dict = {}
 	org_dict['org_id'] = org_id_str
-	org_dict['label'] = {'fi': org_name, 'en': org_name}
+	org_dict['label'] = {'und': org_name}
 
 	if parent_id and parent_name:
 		org_dict['parent_id'] = parent_id

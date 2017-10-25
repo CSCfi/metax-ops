@@ -16,7 +16,7 @@ class IndexableData:
 
         self.doc_type = doc_type
         self.doc_id = self._create_es_document_id(doc_id)
-        self.label = {} # { 'fi': 'value1', 'en': 'value2',..., 'default': 'default_value' }
+        self.label = {} # { 'fi': 'value1', 'en': 'value2',..., 'und': 'default_value' }
         self.same_as = same_as
         self.code = doc_id
         self.wkt = wkt
@@ -26,7 +26,8 @@ class IndexableData:
             for key, val in label.items():
                 self.label[key] = val.replace("'", "&quot;")
 
-        set_default_label(self.label)
+            set_default_label(self.label)
+
         self.uri = uri if uri else ''
 
     def to_es_document(self):

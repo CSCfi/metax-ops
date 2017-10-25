@@ -2,12 +2,15 @@ import json
 import requests
 import os
 from domain.reference_data import ReferenceData
+from time import sleep
+from service.service_utils import file_exists
+
 
 class InfraDataService:
-    '''
+    """
     Service for getting research infrastructure data for elasticsearch index. The data is in AVAA,
     so it is first fetched and parsed.
-    '''
+    """
 
     INFRA_REFERENCE_DATA_SOURCE_URL = 'https://avaa.tdata.fi/api/jsonws/tupa-portlet.Infrastructures/get-all-infrastructures'
 
@@ -15,6 +18,10 @@ class InfraDataService:
 
     def get_data(self):
         self._fetch_infra_data()
+
+        if not file_exists(self.TEMP_FILENAME):
+            return []
+
         index_data_models = self._parse_infra_data()
         os.remove(self.TEMP_FILENAME)
 
@@ -50,10 +57,27 @@ class InfraDataService:
     def _fetch_infra_data(self):
         url = self.INFRA_REFERENCE_DATA_SOURCE_URL
         print("Fetching data from url " + url)
-        response = requests.get(url, stream=True)
-        with open(self.TEMP_FILENAME, 'wb') as handle:
-            for block in response.iter_content(1024):
-                handle.write(block)
+
+        sleep_time = 2
+        num_retries = 7
+
+        for x in range(0, num_retries):
+            try:
+                response = requests.get(url, stream=True)
+                str_error = None
+            except Exception as str_error:
+                pass
+
+            if str_error:
+                sleep(sleep_time)  # wait before trying to fetch the data again
+                sleep_time *= 2  # exponential backoff
+            else:
+                break
+
+        if not str_error and response:
+            with open(self.TEMP_FILENAME, 'wb') as handle:
+                for block in response.iter_content(1024):
+                    handle.write(block)
 
     def _get_data_id(self, urn):
         return urn.replace(':', '-')

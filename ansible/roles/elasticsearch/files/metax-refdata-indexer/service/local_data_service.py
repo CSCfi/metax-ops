@@ -1,11 +1,12 @@
 import json
 from domain.reference_data import ReferenceData
 
+
 class LocalDataService:
-    '''
+    """
     Service for getting reference data for elasticsearch index. The data is local,
     i.e. data should exist on localhost.
-    '''
+    """
 
     LOCAL_REFDATA_FOLDER = 'resources/local-refdata/'
 

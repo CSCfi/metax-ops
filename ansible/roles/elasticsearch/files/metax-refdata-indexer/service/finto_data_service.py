@@ -1,16 +1,19 @@
 import json
 import requests
 import xml.etree.cElementTree as ET
-import os
+from service.service_utils import file_exists
 from domain.reference_data import ReferenceData
 import rdflib
 from rdflib import URIRef
+from time import sleep
+import os
+
 
 class FintoDataService:
-    '''
+    """
     Service for getting reference data for elasticsearch index. The data is in Finto,
     so it is first fetched and parsed.
-    '''
+    """
 
 
     SKOS_NS = '{http://www.w3.org/2004/02/skos/core#}'
@@ -43,6 +46,10 @@ class FintoDataService:
 
     def get_data(self, data_type):
         self._fetch_finto_data(data_type)
+
+        if not file_exists(self.TEMP_XML_FILENAME):
+            return []
+
         index_data_models = self._parse_finto_data(data_type)
         os.remove(self.TEMP_XML_FILENAME)
         return index_data_models
@@ -51,15 +58,16 @@ class FintoDataService:
         index_data_models = []
         model_elem = self.FINTO_MODEL_ELEM[data_type]
 
+        if data_type == ReferenceData.DATA_TYPE_LOCATION:
+            if self.READ_COORDINATES_FROM_FILE:
+                with open(self.WKT_FILENAME) as c:
+                    coordinates = json.load(c)
+            else:
+                with open(self.WKT_FILENAME, 'w') as outfile:
+                    outfile.write('{\n')
+
         print("Extracting relevant data from the fetched data")
         is_parsing_model_elem = False
-
-        if self.READ_COORDINATES_FROM_FILE:
-            with open(self.WKT_FILENAME) as c:
-                coordinates = json.load(c)
-        else:
-            with open(self.WKT_FILENAME, 'w') as outfile:
-                outfile.write('{\n')
 
         for event, elem in ET.iterparse(self.TEMP_XML_FILENAME, events=("start", "end")):
             if event == 'start':
@@ -78,7 +86,8 @@ class FintoDataService:
                     parent_ids.append(self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource']))
                 if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'narrower':
                     child_ids.append(self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource']))
-                if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'closeMatch' and not len(wkt):
+                if data_type == ReferenceData.DATA_TYPE_LOCATION and is_parsing_model_elem and \
+                                elem.tag == self.SKOS_NS + 'closeMatch' and not len(wkt):
                     if self.READ_COORDINATES_FROM_FILE:
                         wkt = coordinates.get(uri, '')
                     else:
@@ -97,47 +106,95 @@ class FintoDataService:
                                                         same_as,
                                                         wkt))
 
-        if not self.READ_COORDINATES_FROM_FILE:
-            with open(self.WKT_FILENAME, 'a') as outfile:
-                outfile.write('}')
+        if data_type == ReferenceData.DATA_TYPE_LOCATION:
+            if not self.READ_COORDINATES_FROM_FILE:
+                with open(self.WKT_FILENAME, 'a') as outfile:
+                    outfile.write('}')
+
         print("Done with all")
         return index_data_models
 
     def _fetch_finto_data(self, data_type):
         url = self.FINTO_REFERENCE_DATA_SOURCE_URLS[data_type]
         print("Fetching data from url " + url)
-        response = requests.get(url, stream=True)
-        with open(self.TEMP_XML_FILENAME, 'wb') as handle:
-            for block in response.iter_content(1024):
-                handle.write(block)
+        sleep_time = 2
+        num_retries = 7
 
+        for x in range(0, num_retries):
+            try:
+                response = requests.get(url, stream=True)
+                str_error = None
+            except Exception as str_error:
+                pass
+
+            if str_error:
+                sleep(sleep_time)  # wait before trying to fetch the data again
+                sleep_time *= 2  # exponential backoff
+            else:
+                break
+
+        if not str_error and response:
+            with open(self.TEMP_XML_FILENAME, 'wb') as handle:
+                for block in response.iter_content(1024):
+                    handle.write(block)
 
     def _get_uri_end_part(self, uri):
         return uri[uri.rindex('/')+1:].strip()
 
     def _get_coordinates_for_location_from_url(self, url):
-        output = ''
+        sleep_time = 2
+        num_retries = 4
+
         if 'wikidata' in url:
-           g=rdflib.Graph()
-           try:
-               g.parse(url + '.rdf')
-               subject = URIRef(url)
-               predicate = URIRef('http://www.wikidata.org/prop/direct/P625')
-               for o in g.objects(subject, predicate):
-                   return str(o).upper()
-           except:
-               print("Unable to read wikidata, skipping..")
+            g = rdflib.Graph()
+            for x in range(0, num_retries):
+                try:
+                    g.parse(url + '.rdf')
+                    str_error = None
+                except Exception as str_error:
+                    pass
+
+                if str_error:
+                    print("Unable to read wikidata, trying again..")
+                    sleep(sleep_time)  # wait before trying to fetch the data again
+                    sleep_time *= 2  # exponential backoff
+                else:
+                    break
+
+            if not str_error:
+                subject = URIRef(url)
+                predicate = URIRef('http://www.wikidata.org/prop/direct/P625')
+                for o in g.objects(subject, predicate):
+                    return str(o).upper()
+            else:
+                print("Failed to read wikidata, skipping..")
 
         elif 'paikkatiedot' in url:
-            response = requests.get(url +'.jsonld')
-            if response.status_code == requests.codes.ok:
+            for x in range(0, num_retries):
+                try:
+                    response = requests.get(url +'.jsonld')
+                    str_error = None
+                except Exception as str_error:
+                    pass
+
+                if str_error:
+                    print("Unable to read paikkatiedot, trying again..")
+                    sleep(sleep_time)  # wait before trying to fetch the data again
+                    sleep_time *= 2  # exponential backoff
+                else:
+                    break
+
+            if not str_error and response and response.status_code == requests.codes.ok:
                 data_as_str = self._find_between(response.text, '<script type="application/ld+json">', '</script>')
                 if data_as_str:
                     data = json.loads(data_as_str)
-                    if data and data.get('geo', False) and data.get('geo').get('latitude', False) and data.get('geo').get('longitude', False):
-                        output = 'POINT(' + str(data['geo']['longitude']) + ' ' + str(data['geo']['latitude']) + ')'
+                    if data and data.get('geo', False) and data.get('geo').get('latitude', False) and data.get(
+                            'geo').get('longitude', False):
+                        return 'POINT(' + str(data['geo']['longitude']) + ' ' + str(data['geo']['latitude']) + ')'
+            else:
+                print("Failed to read pakkatiedot, skipping..")
 
-        return output
+        return ''
 
     def _find_between(self, s, first, last):
         try:

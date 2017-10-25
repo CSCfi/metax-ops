@@ -85,9 +85,18 @@ def main():
     # Reindexing for Finto data
     if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME]:
         for data_type in ReferenceData.FINTO_REFERENCE_DATA_TYPES:
-            es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, data_type, finto_service.get_data(data_type))
+            finto_es_data_models = finto_service.get_data(data_type)
+            if len(finto_es_data_models) == 0:
+                print("No data models to reindex for finto data type {0}".format(data_type))
+                continue
+
+            es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, data_type, finto_es_data_models)
     elif types_to_reindex in ReferenceData.FINTO_REFERENCE_DATA_TYPES:
-        es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, types_to_reindex, finto_service.get_data(types_to_reindex))
+        finto_es_data_models = finto_service.get_data(types_to_reindex)
+        if len(finto_es_data_models) > 0:
+            es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, types_to_reindex, finto_es_data_models)
+        else:
+            print("No data models to reindex for finto data type {0}".format(types_to_reindex))
 
     # Reindexing local data
     if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME]:
@@ -100,13 +109,21 @@ def main():
     if types_to_reindex in [ALL, OrganizationData.DATA_TYPE_ORGANIZATION]:
         es.delete_and_update_indexable_data(ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME, OrganizationData.DATA_TYPE_ORGANIZATION, org_service.get_data())
 
-    # Reindexing Infras
+    # Reindexing infras
     if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA]:
-        es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA, infra_service.get_data())
+        infra_es_data_models = infra_service.get_data()
+        if len(infra_es_data_models) > 0:
+            es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA, infra_es_data_models)
+        else:
+            print("No data models to reindex for infra data type")
 
-    # Reindexing MIME types
+    # Reindexing mime types
     if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_MIME_TYPE]:
-        es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_MIME_TYPE, mime_service.get_data())
+        mime_es_data_models = mime_service.get_data()
+        if len(mime_es_data_models) > 0:
+            es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_MIME_TYPE, mime_es_data_models)
+        else:
+            print("no data models to reindex for mime type data type")
 
     print("Done")
     sys.exit(0)

@@ -22,6 +22,7 @@ ansible/files/
 ansible/roles/ansible-elasticsearch/
 *.tar.gz
 __pycache__
+.idea
 
 # Mac stuff
 .DS_Store
