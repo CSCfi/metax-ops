@@ -24,6 +24,7 @@ server_certificate_name: nginx-selfsigned
 project_repo_branch: test
 server_domain_name: metax.csc.local
 nginx_gunicorn_proxy_pass: http://127.0.0.1:8000
+reload_ref_data_on_app_restart: False
 
 django_allowed_hosts:
   - "{{ server_domain_name }}"
