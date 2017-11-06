@@ -1,0 +1,8 @@
+[{"id":"source", "uri":"http://purl.org/att/es/reference_data/use_category/use_category_source", "label":{"fi":"Lähdeaineisto","en":"Source material"}},
+{"id":"outcome", "uri":"http://purl.org/att/es/reference_data/use_category/use_category_outcome", "label":{"fi":"Tulosaineisto","en":"Outcome material"}},
+{"id":"publication", "uri":"http://purl.org/att/es/reference_data/use_category/use_category_publication", "label":{"fi":"Julkaisu","en":"Publication"}},
+{"id":"documentation", "uri":"http://purl.org/att/es/reference_data/use_category/use_category_documentation", "label":{"fi":"Dokumentaatio","en":"Documentation"}},
+{"id":"configuration", "uri":"http://purl.org/att/es/reference_data/use_category/use_category_configuration", "label":{"fi":"Konfiguraatiotiedosto","en":"Configuration files"}},
+{"id":"method", "uri":"http://purl.org/att/es/reference_data/use_category/use_category_method", "label":{"fi":"Metodi","en":"Method"}},
+{"id":"rights", "uri":"http://purl.org/att/es/reference_data/use_category/use_category_rights", "label":{"fi":"Oikeuksien kuvaus","en":"Rightstatement"}}
+]

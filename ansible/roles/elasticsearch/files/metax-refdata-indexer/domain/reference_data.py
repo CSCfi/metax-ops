@@ -23,6 +23,8 @@ class ReferenceData(IndexableData):
     DATA_TYPE_CONTRIBUTOR_ROLE = 'contributor_role'
     DATA_TYPE_FUNDER_TYPE = 'funder_type'
     DATA_TYPE_LICENSES = 'license'
+    DATA_TYPE_FILE_TYPE = 'file_type'
+    DATA_TYPE_USE_CATEGORY = 'use_category'
 
     FINTO_REFERENCE_DATA_TYPES = [
         DATA_TYPE_FIELD_OF_SCIENCE,
@@ -39,7 +41,9 @@ class ReferenceData(IndexableData):
         DATA_TYPE_ACCESS_RESTRICTION_GROUNDS_TYPE,
         DATA_TYPE_CONTRIBUTOR_ROLE,
         DATA_TYPE_FUNDER_TYPE,
-        DATA_TYPE_LICENSES
+        DATA_TYPE_LICENSES,
+        DATA_TYPE_FILE_TYPE,
+        DATA_TYPE_USE_CATEGORY
     ]
 
     def __init__(

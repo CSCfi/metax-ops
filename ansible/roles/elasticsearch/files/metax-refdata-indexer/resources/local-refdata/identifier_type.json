@@ -20,3 +20,4 @@
 {"id":"urn","uri":"http://purl.org/att/es/reference_data/identifier_type/identifier_type_urn","label":{"en":"Uniform Resource Name (URN)"},"same_as":["http://purl.org/spar/datacite/urn"]},
 {"id":"orcid","uri":"http://purl.org/att/es/reference_data/identifier_type/identifier_type_orcid","label":{"en":"Open Researcher and Contributor Identifier (ORCID)"},"same_as":["http://purl.org/spar/datacite/orcid"]}
 ]
+
