@@ -1,6 +1,6 @@
 [{"id":"api", "uri":"http://purl.org/att/es/reference_data/resource_type/resource_type_api", "label":{"fi":"Rajapinta","en":"Application interface"}},
- {"id":"ui", "uri":"http://purl.org/att/es/reference_data/resource_type/resource_type_api", "label":{"fi":"Käyttöliittymä","en":"User interface"}},
+ {"id":"ui", "uri":"http://purl.org/att/es/reference_data/resource_type/resource_type_ui", "label":{"fi":"Käyttöliittymä","en":"User interface"}},
  {"id":"service", "uri":"http://purl.org/att/es/reference_data/resource_type/resource_type_service", "label":{"fi":"Palvelu","en":"Service"},"same_as":["http://purl.org/dc/dcmitype/Service"]},
  {"id":"collection", "uri":"http://purl.org/att/es/reference_data/resource_type/resource_type_collection", "label":{"fi":"Kokoelma","en":"Collection"},"same_as":["http://purl.org/dc/dcmitype/Collection"]},
  {"id":"physical_object", "uri":"http://purl.org/att/es/reference_data/resource_type/resource_type_physical_object", "label":{"fi":"Fyysinen objekti","en":"Physical object"},"same_as":["http://purl.org/dc/dcmitype/PhysicalObject"]},
- {"id":"other", "uri":"http://purl.org/att/es/reference_data/file_type/file_type_other", "label":{"fi":"Muu","en":"Other"}}]
+ {"id":"other", "uri":"http://purl.org/att/es/reference_data/resource_type/resource_type_other", "label":{"fi":"Muu","en":"Other"}}]
