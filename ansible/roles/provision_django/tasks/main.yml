@@ -42,3 +42,29 @@
     job: "{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path}}/metax_api/cron/update_reference_data.py >> /var/log/{{ project_name }}/update_reference_data.log"
     state: present
     user: "{{ django_user }}"
+
+- name: Delete old Django migration files
+  shell: rm -rf __pycache__/;find . ! -name "*__keep*" -delete
+  args:
+    chdir: "{{ metax_django_base_path }}/{{ django_app_name }}/migrations"
+
+- name: Django makemigrations
+  django_manage: command="makemigrations --noinput {{ django_app_name }}" app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
+  become_user: "{{ django_user }}"
+
+- name: Django migrate
+  django_manage: command=migrate app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
+  become_user: "{{ django_user }}"
+
+- name: Django collectstatic
+  django_manage: command=collectstatic app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
+  become_user: "{{ django_user }}"
+
+- name: Load Django testdata to database
+  django_manage: command=loaddata fixtures=metax_api/tests/testdata/test_data.json app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
+  become_user: "{{ django_user }}"
+  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
+
+- debug:
+    msg: "Local dev environment successfully set up. Run commands 'sudo su - {{ django_user }}' and 'runserver' to run the app."
+  when: deployment_environment_id == 'local_development'

@@ -6,6 +6,4 @@
   become: yes
   roles:
     - deploy_webservers
-    - { role: reboot,
-        when: deployment_environment_id != 'local_development'
-      }
+    - { role: reboot, when: deployment_environment_id != 'local_development' }

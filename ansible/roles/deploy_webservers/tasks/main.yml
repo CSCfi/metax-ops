@@ -70,7 +70,3 @@
 - name: Make sure gunicorn service is restarted
   service: name=gunicorn state=restarted enabled=yes
   when: deployment_environment_id != 'local_development'
-
-- debug:
-    msg: "Local dev environment successfully set up. Run commands 'sudo su - {{ django_user }}' and 'runserver' to run the app."
-  when: deployment_environment_id == 'local_development'

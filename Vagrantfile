@@ -16,7 +16,6 @@ if [ ! -f /vagrant_bootstrap_done.info ]; then
   cd /metax/ansible
   source install_requirements.sh
   ansible-playbook site_provision.yml
-  ansible-playbook site_deploy.yml
   sudo touch /vagrant_bootstrap_done.info
 fi
 

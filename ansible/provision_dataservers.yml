@@ -5,8 +5,8 @@
     is_provision: true
   become: yes
   roles:
-    - os-base
-    - python
+    - { role: os-base, when: deployment_environment_id != 'local_development' and deployment_environment_id != 'playground' }
+    - { role: python, when: deployment_environment_id != 'local_development' and deployment_environment_id != 'playground' }
     - rabbitmq
     - elasticsearch
   handlers:
