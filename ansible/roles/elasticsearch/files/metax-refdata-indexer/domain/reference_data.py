@@ -25,6 +25,7 @@ class ReferenceData(IndexableData):
     DATA_TYPE_LICENSES = 'license'
     DATA_TYPE_FILE_TYPE = 'file_type'
     DATA_TYPE_USE_CATEGORY = 'use_category'
+    DATA_TYPE_RELATION_TYPE = 'relation_type'
 
     FINTO_REFERENCE_DATA_TYPES = [
         DATA_TYPE_FIELD_OF_SCIENCE,
@@ -43,7 +44,8 @@ class ReferenceData(IndexableData):
         DATA_TYPE_FUNDER_TYPE,
         DATA_TYPE_LICENSES,
         DATA_TYPE_FILE_TYPE,
-        DATA_TYPE_USE_CATEGORY
+        DATA_TYPE_USE_CATEGORY,
+        DATA_TYPE_RELATION_TYPE
     ]
 
     def __init__(
