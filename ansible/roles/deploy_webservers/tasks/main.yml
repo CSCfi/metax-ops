@@ -64,6 +64,10 @@
   become_user: "{{ django_user }}"
   when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
 
+- name: Run PUT requests on Django testdata
+  shell: su - {{ django_user }} -c '{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path }}/metax_api/tests/testdata/fetch_and_update_datasets.py'
+  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
+
 - name: Make sure nginx server is restarted
   service: name=nginx state=restarted enabled=yes
 

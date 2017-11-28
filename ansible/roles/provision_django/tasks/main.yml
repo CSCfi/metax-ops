@@ -65,6 +65,10 @@
   become_user: "{{ django_user }}"
   when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
 
+- name: Run PUT requests on Django testdata
+  shell: su - {{ django_user }} -c '{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path }}/metax_api/tests/testdata/fetch_and_update_datasets.py'
+  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
+
 - debug:
     msg: "Local dev environment successfully set up. Run commands 'sudo su - {{ django_user }}' and 'runserver' to run the app."
   when: deployment_environment_id == 'local_development'
