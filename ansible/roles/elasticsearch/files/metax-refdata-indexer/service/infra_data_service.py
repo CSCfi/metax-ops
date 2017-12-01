@@ -65,8 +65,8 @@ class InfraDataService:
             try:
                 response = requests.get(url, stream=True)
                 str_error = None
-            except Exception as str_error:
-                pass
+            except Exception as e:
+                str_error = e
 
             if str_error:
                 sleep(sleep_time)  # wait before trying to fetch the data again
