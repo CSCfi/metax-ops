@@ -1,13 +1,13 @@
 [
-{"id": "1", "uri": "http://purl.org/att/es/reference_data/restriction_grounds_1", "label": {"fi": "Avoin, ei tiedossa olevia rajoituksia"}},
-{"id": "2", "uri": "http://purl.org/att/es/reference_data/restriction_grounds_2", "label": {"fi": "Avoin, tekijänoikeudet rauenneet"}},
-{"id": "3", "uri": "http://purl.org/att/es/reference_data/restriction_grounds_3", "label": {"fi": "Saatavuutta rajoitettu sopimuksen perusteella, esim. luottamuksellisen kaupallisen tai teollisen toiminnan perusteella"}},
-{"id": "4", "uri": "http://purl.org/att/es/reference_data/restriction_grounds_4", "label": {"fi": "Saatavuutta rajoitettu luottamuksellisiin henkilötietoihin perustuen"}},
-{"id": "5", "uri": "http://purl.org/att/es/reference_data/restriction_grounds_5", "label": {"fi": "Saatavuutta rajoitettu tietoja antaneen henkilön etuun tai suojaan perustuen tai esim. luovutussopimuksen perusteella"}},
-{"id": "6", "uri": "http://purl.org/att/es/reference_data/restriction_grounds_6", "label": {"fi": "Saatavuutta rajoitettu kansainvälisiin suhteisiin, yleiseen turvallisuuteen tai kansalliseen puolustukseen perustuen"}},
-{"id": "7", "uri": "http://purl.org/att/es/reference_data/restriction_grounds_7", "label": {"fi": "Saatavuutta rajoitettu tuomioistuinkäsittelyn tai oikeudenkäyntiin perustuen"}},
-{"id": "8", "uri": "http://purl.org/att/es/reference_data/restriction_grounds_8", "label": {"fi": "Saatavuutta rajoitettu luonnonsuojelun perusteella"}},
-{"id": "9", "uri": "http://purl.org/att/es/reference_data/restriction_grounds_9", "label": {"fi": "Saatavuutta rajoitettu tekijäoikeuden perusteella"}},
-{"id": "10", "uri": "http://purl.org/att/es/reference_data/restriction_grounds_10", "label": {"fi": "Saatavuutta rajoitettu kulttuuriperinnön tai alkuperäiskansojen suojelun perusteella"}},
-{"id": "11", "uri": "http://purl.org/att/es/reference_data/restriction_grounds_11", "label": {"fi": "Saatavuutta rajoitettu muulla perusteella"}}
+{"id": "1", "uri": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_1", "label": {"fi": "Avoin, ei tiedossa olevia rajoituksia"}},
+{"id": "2", "uri": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_2", "label": {"fi": "Avoin, tekijänoikeudet rauenneet"}},
+{"id": "3", "uri": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_3", "label": {"fi": "Saatavuutta rajoitettu sopimuksen perusteella, esim. luottamuksellisen kaupallisen tai teollisen toiminnan perusteella"}},
+{"id": "4", "uri": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_4", "label": {"fi": "Saatavuutta rajoitettu luottamuksellisiin henkilötietoihin perustuen"}},
+{"id": "5", "uri": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_5", "label": {"fi": "Saatavuutta rajoitettu tietoja antaneen henkilön etuun tai suojaan perustuen tai esim. luovutussopimuksen perusteella"}},
+{"id": "6", "uri": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_6", "label": {"fi": "Saatavuutta rajoitettu kansainvälisiin suhteisiin, yleiseen turvallisuuteen tai kansalliseen puolustukseen perustuen"}},
+{"id": "7", "uri": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_7", "label": {"fi": "Saatavuutta rajoitettu tuomioistuinkäsittelyn tai oikeudenkäyntiin perustuen"}},
+{"id": "8", "uri": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_8", "label": {"fi": "Saatavuutta rajoitettu luonnonsuojelun perusteella"}},
+{"id": "9", "uri": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_9", "label": {"fi": "Saatavuutta rajoitettu tekijäoikeuden perusteella"}},
+{"id": "10", "uri": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_10", "label": {"fi": "Saatavuutta rajoitettu kulttuuriperinnön tai alkuperäiskansojen suojelun perusteella"}},
+{"id": "11", "uri": "http://purl.org/att/es/reference_data/restriction_grounds/restriction_grounds_11", "label": {"fi": "Saatavuutta rajoitettu muulla perusteella"}}
 ]
