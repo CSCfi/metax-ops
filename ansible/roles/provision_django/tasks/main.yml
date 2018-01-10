@@ -72,3 +72,7 @@
 - debug:
     msg: "Local dev environment successfully set up. Run commands 'sudo su - {{ django_user }}' and 'runserver' to run the app."
   when: deployment_environment_id == 'local_development'
+
+- debug:
+    msg: "{{ deployment_environment_id }} environment successfully set up."
+  when: deployment_environment_id != 'local_development'
