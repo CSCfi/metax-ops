@@ -1,10 +1,10 @@
 import json
 import requests
-import xml.etree.cElementTree as ET
 from service.service_utils import file_exists
 from domain.reference_data import ReferenceData
 import rdflib
-from rdflib import URIRef
+from rdflib import URIRef, RDF
+from rdflib.namespace import SKOS
 from time import sleep
 import os
 
@@ -15,27 +15,12 @@ class FintoDataService:
     so it is first fetched and parsed.
     """
 
-
-    SKOS_NS = '{http://www.w3.org/2004/02/skos/core#}'
-    RDF_NS = '{http://www.w3.org/1999/02/22-rdf-syntax-ns#}'
-    XML_NS = '{http://www.w3.org/XML/1998/namespace}'
-    LVONT_NS = '{http://lexvo.org/ontology#}'
-
     FINTO_REFERENCE_DATA_SOURCE_URLS = {
-        ReferenceData.DATA_TYPE_FIELD_OF_SCIENCE: 'http://finto.fi/rest/v1/okm-tieteenala/data?format=application/rdf%2Bxml',
-        ReferenceData.DATA_TYPE_LANGUAGE: 'http://finto.fi/rest/v1/lexvo/data?format=application/rdf%2Bxml',
-        ReferenceData.DATA_TYPE_LOCATION: 'http://finto.fi/rest/v1/yso-paikat/data?format=application/rdf%2Bxml',
-        ReferenceData.DATA_TYPE_KEYWORD: 'http://finto.fi/rest/v1/yso/data?format=application/rdf%2Bxml'
+        ReferenceData.DATA_TYPE_FIELD_OF_SCIENCE: 'http://finto.fi/rest/v1/okm-tieteenala/data',
+        ReferenceData.DATA_TYPE_LANGUAGE: 'http://finto.fi/rest/v1/lexvo/data',
+        ReferenceData.DATA_TYPE_LOCATION: 'http://finto.fi/rest/v1/yso-paikat/data',
+        ReferenceData.DATA_TYPE_KEYWORD: 'http://finto.fi/rest/v1/yso/data'
     }
-
-    FINTO_MODEL_ELEM = {
-        ReferenceData.DATA_TYPE_FIELD_OF_SCIENCE: SKOS_NS + 'Concept',
-        ReferenceData.DATA_TYPE_LANGUAGE: LVONT_NS + 'Language',
-        ReferenceData.DATA_TYPE_LOCATION: SKOS_NS + 'Concept',
-        ReferenceData.DATA_TYPE_KEYWORD: SKOS_NS + 'Concept'
-    }
-
-    TEMP_XML_FILENAME = '/tmp/data.xml'
 
     WKT_FILENAME = './resources/uri_to_wkt.json'
 
@@ -45,18 +30,16 @@ class FintoDataService:
     READ_COORDINATES_FROM_FILE = True
 
     def get_data(self, data_type):
-        self._fetch_finto_data(data_type)
+        graph = self._fetch_finto_data(data_type)
 
-        if not file_exists(self.TEMP_XML_FILENAME):
+        if graph is None:
             return []
 
-        index_data_models = self._parse_finto_data(data_type)
-        os.remove(self.TEMP_XML_FILENAME)
+        index_data_models = self._parse_finto_data(graph, data_type)
         return index_data_models
 
-    def _parse_finto_data(self, data_type):
+    def _parse_finto_data(self, graph, data_type):
         index_data_models = []
-        model_elem = self.FINTO_MODEL_ELEM[data_type]
 
         if data_type == ReferenceData.DATA_TYPE_LOCATION:
             if self.READ_COORDINATES_FROM_FILE:
@@ -67,44 +50,39 @@ class FintoDataService:
                     outfile.write('{\n')
 
         print("Extracting relevant data from the fetched data")
-        is_parsing_model_elem = False
 
-        for event, elem in ET.iterparse(self.TEMP_XML_FILENAME, events=("start", "end")):
-            if event == 'start':
-                if elem.tag == model_elem:
-                    is_parsing_model_elem = True
-                    uri = elem.attrib[self.RDF_NS + 'about']
-                    label = {}
-                    parent_ids = []
-                    child_ids = []
-                    same_as = []
-                    wkt = ''
-                if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'prefLabel':
-                    if elem.text:
-                        label[elem.attrib[self.XML_NS + 'lang']] = elem.text
-                if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'broader':
-                    parent_ids.append(self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource']))
-                if is_parsing_model_elem and elem.tag == self.SKOS_NS + 'narrower':
-                    child_ids.append(self._get_uri_end_part(elem.attrib[self.RDF_NS + 'resource']))
-                if data_type == ReferenceData.DATA_TYPE_LOCATION and is_parsing_model_elem and \
-                                elem.tag == self.SKOS_NS + 'closeMatch' and not len(wkt):
+        for concept in graph.subjects(RDF.type, SKOS.Concept):
+            uri = str(concept)
+            # preferred labels
+            label = dict(((literal.language, str(literal)) for literal in graph.objects(concept, SKOS.prefLabel)))
+            # parents (broader)
+            parent_ids = [self._get_uri_end_part(parent) for parent in graph.objects(concept, SKOS.broader)]
+            # children (narrower)
+            child_ids = [self._get_uri_end_part(child) for child in graph.objects(concept, SKOS.narrower)]
+            same_as = []
+            wkt = ''
+            if data_type == ReferenceData.DATA_TYPE_LOCATION:
+                # find out the coordinates of matching PNR or Wikidata entities
+                matches = sorted(graph.objects(concept, SKOS.closeMatch))
+                for match in matches:
                     if self.READ_COORDINATES_FROM_FILE:
                         wkt = coordinates.get(uri, '')
                     else:
-                        wkt = self._get_coordinates_for_location_from_url(elem.attrib[self.RDF_NS + 'resource'])
+                        wkt = self._get_coordinates_for_location_from_url(match)
                         with open(self.WKT_FILENAME, 'a') as outfile:
                             outfile.write("\"" + uri + "\":\"" + wkt + '\",\n')
-            elif event == 'end' and elem.tag == model_elem:
-                is_parsing_model_elem = False
-                data_id = self._get_uri_end_part(uri)
-                index_data_models.append(ReferenceData(data_id,
-                                                        data_type,
-                                                        label,
-                                                        uri,
-                                                        parent_ids,
-                                                        child_ids,
-                                                        same_as,
-                                                        wkt))
+                    if wkt != '':
+                        # Stop after first success
+                        break
+            data_id = self._get_uri_end_part(concept)
+            index_data_models.append(ReferenceData(data_id,
+                                                    data_type,
+                                                    label,
+                                                    uri,
+                                                    parent_ids,
+                                                    child_ids,
+                                                    same_as,
+                                                    wkt))
 
         if data_type == ReferenceData.DATA_TYPE_LOCATION:
             if not self.READ_COORDINATES_FROM_FILE:
@@ -119,10 +97,11 @@ class FintoDataService:
         print("Fetching data from url " + url)
         sleep_time = 2
         num_retries = 7
+        g = rdflib.Graph()
 
         for x in range(0, num_retries):
             try:
-                response = requests.get(url, stream=True)
+                g.parse(url)
                 str_error = None
             except Exception as e:
                 str_error = e
@@ -133,10 +112,11 @@ class FintoDataService:
             else:
                 break
 
-        if not str_error and response:
-            with open(self.TEMP_XML_FILENAME, 'wb') as handle:
-                for block in response.iter_content(1024):
-                    handle.write(block)
+        if not str_error:
+            return g
+        else:
+            print("Failed to read Finto data of type %s, skipping.." % data_type)
+            return None
 
     def _get_uri_end_part(self, uri):
         return uri[uri.rindex('/')+1:].strip()

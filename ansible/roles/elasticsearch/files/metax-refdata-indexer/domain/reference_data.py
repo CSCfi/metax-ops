@@ -19,7 +19,7 @@ class ReferenceData(IndexableData):
     DATA_TYPE_CHECKSUM_ALGORITHM = 'checksum_algorithm'
     DATA_TYPE_RESOURCE_TYPE = 'resource_type'
     DATA_TYPE_IDENTIFIER_TYPE = 'identifier_type'
-    DATA_TYPE_ACCESS_RESTRICTION_GROUNDS_TYPE = 'access_restriction_grounds_type'
+    DATA_TYPE_RESTRICTION_GROUNDS = 'restriction_grounds'
     DATA_TYPE_CONTRIBUTOR_ROLE = 'contributor_role'
     DATA_TYPE_FUNDER_TYPE = 'funder_type'
     DATA_TYPE_LICENSES = 'license'
@@ -41,7 +41,7 @@ class ReferenceData(IndexableData):
         DATA_TYPE_CHECKSUM_ALGORITHM,
         DATA_TYPE_RESOURCE_TYPE,
         DATA_TYPE_IDENTIFIER_TYPE,
-        DATA_TYPE_ACCESS_RESTRICTION_GROUNDS_TYPE,
+        DATA_TYPE_RESTRICTION_GROUNDS,
         DATA_TYPE_CONTRIBUTOR_ROLE,
         DATA_TYPE_FUNDER_TYPE,
         DATA_TYPE_LICENSES,
