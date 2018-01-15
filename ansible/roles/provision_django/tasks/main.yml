@@ -9,10 +9,9 @@
 - name: Create django app log file and ensure file permissions
   copy: content="" dest=/var/log/{{ project_name }}/metax_api.log force=no owner={{ django_user }} group=metax mode=0755
 
-- name: Clone project repo from branch {{ project_repo_branch }} to {{ metax_app_base_path }}
+- name: Clone project remote repo from branch {{ project_repo_branch }} to {{ metax_app_base_path }}
   git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
   become_user: "{{ django_user }}"
-  ignore_errors: yes
 
 - block:
 
