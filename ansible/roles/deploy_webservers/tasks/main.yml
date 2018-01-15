@@ -2,13 +2,6 @@
 
 - include_role: name=update_packages
 
-- name: Restart NGINX
-  service: name=nginx state=restarted enabled=yes
-
-- name: Restart Gunicorn
-  service: name=gunicorn state=restarted enabled=yes
-  when: deployment_environment_id != 'local_development'
-
 - block:
 
     - name: Pull latest data from project remote repo branch {{ project_repo_branch }}
@@ -77,6 +70,13 @@
 - name: Install app python package requirements
   pip: requirements={{ metax_app_base_path }}/requirements.txt virtualenv={{ python_virtualenv_path }}
   become_user: "{{ django_user }}"
+
+- name: Restart NGINX
+  service: name=nginx state=restarted enabled=yes
+
+- name: Restart Gunicorn
+  service: name=gunicorn state=restarted enabled=yes
+  when: deployment_environment_id != 'local_development'
 
 - name: Delete old Django migration files
   shell: rm -rf __pycache__/;find . ! -name "*__keep*" -delete
