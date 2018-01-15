@@ -11,12 +11,41 @@
 
 - block:
 
+    - name: Pull latest data from project remote repo branch {{ project_repo_branch }}
+      git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
+      become_user: "{{ django_user }}"
+      register: pull_cmd
+      ignore_errors: yes
+
+    - block:
+
+        - name: Stash repo changes since most likely git pull failed because of modifications in the local repo
+          command: git stash
+          args:
+            chdir: "{{ metax_app_base_path }}"
+
+        - name: Re-pull latest data from project remote repo branch {{ project_repo_branch }}
+          git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
+          become_user: "{{ django_user }}"
+
+        - name: Unstash git repo
+          shell: git stash apply
+          args:
+            executable: /bin/bash
+            chdir: "{{ metax_app_base_path }}"
+          become_user: "{{ django_user }}"
+
+      when: pull_cmd.failed
+
+  when: deployment_environment_id == 'local_development'
+
+- block:
+
     - name: Pull latest data from project repo branch {{ project_repo_branch }}
       git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
       become_user: "{{ django_user }}"
-      ignore_errors: yes
 
-  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
+  when: deployment_environment_id in ['playground', 'test', 'stable']
 
 - block:
 
