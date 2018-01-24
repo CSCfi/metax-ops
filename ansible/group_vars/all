@@ -13,3 +13,10 @@ metax_db_data_path: "{{ metax_db_base_path }}/data"
 metax_db_backup_path: "{{ metax_db_base_path }}/backup"
 metax_db_backup_archive_path: "{{ metax_db_backup_path }}/archive"
 metax_db_config_path: "{{ metax_db_base_path }}/config"
+
+oai:
+  base_url: "http://{{ server_domain_name }}/oai"
+  batch_size: 10
+  repository_name: Metax ({{ deployment_environment_id }})
+  etsin_url_template: "{{ etsin_base_url }}/dataset/%s"
+  admin_email: something@csc.fi
