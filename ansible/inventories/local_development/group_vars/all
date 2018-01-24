@@ -114,3 +114,5 @@ rabbitmq_consumers:
         conf: ^testaaja-.*$
         write: ^testaaja-.*$
         read: ^(datasets|testaaja-.*)$
+
+etsin_base_url: http://etsin.something.fi  
