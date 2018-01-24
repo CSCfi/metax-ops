@@ -42,3 +42,11 @@ RABBITMQ:
 
 # Variables related to api credentials
 API_USERS: {{ nginx_credentials | to_nice_json }}
+
+# Variables for the OAI-PMH API
+OAI:
+  BASE_URL: {{ oai.base_url }}
+  BATCH_SIZE: {{ oai.batch_size }}
+  REPOSITORY_NAME: {{ oai.repository_name }}
+  ETSIN_URL_TEMPLATE: {{ oai.etsin_url_template }}
+  ADMIN_EMAIL: {{ oai.admin_email }}
