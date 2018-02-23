@@ -50,3 +50,11 @@ OAI:
   REPOSITORY_NAME: {{ oai.repository_name }}
   ETSIN_URL_TEMPLATE: {{ oai.etsin_url_template }}
   ADMIN_EMAIL: {{ oai.admin_email }}
+  SET_MAPPINGS:
+    datasets:
+      - "{{att_datacatalog_identifier}}"
+      - "{{ida_datacatalog_identifier}}"
+    att_datasets:
+      - "{{att_datacatalog_identifier}}"
+    ida_datasets:
+      - "{{ida_datacatalog_identifier}}"
