@@ -115,4 +115,7 @@ rabbitmq_consumers:
         write: ^testaaja-.*$
         read: ^(datasets|testaaja-.*)$
 
-etsin_base_url: http://etsin.something.fi  
+etsin_base_url: http://etsin.something.fi
+
+att_datacatalog_identifier: urn:nbn:fi:att:2955e904-e3dd-4d7e-99f1-3fed446f96d1
+ida_datacatalog_identifier: urn:nbn:fi:att:2955e904-e3dd-4d7e-99f1-3fed446f96d2
