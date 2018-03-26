@@ -1,0 +1,8 @@
+---
+
+- hosts: webservers
+  vars:
+    is_provision: true
+  become: yes
+  roles:
+    - app_config
