@@ -82,28 +82,28 @@
     dest: "{{ metax_db_data_path }}/postgresql.conf"
     state: present
     regexp: "lc_messages ="
-    line: "lc_messages = 'en_US.utf8'"
+    line: "lc_messages = 'en_US.UTF-8'"
 
 - name: Change Postgres configuration lc_monetary to Finnish locale UTF8
   lineinfile:
     dest: "{{ metax_db_data_path }}/postgresql.conf"
     state: present
     regexp: "lc_monetary ="
-    line: "lc_monetary = 'fi_FI.utf8'"
+    line: "lc_monetary = 'fi_FI.UTF-8'"
 
 - name: Change Postgres configuration lc_numeric to Finnish locale UTF8
   lineinfile:
     dest: "{{ metax_db_data_path }}/postgresql.conf"
     state: present
     regexp: "lc_numeric ="
-    line: "lc_numeric = 'fi_FI.utf8'"
+    line: "lc_numeric = 'fi_FI.UTF-8'"
 
 - name: Change Postgres configuration lc_time to Finnish locale UTF8
   lineinfile:
     dest: "{{ metax_db_data_path }}/postgresql.conf"
     state: present
     regexp: "lc_time ="
-    line: "lc_time = 'fi_FI.utf8'"
+    line: "lc_time = 'fi_FI.UTF-8'"
 
 - name: Change Postgres configuration default_text_search_config to Finnish
   lineinfile:

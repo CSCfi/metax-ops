@@ -53,15 +53,15 @@
     - xqilla
     - xqilla-devel
 
+- name: Reinstall glibc-common just in case to make Finnish locale available
+  shell: yum -y reinstall glibc-common
+  when: deployment_environment_id == 'local_development'
+
 - name: Disable SELinux (A better approach should be come up with!)
   selinux: state=permissive policy=targeted
 
-# It seems at least in local dev centos 7 the fi_FI locale is already present!
-# Make sure it is so also in other envs!
-# - name: Install fi_FI locale
-#   locale_gen:
-#     name: fi_FI.UTF-8
-#     state: present
+- name: Set locale LANG to fi_FI.UTF-8
+  shell: localectl set-locale LANG=fi_FI.UTF-8
 
 - name: Set default locale as LC_ALL to fi_FI.UTF-8
   lineinfile:
