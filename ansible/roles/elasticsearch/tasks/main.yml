@@ -4,7 +4,8 @@
       name: ansible-elasticsearch
     vars:
       es_instance_name: "{{ elasticsearch_instance.node_name }}"
-      es_version: "5.6.4"
+      es_version: "5.6.8"
+      es_major_version: "5.x"
       es_version_lock: true
       es_config: {
         node.name: "{{ elasticsearch_instance.node_name }}",
