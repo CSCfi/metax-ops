@@ -16,10 +16,11 @@ alias alter-metax-db='sudo -su postgres psql -c '"'"'alter database {{ metax_dat
 alias rm-migrations='cd {{ metax_django_base_path }}/metax_api/migrations && rm -rf __pycache__/ && find . ! -name '"'"'*__keep*'"'"' -delete && cd -'
 alias makemigrations='cd {{ metax_django_base_path }} && python manage.py makemigrations metax_api && cd -'
 alias migrate='cd {{ metax_django_base_path }} && python manage.py migrate metax_api && cd -'
-alias loaddata='cd {{ metax_django_base_path }} && python manage.py loaddata metax_api/tests/testdata/test_data.json && python metax_api/tests/testdata/fetch_and_update_datasets.py && cd -'
+alias update_datasets='source-pyvenv && cd {{ metax_django_base_path }} && python metax_api/tests/testdata/fetch_and_update_datasets.py && cd -'
+alias loaddata='source-pyvenv && cd {{ metax_django_base_path }} && python manage.py loaddata metax_api/tests/testdata/test_data.json && cd -'
 alias runserver='cd {{ metax_django_base_path }} && {{ python_virtualenv_path }}/bin/gunicorn --bind localhost:8000 --access-logfile - --error-logfile - --config /etc/gunicorn.py --reload metax_api.wsgi:application'
-alias runtests='cd {{ metax_django_base_path }} && python manage.py test --failfast && cd -'
-alias generate-testdata='cd {{ metax_django_base_path }}/metax_api/tests/testdata && python generate_test_data.py && cd -'
+alias runtests='source-pyvenv && cd {{ metax_django_base_path }} && python manage.py test --failfast && cd -'
+alias generate-testdata='source-pyvenv && cd {{ metax_django_base_path }}/metax_api/tests/testdata && python generate_test_data.py && cd -'
 
 # in one command: completely drop and recreate db, delete django migration files, and recreate tables
-alias recreate-db='drop-metax-db && create-metax-db && alter-metax-db && rm-migrations && makemigrations && migrate'
+alias recreate-db='source-pyvenv && drop-metax-db && create-metax-db && alter-metax-db && rm-migrations && makemigrations && migrate'
