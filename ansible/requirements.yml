@@ -1,4 +1,4 @@
 ---
 
 # use forked repository until original is fixed (bug with handlers when included from another file)
-- src: https://github.com/CSCfi/ansible-elasticsearch
+- src: https://github.com/elastic/ansible-elasticsearch
