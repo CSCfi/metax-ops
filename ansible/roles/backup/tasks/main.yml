@@ -54,4 +54,4 @@
     - name: Run backup sync script to sync backups with the remote storage
       shell: "{{ metax_db_backup_path }}/metax_backup_sync.sh"
 
-  when: deployment_environment_id == 'test'
+  when: deployment_environment_id in ['test', 'stable', 'staging']

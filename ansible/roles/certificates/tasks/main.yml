@@ -1,6 +1,6 @@
 - name: Create self-signed SSL cert and private key
   command: openssl req -x509 -nodes -subj "/C=FI/ST=Uusimaa/L=Espoo/O=CSC/CN={{ server_domain_name }}" -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl_certs/{{ server_certificate_name }}.key -out /etc/nginx/ssl_certs/nginx-selfsigned.crt creates=/etc/nginx/ssl_certs/{{ server_certificate_name }}.crt
-  when: deployment_environment_id == 'local_development' or deployment_environment_id == 'playground'
+  when: deployment_environment_id in ['local_development', 'playground', 'staging']
 
 - block:
 
