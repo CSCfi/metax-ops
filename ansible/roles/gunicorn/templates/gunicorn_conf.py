@@ -11,6 +11,7 @@ def max_workers():
 max_requests = 1000
 worker_class = 'gevent'
 workers = max_workers()
+timeout = 86400 # 24 hours
 
 secure_scheme_headers = {
     'X-FORWARDED-PROTOCOL': 'ssl',
