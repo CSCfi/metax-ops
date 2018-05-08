@@ -22,7 +22,10 @@ class LocalDataService:
                 label = item.get('label', '')
                 uri = item.get('uri', '')
                 data_id = item.get('id', '')
-                index_data_models.append(ReferenceData(data_id, data_type, label, uri, same_as = same_as))
+                input_file_format = item.get('input_file_format', '')
+                output_format_version = item.get('output_format_version', '')
+
+                index_data_models.append(ReferenceData(data_id, data_type, label, uri, same_as = same_as, input_file_format = input_file_format, output_format_version = output_format_version))
 
         # if len(index_data_models) > 0:
         #     for ref in index_data_models:

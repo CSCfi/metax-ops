@@ -17,10 +17,9 @@ class OrganizationData(IndexableData):
         label,
         parent_id='',
         same_as=[],
-        org_csc='',
-        wkt=''):
+        org_csc=''):
 
-        super(OrganizationData, self).__init__(org_id, OrganizationData.DATA_TYPE_ORGANIZATION, label, OrganizationData.ORGANIZATION_PURL_BASE_URL + org_id, same_as, wkt)
+        super(OrganizationData, self).__init__(org_id, OrganizationData.DATA_TYPE_ORGANIZATION, label, OrganizationData.ORGANIZATION_PURL_BASE_URL + org_id, same_as)
         self.parent_id = ''
         if parent_id:
             self.parent_id = self._create_es_document_id(parent_id)
@@ -35,7 +34,6 @@ class OrganizationData(IndexableData):
                 "\"uri\":\"" + self.uri + "\","
                 "\"org_csc\":\"" + self.org_csc + "\","
                 "\"parent_id\":\"" + self.parent_id + "\","
-                "\"wkt\":\"" + self.wkt + "\","
                 "\"label\":" + json.dumps(self.label) + ","
                 "\"same_as\":" + json.dumps(self.same_as) +
             "}")

@@ -28,6 +28,7 @@ class ReferenceData(IndexableData):
     DATA_TYPE_RELATION_TYPE = 'relation_type'
     DATA_TYPE_LIFECYCLE_EVENT = 'lifecycle_event'
     DATA_TYPE_PRESERVATION_EVENT = 'preservation_event'
+    DATA_TYPE_FILE_FORMAT_VERSION = 'file_format_version'
 
     FINTO_REFERENCE_DATA_TYPES = [
         DATA_TYPE_FIELD_OF_SCIENCE,
@@ -49,7 +50,8 @@ class ReferenceData(IndexableData):
         DATA_TYPE_USE_CATEGORY,
         DATA_TYPE_RELATION_TYPE,
         DATA_TYPE_LIFECYCLE_EVENT,
-        DATA_TYPE_PRESERVATION_EVENT
+        DATA_TYPE_PRESERVATION_EVENT,
+        DATA_TYPE_FILE_FORMAT_VERSION
     ]
 
     def __init__(
@@ -61,9 +63,15 @@ class ReferenceData(IndexableData):
         parent_ids=[],
         child_ids=[],
         same_as=[],
-        wkt=''):
+        wkt='',
+        input_file_format='',
+        output_format_version=''):
 
-        super(ReferenceData, self).__init__(data_id, data_type, label, uri, same_as, wkt)
+        super(ReferenceData, self).__init__(data_id, data_type, label, uri, same_as)
+
+        self.wkt = wkt
+        self.input_file_format = input_file_format
+        self.output_format_version = output_format_version
 
         self.parent_ids = []
         self.child_ids = []
@@ -85,6 +93,8 @@ class ReferenceData(IndexableData):
                 "\"type\":\"" + self.doc_type + "\","
                 "\"uri\":\"" + self.uri + "\","
                 "\"wkt\":\"" + self.wkt + "\","
+                "\"input_file_format\":\"" + self.input_file_format + "\","
+                "\"output_format_version\":\"" + self.output_format_version + "\","
                 "\"label\":" + json.dumps(self.label) + ","
                 "\"parent_ids\":" + json.dumps(self.parent_ids) + ","
                 "\"child_ids\":" + json.dumps(self.child_ids) + ","
