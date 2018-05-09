@@ -19,4 +19,7 @@ oai:
   batch_size: 25
   repository_name: Metax ({{ deployment_environment_id }})
   etsin_url_template: "{{ etsin_base_url }}/dataset/%s"
-  admin_email: something@csc.fi
+  admin_email: servicedesk@csc.fi
+
+att_datacatalog_identifier: urn:nbn:fi:att:data-catalog-att
+ida_datacatalog_identifier: urn:nbn:fi:att:data-catalog-ida 

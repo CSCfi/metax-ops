@@ -11,15 +11,13 @@ class IndexableData:
         doc_type,
         label,
         uri,
-        same_as,
-        wkt):
+        same_as):
 
         self.doc_type = doc_type
         self.doc_id = self._create_es_document_id(doc_id)
         self.label = {} # { 'fi': 'value1', 'en': 'value2',..., 'und': 'default_value' }
         self.same_as = same_as
         self.code = doc_id
-        self.wkt = wkt
 
         # Replace quotes with corresponding html entity not to break outbound json
         if label:
