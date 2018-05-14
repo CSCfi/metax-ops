@@ -42,7 +42,6 @@ django_debug: True
 
 elasticsearch_instance:
   node_name: "node1"
-  allow_origin: "*"
   is_master_node: "true"
   is_data_node: "true"
   cluster_name: metax-es-cluster

@@ -13,8 +13,8 @@
         node.data: "{{ elasticsearch_instance.is_data_node }}",
         node.master: "{{ elasticsearch_instance.is_master_node }}",
         http.cors.enabled : true,
-        http.cors.allow-origin : "{{ elasticsearch_instance.allow_origin }}",
-        http.cors.allow-methods : "OPTIONS, HEAD, GET, POST, PUT, DELETE",
+        http.cors.allow-origin : "*",
+        http.cors.allow-methods : "OPTIONS, HEAD, GET",
         http.cors.allow-headers : "X-Requested-With,X-Auth-Token,Content-Type, Content-Length",
         network.host: [_local_, _site_]
       }
