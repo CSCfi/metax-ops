@@ -21,11 +21,11 @@
   when: deployment_environment_id != 'local_development'
   notify: restart sshd
 
-- name: Install pip
+- name: Install yum pip
   yum: name=python-pip state=latest
   when: deployment_environment_id != 'local_development'
 
-- name: Update pip and install setuptools and pur
+- name: Install latest python pip, setuptools and pur
   pip: name={{ item }} state=latest
   with_items:
     - pip

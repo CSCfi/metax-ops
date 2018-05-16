@@ -2,6 +2,13 @@
 
 - include_role: name=update_packages
 
+- name: Install latest python pip, setuptools and pur
+  pip: name={{ item }} state=latest
+  with_items:
+    - pip
+    - setuptools
+    - pur
+
 - block:
 
     - name: Pull latest data from project remote repo branch {{ project_repo_branch }}
