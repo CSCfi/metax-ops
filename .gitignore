@@ -20,6 +20,7 @@ ansible/inventories/stable/group_vars/stable
 ansible/inventories/stable/host_vars
 ansible/inventories/staging/group_vars/staging
 ansible/inventories/staging/host_vars
+ansible/inventories/production
 
 ansible/files/
 *.pem
