@@ -62,7 +62,7 @@ API_ACCESS: {
         "write": ["metax", "qvain", "etsin", "pas"]
     },
     "directories": {
-        "read":  ["metax", "qvain", "etsin", "fds"],
+        "read":  ["metax", "qvain", "etsin", "pas", "fds"],
         "write": []
     },
     "files": {
