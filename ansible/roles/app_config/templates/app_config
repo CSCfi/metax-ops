@@ -43,6 +43,42 @@ RABBITMQ:
 # Variables related to api credentials
 API_USERS: {{ nginx_credentials | to_nice_json }}
 
+# specify read and write access of services per api, or if an api is readable by world
+API_ACCESS: {
+    "apierrors": {
+        "read":  ["metax"],
+        "write": []
+    },
+    "contracts": {
+        "read":  ["metax", "pas"],
+        "write": ["metax", "pas"]
+    },
+    "datacatalogs": {
+        "read":  ["metax", "all"],
+        "write": ["metax", "etsin"]
+    },
+    "datasets": {
+        "read":  ["all"],
+        "write": ["metax", "qvain", "etsin", "pas"]
+    },
+    "directories": {
+        "read":  ["metax", "qvain", "etsin", "fds"],
+        "write": []
+    },
+    "files": {
+        "read":  ["metax", "ida", "fds", "pas"],
+        "write": ["metax", "ida"]
+    },
+    "filestorages": {
+        "read":  ["metax"],
+        "write": ["metax"]
+    },
+    "schemas": {
+        "read":  ["all"],
+        "write": []
+    }
+}
+
 # Variables for the OAI-PMH API
 OAI:
   BASE_URL: {{ oai.base_url }}
