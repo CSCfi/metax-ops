@@ -140,23 +140,3 @@
       postgresql_privs: db={{ metax_database.name }} role=PUBLIC type=database priv=ALL state=absent
 
   become_user: postgres
-
-# DO NOT DELETE (THE BELOW STUFF IS FOR UBUNTU)
-# - name: Install PostGIS
-#   apt: name=postgresql-9.6-postgis-2.3 state=present
-#
-
-# - block:
-#     - name: Create PostGIS tables and functions
-#       command: psql -d {{ metax_database }} -f /usr/share/postgresql/9.6/contrib/postgis-2.3/postgis.sql
-#
-#     - name: Populate PostGIS spatial reference table
-#       command: psql -d {{ metax_database }} -f /usr/share/postgresql/9.6/contrib/postgis-2.3/spatial_ref_sys.sql
-#
-#     - name: Change spatial view owner
-#       command: psql -d {{ metax_database }} -c 'ALTER VIEW geometry_columns OWNER TO {{ metax_database_user }};'
-#
-#     - name: Change spatial table owner
-#       command: psql -d {{ metax_database }} -c 'ALTER TABLE spatial_ref_sys OWNER TO {{ metax_database_user }};'
-#
-#   become_user: postgres
