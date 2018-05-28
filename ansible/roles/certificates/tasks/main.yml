@@ -1,5 +1,9 @@
+- name: Create directory for SSL certificates
+  file: path={{ ssl_certs_path }} state=directory
+  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
+
 - name: Create self-signed SSL cert and private key
-  command: openssl req -x509 -nodes -subj "/C=FI/ST=Uusimaa/L=Espoo/O=CSC/CN={{ server_domain_name }}" -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl_certs/{{ server_certificate_name }}.key -out /etc/nginx/ssl_certs/nginx-selfsigned.crt creates=/etc/nginx/ssl_certs/{{ server_certificate_name }}.crt
+  command: openssl req -x509 -nodes -subj "/C=FI/ST=Uusimaa/L=Espoo/O=CSC/CN={{ server_domain_name }}" -days 365 -newkey rsa:2048 -keyout {{ ssl_certs_path }}/{{ server_certificate_name }}.key -out {{ ssl_certs_path }}/{{ server_certificate_name }}.crt creates={{ ssl_certs_path }}/{{ server_certificate_name }}.crt
   when: deployment_environment_id in ['local_development', 'playground', 'staging']
 
 - block:
@@ -8,7 +12,7 @@
       yum: name=dos2unix state=latest
 
     - name: Copy CA-signed primary certificate and private key
-      copy: src=files/certificates/{{ item }} dest=/etc/nginx/ssl_certs/{{ item }} owner=root group=root mode=0644
+      copy: src=files/certificates/{{ item }} dest={{ ssl_certs_path }}/{{ item }} owner=root group=root mode=0644
       with_items:
         - "{{ server_certificate_name }}.crt"
         - "{{ server_certificate_name }}.key"
@@ -16,11 +20,10 @@
     - name: Concatenate intermediate certificate to primary certificate
       lineinfile:
         line: "{{ lookup('file', 'files/certificates/{{ intermediate_certificate_name }}') }}"
-        dest: "/etc/nginx/ssl_certs/{{ server_certificate_name }}.crt"
+        dest: "{{ ssl_certs_path }}/{{ server_certificate_name }}.crt"
         state: present
 
     - name: Fix concatenated file carriage returns
-      command: dos2unix /etc/nginx/ssl_certs/{{ server_certificate_name }}.crt
+      command: dos2unix {{ ssl_certs_path }}/{{ server_certificate_name }}.crt
 
-  # Add envs to the when below as new certificates will become available for the target env
   when: deployment_environment_id == 'test' or deployment_environment_id == 'stable'

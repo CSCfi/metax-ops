@@ -7,6 +7,7 @@ metax_base_path: /srv/metax
 python_virtualenv_path: "{{ metax_base_path }}/pyenv"
 metax_django_base_path: "{{ metax_app_base_path }}/src"
 static_root: "{{ metax_django_base_path }}/static"
+nginx_dh_param_name: nginx_dhparam.pem
 
 metax_db_base_path: "{{ metax_base_path }}/db"
 metax_db_data_path: "{{ metax_db_base_path }}/data"
@@ -22,4 +23,4 @@ oai:
   admin_email: servicedesk@csc.fi
 
 att_datacatalog_identifier: urn:nbn:fi:att:data-catalog-att
-ida_datacatalog_identifier: urn:nbn:fi:att:data-catalog-ida 
+ida_datacatalog_identifier: urn:nbn:fi:att:data-catalog-ida
