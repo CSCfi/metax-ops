@@ -12,6 +12,8 @@ nginx_credentials:
 nginx_whitelisted_ip_addresses_for_metax_api_writes:
   - 20.20.20.1
 
+ssl_certs_path: /etc/nginx/ssl_certs
+
 webserver_1_internal_ip: 127.0.0.1
 dbserver_1_internal_ip: 127.0.0.1
 dataserver_1_internal_ip: 127.0.0.1
