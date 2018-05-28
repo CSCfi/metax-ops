@@ -1,15 +1,19 @@
 ---
 
-- name: Add users to OS
-  user: name={{ item }} groups=wheel,metax append=yes state=present createhome=yes
-  with_items: "{{ os_users }}"
+- name: Add django user to OS
+  user: name={{ django_user }} groups=wheel,metax append=yes state=present createhome=yes
 
-- name: Create .ssh folders to users' home folders in cloud environment
-  file: path=/home/{{ item }}/.ssh owner={{ item }} mode=0700 state=directory
-  with_items: "{{ os_users }}"
-  when: deployment_environment_id != 'local_development'
+- block:
+    - name: Add users that should be able to log in to OS
+      user: name={{ item }} groups=wheel,metax append=yes state=present createhome=yes
+      with_items: "{{ os_users }}"
 
-- name: Add users' public keys to cloud environment
-  copy: src=files/public_keys/{{ item }}.pub dest=/home/{{ item }}/.ssh/authorized_keys owner={{ item }} mode=0700
-  with_items: "{{ os_users }}"
-  when: deployment_environment_id != 'local_development'
+    - name: Create .ssh folders to login users' home folders in cloud environment
+      file: path=/home/{{ item }}/.ssh owner={{ item }} mode=0700 state=directory
+      with_items: "{{ os_users }}"
+
+    - name: Add login users' public keys to cloud environment
+      copy: src=files/public_keys/{{ item }}.pub dest=/home/{{ item }}/.ssh/authorized_keys owner={{ item }} mode=0700
+      with_items: "{{ os_users }}"
+
+  when: deployment_environment_id not in ['local_development', 'staging', 'production']
