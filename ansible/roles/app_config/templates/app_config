@@ -50,8 +50,8 @@ API_ACCESS: {
         "write": []
     },
     "contracts": {
-        "read":  ["metax", "pas"],
-        "write": ["metax", "pas"]
+        "read":  ["metax", "tpas"],
+        "write": ["metax", "tpas"]
     },
     "datacatalogs": {
         "read":  ["metax", "all"],
@@ -59,14 +59,14 @@ API_ACCESS: {
     },
     "datasets": {
         "read":  ["all"],
-        "write": ["metax", "qvain", "etsin", "pas"]
+        "write": ["metax", "qvain", "etsin", "tpas"]
     },
     "directories": {
-        "read":  ["metax", "qvain", "etsin", "pas", "fds"],
+        "read":  ["metax", "qvain", "etsin", "tpas", "fds"],
         "write": []
     },
     "files": {
-        "read":  ["metax", "ida", "fds", "pas"],
+        "read":  ["metax", "ida", "fds", "tpas"],
         "write": ["metax", "ida"]
     },
     "filestorages": {
