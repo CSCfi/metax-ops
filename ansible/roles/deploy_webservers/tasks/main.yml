@@ -83,15 +83,6 @@
   service: name=gunicorn state=restarted enabled=yes
   when: deployment_environment_id != 'local_development'
 
-- name: Delete old Django migration files
-  shell: rm -rf __pycache__/;find . ! -name "*__keep*" -delete
-  args:
-    chdir: "{{ metax_django_base_path }}/{{ django_app_name }}/migrations"
-
-- name: Django makemigrations
-  django_manage: command="makemigrations --noinput {{ django_app_name }}" app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
-
 - name: Django migrate
   django_manage: command=migrate app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
   become_user: "{{ django_user }}"
