@@ -1,7 +1,5 @@
 ---
 
-- include_role: name=update_packages
-
 - block:
     - name: Drop current metax database
       shell: "psql -c 'DROP DATABASE '\"$METAX_DATABASE_NAME\"';'"

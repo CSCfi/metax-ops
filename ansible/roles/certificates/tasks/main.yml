@@ -26,4 +26,4 @@
     - name: Fix concatenated file carriage returns
       command: dos2unix {{ ssl_certs_path }}/{{ server_certificate_name }}.crt
 
-  when: deployment_environment_id == 'test' or deployment_environment_id == 'stable'
+  when: deployment_environment_id in ['test', 'stable']

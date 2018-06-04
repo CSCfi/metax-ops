@@ -5,5 +5,6 @@
     is_provision: false
   become: yes
   roles:
+    - update_packages
     - deploy_dataservers
-    - { role: reboot, when: deployment_environment_id != 'local_development' and deployment_environment_id != 'playground' }
+    - { role: reboot, when: deployment_environment_id not in ['local_development', 'playground', 'staging', 'production']}
