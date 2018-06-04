@@ -17,6 +17,7 @@
         line: 'METAX_DATABASE_USER="{{ metax_database.user }}"'
   roles:
     - os-base
+    - update_packages
     - postgres
     - backup
   handlers:

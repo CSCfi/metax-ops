@@ -1,3 +1,1 @@
 ---
-
-  - include_role: name=update_packages
