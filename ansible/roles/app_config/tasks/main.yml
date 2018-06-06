@@ -1,2 +1,2 @@
 - name: Copy app config to target VM
-  template: src=templates/app_config dest=/home/{{ django_user }}/app_config owner={{ django_user }} group=metax mode=0440
+  template: src=templates/app_config dest=/home/{{ app_user }}/app_config owner={{ app_user }} group=metax mode=0440

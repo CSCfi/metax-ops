@@ -3,7 +3,7 @@ dbserver_1_external_ip: 86.50.169.34
 dataserver_1_external_ip: 193.166.25.31
 cacheserver_1_external_ip: 193.166.24.98
 
-metax_app_base_path: "{{ metax_base_path }}/{{ project_name }}"
+metax_app_base_path: "{{ metax_base_path }}/{{ app_name }}"
 deployment_environment_id: test
 project_repo_branch: test
 nginx_gunicorn_proxy_pass: http://unix:{{ metax_base_path }}/gunicorn/socket

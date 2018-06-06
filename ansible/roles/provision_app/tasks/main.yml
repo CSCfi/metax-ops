@@ -1,17 +1,17 @@
 - include_role: name=app_config
 
 - name: Create folder {{ metax_app_base_path }}
-  file: path={{ metax_app_base_path }} state=directory owner={{ django_user }} group=metax mode=0755
+  file: path={{ metax_app_base_path }} state=directory owner={{ app_user }} group=metax mode=0755
 
 - name: Create django app logging directory
-  file: path=/var/log/{{ project_name }} state=directory owner={{ django_user }} group=metax
+  file: path=/var/log/{{ app_name }} state=directory owner={{ app_user }} group=metax
 
 - name: Create django app log file and ensure file permissions
-  copy: content="" dest=/var/log/{{ project_name }}/metax_api.log force=no owner={{ django_user }} group=metax mode=0755
+  copy: content="" dest=/var/log/{{ app_name }}/{{ app_log_file }} force=no owner={{ app_user }} group=metax mode=0755
 
 - name: Clone project remote repo from branch {{ project_repo_branch }} to {{ metax_app_base_path }}
   git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
 
 - block:
 
@@ -20,16 +20,16 @@
 
     - name: Update app python package requirements to their latest versions
       shell: pur --force --requirement {{ metax_app_base_path }}/requirements.txt
-      become_user: "{{ django_user }}"
+      become_user: "{{ app_user }}"
 
   when: deployment_environment_id == 'local_development'
 
 - name: Install app python package requirements
   pip: requirements={{ metax_app_base_path }}/requirements.txt virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
 
 - name: Create directory for static files
-  file: path={{ static_root }} state=directory owner={{ django_user }} group=metax
+  file: path={{ static_root }} state=directory owner={{ app_user }} group=metax
 
 - include_role: name=gunicorn
 
@@ -38,35 +38,35 @@
     name: "Update reference and organization data in local cache"
     minute: "00"
     hour: "4"
-    job: "{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path}}/metax_api/cron/update_reference_data.py >> /var/log/{{ project_name }}/update_reference_data.log"
+    job: "{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path}}/metax_api/cron/update_reference_data.py >> /var/log/{{ app_name }}/update_reference_data.log"
     state: present
-    user: "{{ django_user }}"
+    user: "{{ app_user }}"
 
 - name: Django migrate
   django_manage: command=migrate app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
 
 - name: Django collectstatic
   django_manage: command=collectstatic app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
   when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
 
 - name: Load Django testdata to database
   django_manage: command=loaddata fixtures=metax_api/tests/testdata/test_data.json app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
   when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
 
 - name: Load Metax initial production data
   django_manage: command=loadinitialdata app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
   when: deployment_environment_id != 'local_development'
 
 - name: Run PUT requests on Django testdata
-  shell: su - {{ django_user }} -c '{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path }}/metax_api/tests/testdata/fetch_and_update_datasets.py'
+  shell: su - {{ app_user }} -c '{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path }}/metax_api/tests/testdata/fetch_and_update_datasets.py'
   when: deployment_environment_id in ['playground', 'test', 'stable']
 
 - debug:
-    msg: "Local dev environment successfully set up. Switch to using {{ django_user }} by saying 'sudo su - {{ django_user }}', then run the application by saying 'runserver' and finally, in another terminal, switch to {{ django_user }} and run 'update_datasets' to update dataset reference data."
+    msg: "Local dev environment successfully set up. Switch to using {{ app_user }} by saying 'sudo su - {{ app_user }}', then run the application by saying 'runserver' and finally, in another terminal, switch to {{ app_user }} and run 'dev-init'."
   when: deployment_environment_id == 'local_development'
 
 - debug:

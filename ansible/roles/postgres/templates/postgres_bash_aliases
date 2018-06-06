@@ -1,0 +1,14 @@
+# ALIASES TO USE FOR DEVELOPMENT
+
+# Generally useful
+alias aliases='cat ~/.bash_aliases'
+alias metax-src='cd {{ metax_django_base_path }}'
+alias tail-log='tail -f -n 200 /var/log/{{ app_name }}/{{ app_log_file }}'
+
+# Drop and create db
+alias drop-metax-db='psql -c '"'"'drop database {{ metax_database.name }};'"'"
+alias create-metax-db='psql -c '"'"'create database {{ metax_database.name }};'"'"
+alias alter-metax-db='psql -c '"'"'alter database {{ metax_database.name }} owner to {{ metax_database.user }};'"'"
+
+# Completely drop and recreate db
+alias recreate-db='drop-metax-db && create-metax-db && alter-metax-db'

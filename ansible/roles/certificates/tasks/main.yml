@@ -1,6 +1,6 @@
 - name: Create directory for SSL certificates
   file: path={{ ssl_certs_path }} state=directory
-  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
+  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable', 'staging']
 
 - name: Create self-signed SSL cert and private key
   command: openssl req -x509 -nodes -subj "/C=FI/ST=Uusimaa/L=Espoo/O=CSC/CN={{ server_domain_name }}" -days 365 -newkey rsa:2048 -keyout {{ ssl_certs_path }}/{{ server_certificate_name }}.key -out {{ ssl_certs_path }}/{{ server_certificate_name }}.crt creates={{ ssl_certs_path }}/{{ server_certificate_name }}.crt

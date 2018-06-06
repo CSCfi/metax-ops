@@ -6,52 +6,30 @@
     - "{{ metax_db_backup_path }}"
     - "{{ metax_db_backup_archive_path }}"
 
-- name: Copy backup script in place
-  template: src=templates/metax_backup.sh dest={{ metax_db_backup_path }} owner=postgres group=postgres mode=0770
-
-- name: Create cronjob for running backup script
-  cron:
-    name: "Backup data"
-    minute: "30"
-    hour: "2"
-    job: "{{ metax_db_backup_path }}/metax_backup.sh > /dev/null 2>&1"
-    state: present
-    user: postgres
-
-- name: Copy backup cleaning script in place
-  template: src=templates/metax_backup_clean.sh dest={{ metax_db_backup_path }} owner=root group=postgres mode=0770
-
-- name: Create cronjob for running backup cleaning script
-  cron:
-    name: "Clean backup data"
-    minute: "30"
-    hour: "3"
-    job: "{{ metax_db_backup_path }}/metax_backup_clean.sh > /dev/null 2>&1"
-    state: present
-    user: root
-
-  # Change the below sync tasks to apply only in production as soon as it exists
-
 - block:
-    - name: Install Nextcloud client for syncing backups to the remote storage
-      yum: name={{ item }} state=present
-      with_items:
-        - centos-release-scl
-        - nextcloud-client
 
-    - name: Copy backup sync script in place
-      template: src=templates/metax_backup_sync.sh dest={{ metax_db_backup_path }} owner=root group=postgres mode=0740
+    - name: Copy backup script in place
+      template: src=templates/metax_backup.sh dest={{ metax_db_backup_path }} owner=postgres group=postgres mode=0770
 
-    - name: Create cronjob for running backup sync script
+    - name: Create cronjob for running backup script
       cron:
-        name: "Sync backup data"
-        minute: "00"
-        hour: "4"
-        job: "{{ metax_db_backup_path }}/metax_backup_sync.sh > /dev/null 2>&1"
+        name: "Backup data"
+        minute: "30"
+        hour: "2"
+        job: "{{ metax_db_backup_path }}/metax_backup.sh > /dev/null 2>&1"
+        state: present
+        user: postgres
+
+    - name: Copy backup cleaning script in place
+      template: src=templates/metax_backup_clean.sh dest={{ metax_db_backup_path }} owner=root group=postgres mode=0770
+
+    - name: Create cronjob for running backup cleaning script
+      cron:
+        name: "Clean backup data"
+        minute: "30"
+        hour: "3"
+        job: "{{ metax_db_backup_path }}/metax_backup_clean.sh > /dev/null 2>&1"
         state: present
         user: root
 
-    - name: Run backup sync script to sync backups with the remote storage
-      shell: "{{ metax_db_backup_path }}/metax_backup_sync.sh"
-
-  when: deployment_environment_id in ['test', 'stable', 'staging']
+  when: deployment_environment_id not in ['staging', 'production']

@@ -5,9 +5,9 @@ then
   exit 2
 fi
 
-if [ "$USER" != "{{ django_user }}" ]; then
-    echo "Run this as {{ django_user }}"
-    su {{ django_user }}
+if [ "$USER" != "{{ app_user }}" ]; then
+    echo "Run this as {{ app_user }}"
+    su {{ app_user }}
 fi
 
 source {{ python_virtualenv_path }}/bin/activate

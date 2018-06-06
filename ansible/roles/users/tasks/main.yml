@@ -1,7 +1,7 @@
 ---
 
-- name: Add django user to OS
-  user: name={{ django_user }} groups=wheel,metax append=yes state=present createhome=yes
+- name: Add app user to OS
+  user: name={{ app_user }} groups=metax append=yes state=present createhome=yes
 
 - block:
     - name: Add users that should be able to log in to OS
