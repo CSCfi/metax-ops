@@ -2,17 +2,6 @@
 
 - hosts: dbservers
   become: yes
-  pre_tasks:
-    - name: Place database name into target VM env vars
-      lineinfile:
-        dest: /etc/environment
-        state: present
-        line: 'METAX_DATABASE_NAME="{{ metax_database.name }}"'
-    - name: Place database user into target VM env vars
-      lineinfile:
-        dest: /etc/environment
-        state: present
-        line: 'METAX_DATABASE_USER="{{ metax_database.user }}"'
   roles:
     - os-base
     - update_packages

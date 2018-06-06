@@ -1,5 +1,16 @@
 ---
 
+- name: Make sure we have a 'wheel' group
+  group: name=wheel state=present
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+  when: deployment_environment_id not in ['staging', 'production']
+  
 - name: Add app user to OS
   user: name={{ app_user }} groups=metax append=yes state=present createhome=yes
 
