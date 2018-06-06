@@ -1,8 +1,5 @@
 ---
 
-# Basebackup ja wal folderit tulee admineilta
-# Muut backupit /data/backup
-
 - block:
     - name: Place database name {{ metax_database.name }} into target VM env vars
       lineinfile:
@@ -25,8 +22,7 @@
     baseurl: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7.3-x86_64/
     gpgcheck: no
     state: present
-  # when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable', 'staging']
-  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
+  when: deployment_environment_id ==  'local_development'
 
 - name: Install PostgreSQL 9 and python psycopg2
   yum: name={{ item }} state=present
@@ -36,7 +32,7 @@
     - postgresql96-contrib
     - python-psycopg2
 
-- name: Create data directory {{ data_dir_base_path }}
+- name: Create/ensure data directory {{ data_dir_base_path }}
   file: path={{ data_dir_base_path }} state=directory owner={{ app_user }} group=metax mode=0755
 
 - name: Create database data directory {{ metax_db_data_path }}
@@ -186,17 +182,18 @@
     regexp: "#archive_mode ="
     line: "archive_mode = on"
 
-# admins deliver archive command to be used
 - name: Change Postgres configuration archive_command
   lineinfile:
     dest: "{{ metax_db_data_path }}/postgresql.conf"
     state: present
     regexp: "#archive_command ="
-    line: "archive_command = 'test ! -f {{ metax_db_wal_archive_path }}/%f && cp %p {{ metax_db_wal_archive_path }}/%f'"
+    line: "archive_command = 'test ! -f {{ metax_db_archive_path }}/%f && cp %p {{ metax_db_archive_path }}/%f && chmod 660 {{ metax_db_archive_path }}/%f'"
 
-# Modify this according to changes above
 - name: Create wal archive directory
-  file: path={{ metax_db_wal_archive_path }} state=directory owner=postgres group=postgres mode=0770
+  file: path={{ metax_db_archive_path }} state=directory owner=postgres group=postgres mode=0760 recurse=yes
+
+- name: Create database backup directory
+  file: path={{ metax_db_backup_path }} state=directory owner=postgres group=postgres mode=0760 recurse=yes
 
 - name: Restart Postgresql
   systemd: name=postgresql-9.6 state=restarted daemon_reload=yes

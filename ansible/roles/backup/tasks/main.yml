@@ -1,11 +1,5 @@
 ---
 
-- name: Create database backup directories
-  file: path={{ item }} state=directory owner=postgres group=postgres mode=0770
-  with_items:
-    - "{{ metax_db_backup_path }}"
-    - "{{ metax_db_backup_archive_path }}"
-
 - block:
 
     - name: Copy backup script in place

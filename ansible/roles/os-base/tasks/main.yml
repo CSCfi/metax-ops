@@ -1,16 +1,5 @@
 ---
 
-- name: Make sure we have a 'wheel' group
-  group: name=wheel state=present
-
-- name: Allow 'wheel' group to have passwordless sudo
-  lineinfile:
-    dest: /etc/sudoers
-    state: present
-    regexp: '^%wheel'
-    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
-  when: deployment_environment_id not in ['staging', 'production']
-
 - name: Make sure we have a 'metax' group in OS
   group: name=metax state=present
 

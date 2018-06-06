@@ -10,11 +10,12 @@ static_root: "{{ metax_django_base_path }}/static"
 nginx_dh_param_name: nginx_dhparam.pem
 
 data_dir_base_path: /data
-metax_db_base_path: "{{ data_dir_base_path }}/pg96"
-metax_db_data_path: "{{ metax_db_base_path }}/metax_{{ deployment_environment_id }}"
-metax_db_backup_path: "{{ metax_db_base_path }}/backups"
-metax_db_backup_archive_path: "{{ metax_db_backup_path }}/archive"
-metax_db_wal_archive_path: "{{ metax_db_backup_path }}/wal_archive"
+db_backup_dir_base_path: /backup
+
+metax_db_base_path: "{{ data_dir_base_path }}/pg96/metax_{{ deployment_environment_id }}"
+metax_db_data_path: "{{ metax_db_base_path }}/data"
+metax_db_archive_path: "{{ metax_db_base_path }}/backup/archive"
+metax_db_backup_path: "{{ db_backup_dir_base_path }}/metax_{{ deployment_environment_id }}"
 
 oai:
   base_url: "http://{{ server_domain_name }}/oai"
