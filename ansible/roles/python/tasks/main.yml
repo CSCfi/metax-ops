@@ -1,10 +1,16 @@
-- name: Is python 3 installed?
+- name: Is python36u installed?
   stat: path=/usr/bin/python3.6
-  register: command_result
+  register: python36u_installed
+
+- name: Is rh-python36 installed?
+  stat: path=/opt/rh/rh-python36/root/usr/bin/python3
+  register: rh_python36_installed
 
 - block:
     - name: Install IUS
       yum: name=https://centos7.iuscommunity.org/ius-release.rpm
+      when: deployment_environment_id not in ['staging', 'production']
+      # when: deployment_environment_id not in ['production']
 
     - name: Install Python 3.6
       yum: name={{ item }} state=latest
@@ -12,18 +18,35 @@
         - python36u
         - python36u-pip
         - python36u-devel
+      when: deployment_environment_id not in ['staging', 'production']
+      # when: deployment_environment_id not in ['production']
 
-    - name: Create virtual environment directory for Python {{ python_virtualenv_path }}
-      file: path={{ python_virtualenv_path }} state=directory owner={{ django_user }} group=metax mode=0755
 
-    - name: Install virtual environment for Python
+    - name: Install Python 3.6
+      yum: name={{ item }} state=latest
+      with_items:
+        - rh-python36
+      when: deployment_environment_id in ['staging', 'production']
+      # when: deployment_environment_id in ['production']
+
+    - name: Create virtual environment directory for Python to {{ python_virtualenv_path }}
+      file: path={{ python_virtualenv_path }} state=directory owner={{ app_user }} group=metax mode=0755
+
+    - name: Install virtual environment for Python to {{ python_virtualenv_path }}
       command: /usr/bin/python3.6 -m venv {{ python_virtualenv_path }}
+      when: deployment_environment_id not in ['staging', 'production']
+      # when: deployment_environment_id not in ['production']
 
-  when: not command_result.stat.exists
+    - name: Install virtual environment for Python to {{ python_virtualenv_path }}
+      command: /opt/rh/rh-python36/root/usr/bin/python3 -m venv {{ python_virtualenv_path }}
+      when: deployment_environment_id in ['staging', 'production']
+      # when: deployment_environment_id in [production']
 
-- name: Set owner of pyvenv to {{ django_user }} user
-  file: path={{ python_virtualenv_path }} owner={{ django_user }} group=metax recurse=yes mode=0755
+  when: not python36u_installed.stat.exists and not rh_python36_installed.stat.exists
 
-- name: install wheel package to enable using pip for installing requirements as {{ django_user }}
+- name: Set owner of pyvenv to {{ app_user }} user
+  file: path={{ python_virtualenv_path }} owner={{ app_user }} group=metax recurse=yes mode=0755
+
+- name: install wheel python package to enable using pip for installing requirements as {{ app_user }}
   pip: name=wheel virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"

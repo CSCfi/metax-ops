@@ -9,6 +9,7 @@
     state: present
     regexp: '^%wheel'
     line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+  when: deployment_environment_id not in ['staging', 'production']
 
 - name: Make sure we have a 'metax' group in OS
   group: name=metax state=present
@@ -21,43 +22,50 @@
   when: deployment_environment_id != 'local_development'
   notify: restart sshd
 
-- name: Install yum pip
-  yum: name=python-pip state=latest
-  when: deployment_environment_id != 'local_development'
-
-- name: Install latest python pip, setuptools and pur
-  pip: name={{ item }} state=latest
-  with_items:
-    - pip
-    - setuptools
-    - pur
-
-- include_role: name=update_packages
-
-- name: Ensure os common packages
+- name: Install common yum packages
   yum: name={{ item }} state=latest
   with_items:
-    - '@Development tools'
+    - gcc
+    - gcc-c++
     - python-devel
-    - htop
     - git
-    - zip
-    - unzip
     - curl
     - vim
-    - tcl
-    - ntp
-    - tree
-    - zile
+    - zip
+    - unzip
     - python-passlib
     - xqilla
     - xqilla-devel
 
-- name: Reinstall glibc-common just in case to make Finnish locale available
+- name: Install common os packages for development
+  yum: name={{ item }} state=latest
+  with_items:
+    - htop
+    - tcl
+    - ntp
+    - tree
+    - zile
+  when: deployment_environment_id not in ['staging', 'production']
+
+- name: Install pip using yum
+  yum: name=python-pip state=latest
+  when: deployment_environment_id != 'local_development'
+
+- name: Install latest python pip and setuptools using pip
+  pip: name={{ item }} state=latest
+  with_items:
+    - pip
+    - setuptools
+
+- name: Install pur for updating pip dependencies using pip
+  pip: name=pur state=latest
+  when: deployment_environment_id == 'local_development'
+
+- name: Reinstall glibc-common just in case to make Finnish locale available using yum
   shell: yum -y reinstall glibc-common
   when: deployment_environment_id == 'local_development'
 
-- name: Disable SELinux (A better approach should be come up with!)
+- name: Disable SELinux
   selinux: state=permissive policy=targeted
 
 - name: Set locale LANG to fi_FI.UTF-8
@@ -81,24 +89,23 @@
 
 - include_role: name=users
 
-- name: Create /srv/metax base directory
-  file: path=/srv/metax state=directory owner={{ django_user }} group=metax mode=0755
+- name: Create app base directory {{ metax_base_path }}
+  file: path={{ metax_base_path }} state=directory owner={{ app_user }} group=metax mode=0755
 
 - block:
+    - name: Copy bash aliases to {{ app_user }} user home dir
+      template: src=templates/app_user_bash_aliases dest=/home/{{ app_user }}/.bash_aliases owner={{ app_user }} group={{ app_user }}
 
-    - name: Copy bash aliases to {{ django_user }} user home dir
-      template: src=templates/bash_aliases dest=/home/{{ django_user }}/.bash_aliases owner={{ django_user }} group={{ django_user }}
+    - name: Touch {{ app_user }} .bash_profile
+      file: path=/home/{{ app_user }}/.bash_profile owner={{ app_user }} group={{ app_user }} state=touch
 
-    - name: Touch .bash_profile
-      file: path=/home/{{ django_user }}/.bash_profile owner={{ django_user }} group={{ django_user }} state=touch
-
-    - name: Add printing of bash aliases to {{ django_user }} profile
+    - name: Add printing of bash aliases to {{ app_user }} profile
       lineinfile:
-        dest: "/home/{{ django_user }}/.bash_profile"
+        dest: "/home/{{ app_user }}/.bash_profile"
         state: present
         line: "{{ item }}"
       with_items:
         - "source .bash_aliases"
         - "aliases"
 
-  when: deployment_environment_id in ['local_development', 'playground', 'test']
+  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']

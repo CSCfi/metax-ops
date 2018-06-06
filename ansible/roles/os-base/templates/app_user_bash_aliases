@@ -1,25 +1,21 @@
-
 # ALIASES TO USE FOR DEVELOPMENT
 
 # Generally useful
 alias aliases='cat ~/.bash_aliases'
 alias metax-src='cd {{ metax_django_base_path }}'
 alias source-pyvenv='source {{ python_virtualenv_path }}/bin/activate'
-alias tail-log='tail -f -n 200 /var/log/{{ project_name }}/metax_api.log'
-
-# Drop and create db
-alias drop-metax-db='sudo -su postgres psql -c '"'"'drop database {{ metax_database.name }};'"'"
-alias create-metax-db='sudo -su postgres psql -c '"'"'create database {{ metax_database.name }};'"'"
-alias alter-metax-db='sudo -su postgres psql -c '"'"'alter database {{ metax_database.name }} owner to {{ metax_database.user }};'"'"
+alias tail-log='tail -f -n 200 /var/log/{{ app_name }}/{{ app_log_file }}'
 
 # django-specific aliases
 alias makemigrations='cd {{ metax_django_base_path }} && python manage.py makemigrations metax_api && cd -'
 alias migrate='cd {{ metax_django_base_path }} && python manage.py migrate metax_api && cd -'
 alias update_datasets='source-pyvenv && cd {{ metax_django_base_path }} && python metax_api/tests/testdata/fetch_and_update_datasets.py && cd -'
+alias loadinitialdata='source-pyvenv && cd {{ metax_django_base_path }} && python manage.py loadinitialdata && cd -'
 alias loaddata='source-pyvenv && cd {{ metax_django_base_path }} && python manage.py loaddata metax_api/tests/testdata/test_data.json && python manage.py loadinitialdata && update_datasets && cd -'
 alias runserver='cd {{ metax_django_base_path }} && {{ python_virtualenv_path }}/bin/gunicorn --bind localhost:8000 --access-logfile - --error-logfile - --config /etc/gunicorn.py --reload metax_api.wsgi:application'
 alias runtests='source-pyvenv && cd {{ metax_django_base_path }} && python manage.py test --failfast && cd -'
 alias generate-testdata='source-pyvenv && cd {{ metax_django_base_path }}/metax_api/tests/testdata && python generate_test_data.py && cd -'
+alias dev-init='loadinitialdata && update_datasets'
 
-# in one command: completely drop and recreate db, delete django migration files, and recreate tables
-alias recreate-db='source-pyvenv && drop-metax-db && create-metax-db && alter-metax-db && makemigrations && migrate'
+# Make migrations and load them to database
+alias make_and_load_migrations='source-pyvenv && makemigrations && migrate'

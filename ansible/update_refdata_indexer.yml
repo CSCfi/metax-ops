@@ -1,0 +1,6 @@
+---
+
+- hosts: dataservers
+  become: yes
+  roles:
+    - refdata_indexer

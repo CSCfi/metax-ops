@@ -1,5 +1,23 @@
 ---
 
+# Basebackup ja wal folderit tulee admineilta
+# Muut backupit /data/backup
+
+- block:
+    - name: Place database name {{ metax_database.name }} into target VM env vars
+      lineinfile:
+        dest: /etc/environment
+        state: present
+        line: 'METAX_DATABASE_NAME="{{ metax_database.name }}"'
+
+    - name: Place database user {{ metax_database.user }} into target VM env vars
+      lineinfile:
+        dest: /etc/environment
+        state: present
+        line: 'METAX_DATABASE_USER="{{ metax_database.user }}"'
+
+  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
+
 - name: Install Postgresql repository
   yum_repository:
     name: postgresql
@@ -7,6 +25,8 @@
     baseurl: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7.3-x86_64/
     gpgcheck: no
     state: present
+  # when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable', 'staging']
+  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
 
 - name: Install PostgreSQL 9 and python psycopg2
   yum: name={{ item }} state=present
@@ -16,14 +36,33 @@
     - postgresql96-contrib
     - python-psycopg2
 
-- name: Create database data directory
-  file: path={{ item }} state=directory owner=postgres group=postgres mode=700
-  with_items:
-    - "{{ metax_db_data_path }}"
+- name: Create data directory {{ data_dir_base_path }}
+  file: path={{ data_dir_base_path }} state=directory owner={{ app_user }} group=metax mode=0755
 
-- name: Initialize Postgres database cluster
+- name: Create database data directory {{ metax_db_data_path }}
+  file: path={{ metax_db_data_path }} state=directory owner=postgres group=postgres mode=700
+
+- name: Initialize Postgres database to {{ metax_db_data_path }}
   command: /usr/pgsql-9.6/bin/pg_ctl initdb -D {{ metax_db_data_path }} creates={{ metax_db_data_path }}/postgresql.conf
   become_user: postgres
+
+- block:
+    - name: Copy bash aliases to postgres user home dir
+      template: src=templates/postgres_bash_aliases dest=/var/lib/pgsql/.bash_aliases owner=postgres group=postgres
+
+    - name: Touch postgres .bash_profile
+      file: path=/var/lib/pgsql/.bash_profile owner=postgres group=postgres state=touch
+
+    - name: Add printing of bash aliases to postgres profile
+      lineinfile:
+        dest: "/var/lib/pgsql/.bash_profile"
+        state: present
+        line: "{{ item }}"
+      with_items:
+        - "source .bash_aliases"
+        - "aliases"
+
+  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
 
 - name: Shutdown Postgresql
   systemd: name=postgresql-9.6 enabled=yes state=stopped
@@ -39,7 +78,7 @@
 - name: Systemctl daemon-reload
   shell: "systemctl daemon-reload"
 
-- name: Copy Postgres host based authentication configuration
+- name: Copy Postgres host based authentication configuration {{ metax_db_data_path }}/pg_hba.conf
   template: src=templates/pg_hba.conf dest={{ metax_db_data_path }}/pg_hba.conf owner=postgres group=postgres
 
 - name: Change Postgres configuration listen_address to all
@@ -125,6 +164,39 @@
     state: present
     regexp: "effective_cache_size ="
     line: "effective_cache_size = '{{ (ansible_memtotal_mb*0.75) | int }}MB'"
+
+- name: Change Postgres configuration wal_level to replica
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "#wal_level ="
+    line: "wal_level = replica"
+
+- name: Change Postgres configuration max_wal_senders to 1
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "#max_wal_senders ="
+    line: "max_wal_senders = 1"
+
+- name: Change Postgres configuration archive_mode to on
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "#archive_mode ="
+    line: "archive_mode = on"
+
+# admins deliver archive command to be used
+- name: Change Postgres configuration archive_command
+  lineinfile:
+    dest: "{{ metax_db_data_path }}/postgresql.conf"
+    state: present
+    regexp: "#archive_command ="
+    line: "archive_command = 'test ! -f {{ metax_db_wal_archive_path }}/%f && cp %p {{ metax_db_wal_archive_path }}/%f'"
+
+# Modify this according to changes above
+- name: Create wal archive directory
+  file: path={{ metax_db_wal_archive_path }} state=directory owner=postgres group=postgres mode=0770
 
 - name: Restart Postgresql
   systemd: name=postgresql-9.6 state=restarted daemon_reload=yes

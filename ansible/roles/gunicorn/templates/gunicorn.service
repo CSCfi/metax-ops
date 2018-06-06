@@ -1,14 +1,14 @@
 [Unit]
-Description=Gunicorn application server handling {{ project_name }}
+Description=Gunicorn application server handling {{ app_name }}
 Requires=gunicorn.socket
 After=network.target
 
 [Service]
 PIDFile={{ metax_base_path }}/gunicorn/pid
-User={{ django_user }}
+User={{ app_user }}
 Group=nginx
 WorkingDirectory={{ metax_django_base_path }}
-ExecStart={{ python_virtualenv_path }}/bin/gunicorn --pid {{ metax_base_path }}/gunicorn/pid --bind unix:{{ metax_base_path }}/gunicorn/socket --access-logfile /var/log/{{ project_name }}/metax_api.log --error-logfile /var/log/{{ project_name }}/metax_api.log --log-level info --pythonpath {{ metax_django_base_path }} --config /etc/gunicorn.py  metax_api.wsgi:application
+ExecStart={{ python_virtualenv_path }}/bin/gunicorn --pid {{ metax_base_path }}/gunicorn/pid --bind unix:{{ metax_base_path }}/gunicorn/socket --access-logfile /var/log/{{ app_name }}/{{ app_log_file }} --error-logfile /var/log/{{ app_name }}/{{ app_log_file }} --log-level info --pythonpath {{ metax_django_base_path }} --config /etc/gunicorn.py  metax_api.wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 Restart=always

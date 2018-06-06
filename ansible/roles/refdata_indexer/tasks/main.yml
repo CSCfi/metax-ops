@@ -1,0 +1,24 @@
+- name: Copy reference and organization data indexing script
+  copy: src=metax-refdata-indexer/ dest={{ metax_base_path }}/refdata_indexer owner={{ app_user}} group=metax mode=740
+
+- name: Install indexing script dependencies
+  pip: requirements={{ metax_base_path }}/refdata_indexer/requirements.txt virtualenv={{ python_virtualenv_path }}
+  become_user: "{{ app_user }}"
+
+- name: Create refdata indexer logging directory
+  file: path=/var/log/refdata_indexer state=directory owner={{ app_user }} group=metax
+
+- name: Create refdata indexer log file and ensure file permissions
+  copy: content="" dest=/var/log/refdata_indexer/reindex.log force=no owner={{ app_user }} group=metax mode=0755
+
+- name: Index reference and organization data
+  shell: su - {{ app_user }} -c '{{ metax_base_path }}/refdata_indexer/reindex_all.sh delete_and_reindex >> /var/log/refdata_indexer/reindex.log'
+
+- name: Create cronjob for running reindexing script
+  cron:
+    name: "Reindex reference and organization data"
+    minute: "00"
+    hour: "3"
+    job: "{{ metax_base_path }}/refdata_indexer/reindex_all.sh only_reindex >> /var/log/refdata_indexer/reindex.log"
+    state: present
+    user: "{{ app_user }}"

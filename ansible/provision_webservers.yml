@@ -1,15 +1,13 @@
 ---
 
 - hosts: webservers
-  vars:
-    is_provision: true
   become: yes
   roles:
     - { role: os-base, when: "deployment_environment_id not in ['local_development', 'playground']" }
     - { role: update_packages, when: "deployment_environment_id not in ['local_development', 'playground']" }
     - { role: python, when: "deployment_environment_id not in ['local_development', 'playground']" }
     - nginx
-    - provision_django
+    - provision_app
   handlers:
     - name: restart sshd
       service: name=sshd state=restarted

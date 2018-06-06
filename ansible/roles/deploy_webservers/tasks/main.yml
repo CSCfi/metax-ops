@@ -11,7 +11,7 @@
 
     - name: Pull latest data from project remote repo branch {{ project_repo_branch }}
       git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
-      become_user: "{{ django_user }}"
+      become_user: "{{ app_user }}"
       register: pull_cmd
       ignore_errors: yes
 
@@ -24,14 +24,14 @@
 
         - name: Re-pull latest data from project remote repo branch {{ project_repo_branch }}
           git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
-          become_user: "{{ django_user }}"
+          become_user: "{{ app_user }}"
 
         - name: Unstash git repo
           shell: git stash apply
           args:
             executable: /bin/bash
             chdir: "{{ metax_app_base_path }}"
-          become_user: "{{ django_user }}"
+          become_user: "{{ app_user }}"
 
       when: pull_cmd.failed
 
@@ -41,7 +41,7 @@
 
     - name: Pull latest data from project repo branch {{ project_repo_branch }}
       git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
-      become_user: "{{ django_user }}"
+      become_user: "{{ app_user }}"
 
   when: deployment_environment_id in ['playground', 'test', 'stable']
 
@@ -54,12 +54,12 @@
 - block:
 
     - name: Copy deployment script to remote
-      template: src=templates/update_metax_api_with_tags.sh dest=/tmp/update_metax_api_with_tags.sh owner={{ django_user }} mode=500
+      template: src=templates/update_metax_api_with_tags.sh dest=/tmp/update_metax_api_with_tags.sh owner={{ app_user }} mode=500
 
     - name: Fetch tags, checkout the tag {{ metax_api_tag }}
       shell: /tmp/update_metax_api_with_tags.sh {{ metax_api_tag }}
       register: shell_result
-      become_user: "{{ django_user }}"
+      become_user: "{{ app_user }}"
 
     - name: Print script output
       debug:
@@ -69,12 +69,12 @@
 
 - name: Update app python package requirements to their latest versions
   shell: pur --force --requirement {{ metax_app_base_path }}/requirements.txt
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
   when: deployment_environment_id == 'local_development'
 
 - name: Install app python package requirements
   pip: requirements={{ metax_app_base_path }}/requirements.txt virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
 
 - name: Restart NGINX
   service: name=nginx state=restarted enabled=yes
@@ -85,23 +85,23 @@
 
 - name: Django migrate
   django_manage: command=migrate app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
 
 - name: Django collectstatic
   django_manage: command=collectstatic app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
   when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
 
 - name: Load Django testdata to database
   django_manage: command=loaddata fixtures=metax_api/tests/testdata/test_data.json app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
   when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
 
 - name: Load Metax initial production data
   django_manage: command=loadinitialdata app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ django_user }}"
+  become_user: "{{ app_user }}"
   when: deployment_environment_id != 'local_development'
 
 - name: Run PUT requests on Django testdata
-  shell: su - {{ django_user }} -c '{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path }}/metax_api/tests/testdata/fetch_and_update_datasets.py'
+  shell: su - {{ app_user }} -c '{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path }}/metax_api/tests/testdata/fetch_and_update_datasets.py'
   when: deployment_environment_id in ['playground', 'test', 'stable']
