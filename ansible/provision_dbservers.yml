@@ -1,8 +1,6 @@
 ---
 
 - hosts: dbservers
-  vars:
-    is_provision: true
   become: yes
   pre_tasks:
     - name: Place database name into target VM env vars

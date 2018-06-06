@@ -1,0 +1,15 @@
+- name: Attach VM to Spacewalk as a system
+  shell: wget -qO- http://spacewalk.csc.fi/pub/bootstrap/bootstrap-centos7-base-with-activationkey | sh -s {{ spacewalk_key }}
+
+- name: Add repo GPG keys
+  shell: rpm --import {{ item }}
+  with_items: "{{ spacewalk_repo_gpg_keys }}"
+
+- name: Stop iptables service
+  systemd: name=iptables state=stopped enabled=no
+
+- name: Allow all ssh connections
+  replace:
+    dest: "/etc/hosts.allow"
+    regexp: "^sshd"
+    replace: "#sshd"
