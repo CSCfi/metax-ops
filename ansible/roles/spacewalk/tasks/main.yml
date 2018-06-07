@@ -13,3 +13,6 @@
     dest: "/etc/hosts.allow"
     regexp: "^sshd"
     replace: "#sshd"
+
+- name: Disable anacron job
+  file: path=/etc/cron.weekly/update-kernel mode=0644
