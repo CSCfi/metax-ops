@@ -42,6 +42,15 @@
     state: present
     user: "{{ app_user }}"
 
+- name: Create cronjob for cleaning up old ApiError files
+  cron:
+    name: "Cleanup old ApiError files"
+    minute: "00"
+    hour: "5"
+    job: "find /var/log/{{ app_name }}/errors/ -type f -mtime +30 -name '*.json' -delete"
+    state: present
+    user: "{{ app_user }}"
+
 - name: Django migrate
   django_manage: command=migrate app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
   become_user: "{{ app_user }}"
