@@ -19,7 +19,7 @@ class FintoDataService:
         ReferenceData.DATA_TYPE_FIELD_OF_SCIENCE: 'http://finto.fi/rest/v1/okm-tieteenala/data',
         ReferenceData.DATA_TYPE_LANGUAGE: 'http://finto.fi/rest/v1/lexvo/data',
         ReferenceData.DATA_TYPE_LOCATION: 'http://finto.fi/rest/v1/yso-paikat/data',
-        ReferenceData.DATA_TYPE_KEYWORD: 'http://finto.fi/rest/v1/yso/data'
+        ReferenceData.DATA_TYPE_KEYWORD: 'http://finto.fi/rest/v1/koko/data'
     }
 
     WKT_FILENAME = './resources/uri_to_wkt.json'
