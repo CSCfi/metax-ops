@@ -1,0 +1,8 @@
+/var/log/{{ app_name }}/{{ app_log_file }} {
+    daily
+    rotate 180
+    copytruncate
+    dateext
+    compress
+    su {{ app_user }} metax
+}
