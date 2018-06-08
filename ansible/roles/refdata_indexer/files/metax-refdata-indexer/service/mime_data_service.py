@@ -70,7 +70,7 @@ class MimeDataService:
                     is_parsing_model_elem = False
                 if is_parsing_model_elem and elem.tag == (self.IANA_NS + 'record'):
                     if found_valid_file_elem or found_valid_name_elem:
-                        index_data_models.append(ReferenceData(data_id, data_type, {}, uri))
+                        index_data_models.append(ReferenceData(data_id, data_type, {}, uri, scheme=MimeDataService.MIME_TYPE_REFERENCE_DATA_SOURCE_URL))
                     found_valid_file_elem = False
                     found_valid_name_elem = False
 
