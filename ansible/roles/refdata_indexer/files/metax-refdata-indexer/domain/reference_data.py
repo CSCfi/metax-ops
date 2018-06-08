@@ -65,9 +65,10 @@ class ReferenceData(IndexableData):
         same_as=[],
         wkt='',
         input_file_format='',
-        output_format_version=''):
+        output_format_version='',
+        scheme=''):
 
-        super(ReferenceData, self).__init__(data_id, data_type, label, uri, same_as)
+        super(ReferenceData, self).__init__(data_id, data_type, label, uri, same_as, scheme)
 
         self.wkt = wkt
         self.input_file_format = input_file_format
@@ -99,5 +100,6 @@ class ReferenceData(IndexableData):
                 "\"parent_ids\":" + json.dumps(self.parent_ids) + ","
                 "\"child_ids\":" + json.dumps(self.child_ids) + ","
                 "\"has_children\":" + json.dumps(self.has_children) + ","
-                "\"same_as\":" + json.dumps(self.same_as) +
+                "\"same_as\":" + json.dumps(self.same_as) + ","
+                "\"scheme\":\"" + self.scheme + "\""
             "}")

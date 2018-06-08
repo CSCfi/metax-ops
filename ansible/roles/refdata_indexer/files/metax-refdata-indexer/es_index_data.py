@@ -1,5 +1,5 @@
 import sys
-from domain.organization_data import OrganizationData
+from domain.indexable_data import IndexableData
 from domain.reference_data import ReferenceData
 from service.elasticsearch_service import ElasticSearchService
 from service.finto_data_service import FintoDataService
@@ -18,7 +18,7 @@ def main():
     TYPES_TO_REINDEX = 'types_to_reindex'
 
     instructions = """\nRun the program as metax-user with pyenv activated using 'python es_index_data.py remove_and_recreate_index=INDEX types_to_reindex=TYPE', where either or both of the arguments should be provided with one of the following values per argument:\n\nINDEX:\n{indices}\n\nTYPE:\n{types}"""
-    instructions = instructions.format(indices=str([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME]), types=str([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, OrganizationData.DATA_TYPE_ORGANIZATION] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]))
+    instructions = instructions.format(indices=str([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME]), types=str([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, IndexableData.DATA_TYPE_ORGANIZATION] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]))
 
     run_args = dict([arg.split('=', maxsplit=1) for arg in sys.argv[1:]])
     remove_and_recreate_index = None
@@ -36,7 +36,7 @@ def main():
 
     if TYPES_TO_REINDEX in run_args:
         types_to_reindex = run_args[TYPES_TO_REINDEX]
-        if types_to_reindex not in ([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, OrganizationData.DATA_TYPE_ORGANIZATION] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]):
+        if types_to_reindex not in ([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, IndexableData.DATA_TYPE_ORGANIZATION] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]):
             print(instructions)
             sys.exit(1)
 
@@ -48,7 +48,7 @@ def main():
     if types_to_reindex in ([ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME] + ReferenceData.LOCAL_REFERENCE_DATA_TYPES):
         local_service = LocalDataService()
 
-    if types_to_reindex in [ALL, OrganizationData.DATA_TYPE_ORGANIZATION]:
+    if types_to_reindex in [ALL, IndexableData.DATA_TYPE_ORGANIZATION]:
         org_service = OrganizationService()
 
     if types_to_reindex in ([ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA]):
@@ -79,7 +79,7 @@ def main():
             ElasticSearchService.ORGANIZATION_DATA_INDEX_FILENAME)
 
         es.create_type_mapping(ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME,
-            OrganizationData.DATA_TYPE_ORGANIZATION,
+            IndexableData.DATA_TYPE_ORGANIZATION,
             ElasticSearchService.ORGANIZATION_DATA_TYPE_MAPPING_FILENAME)
 
     # Reindexing for Finto data
@@ -106,8 +106,8 @@ def main():
         es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, types_to_reindex, local_service.get_data(types_to_reindex))
 
     # Reindexing organizations
-    if types_to_reindex in [ALL, OrganizationData.DATA_TYPE_ORGANIZATION]:
-        es.delete_and_update_indexable_data(ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME, OrganizationData.DATA_TYPE_ORGANIZATION, org_service.get_data())
+    if types_to_reindex in [ALL, IndexableData.DATA_TYPE_ORGANIZATION]:
+        es.delete_and_update_indexable_data(ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME, IndexableData.DATA_TYPE_ORGANIZATION, org_service.get_data())
 
     # Reindexing infras
     if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA]:

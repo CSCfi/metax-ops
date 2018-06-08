@@ -51,6 +51,13 @@ class FintoDataService:
 
         print("Extracting relevant data from the fetched data")
 
+        in_scheme = ''
+        for concept in graph.subjects(RDF.type, SKOS.Concept):
+            for value in graph.objects(concept, SKOS.inScheme):
+                in_scheme = str(value)
+                break
+            break
+
         for concept in graph.subjects(RDF.type, SKOS.Concept):
             uri = str(concept)
             # preferred labels
@@ -79,10 +86,11 @@ class FintoDataService:
                                                     data_type,
                                                     label,
                                                     uri,
-                                                    parent_ids,
-                                                    child_ids,
-                                                    same_as,
-                                                    wkt))
+                                                    parent_ids=parent_ids,
+                                                    child_ids=child_ids,
+                                                    same_as=same_as,
+                                                    wkt=wkt,
+                                                    scheme=in_scheme))
 
         if data_type == ReferenceData.DATA_TYPE_LOCATION:
             if not self.READ_COORDINATES_FROM_FILE:

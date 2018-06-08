@@ -50,7 +50,7 @@ class InfraDataService:
                     if item.get('name_EN'):
                         label['en'] = item['name_EN']
 
-                    index_data_models.append(ReferenceData(data_id, data_type, label, uri, same_as=same_as))
+                    index_data_models.append(ReferenceData(data_id, data_type, label, uri, same_as=same_as, scheme=InfraDataService.INFRA_REFERENCE_DATA_SOURCE_URL))
 
         return index_data_models
 
