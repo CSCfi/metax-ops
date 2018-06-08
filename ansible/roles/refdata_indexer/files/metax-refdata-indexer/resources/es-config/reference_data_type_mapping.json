@@ -19,10 +19,22 @@
     "id": {
       "type": "keyword"
     },
+    "code": {
+      "type": "keyword"
+    },
     "type": {
       "type": "keyword"
     },
     "uri": {
+      "type": "keyword"
+    },
+    "wkt": {
+      "type": "keyword"
+    },
+    "input_file_format": {
+      "type": "keyword"
+    },
+    "output_format_version": {
       "type": "keyword"
     },
     "parent_ids": {
@@ -36,6 +48,13 @@
     "has_children": {
       "type": "boolean",
       "index": false
+    },
+    "same_as": {
+      "type": "keyword",
+      "index": false
+    },
+    "scheme": {
+      "type": "keyword"
     }
   }
 }

@@ -19,10 +19,28 @@
     "id": {
       "type": "keyword"
     },
+    "code": {
+      "type": "keyword"
+    },
+    "type": {
+      "type": "keyword",
+      "index": false
+    },
     "uri": {
       "type": "keyword"
     },
+    "org_csc": {
+      "type": "keyword",
+      "index": false
+    },
     "parent_id": {
+      "type": "keyword"
+    },
+    "same_as": {
+      "type": "keyword",
+      "index": false
+    },
+    "scheme": {
       "type": "keyword"
     }
   }
