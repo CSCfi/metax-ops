@@ -41,7 +41,7 @@
     name: "Update reference and organization data in local cache"
     minute: "00"
     hour: "4"
-    job: "{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path}}/metax_api/cron/update_reference_data.py >> /var/log/{{ app_name }}/update_reference_data.log"
+    job: "{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path}}/manage.py updatereferencedata"
     state: present
     user: "{{ app_user }}"
 
