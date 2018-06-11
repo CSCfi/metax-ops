@@ -1,9 +1,9 @@
 - name: Create directory for SSL certificates
-  file: path={{ ssl_certs_path }} state=directory
+  file: path={{ ssl_certificates_path }} state=directory
   when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable', 'staging']
 
 - name: Create self-signed SSL cert and private key
-  command: openssl req -x509 -nodes -subj "/C=FI/ST=Uusimaa/L=Espoo/O=CSC/CN={{ server_domain_name }}" -days 365 -newkey rsa:2048 -keyout {{ ssl_certs_path }}/{{ server_certificate_name }}.key -out {{ ssl_certs_path }}/{{ server_certificate_name }}.crt creates={{ ssl_certs_path }}/{{ server_certificate_name }}.crt
+  command: openssl req -x509 -nodes -subj "/C=FI/ST=Uusimaa/L=Espoo/O=CSC/CN={{ server_domain_name }}" -days 365 -newkey rsa:2048 -keyout {{ ssl_certificates_path }}/{{ ssl_key_name }} -out {{ ssl_certificates_path }}/{{ ssl_certificate_name }} creates={{ ssl_certificates_path }}/{{ ssl_certificate_name }}
   when: deployment_environment_id in ['local_development', 'playground', 'staging']
 
 - block:
@@ -12,18 +12,18 @@
       yum: name=dos2unix state=latest
 
     - name: Copy CA-signed primary certificate and private key
-      copy: src=files/certificates/{{ item }} dest={{ ssl_certs_path }}/{{ item }} owner=root group=root mode=0644
+      copy: src=files/certificates/{{ item }} dest={{ ssl_certificates_path }}/{{ item }} owner=root group=root mode=0644
       with_items:
-        - "{{ server_certificate_name }}.crt"
-        - "{{ server_certificate_name }}.key"
+        - "{{ ssl_certificate_name }}"
+        - "{{ ssl_key_name }}"
 
     - name: Concatenate intermediate certificate to primary certificate
       lineinfile:
         line: "{{ lookup('file', 'files/certificates/{{ intermediate_certificate_name }}') }}"
-        dest: "{{ ssl_certs_path }}/{{ server_certificate_name }}.crt"
+        dest: "{{ ssl_certificates_path }}/{{ ssl_certificate_name }}"
         state: present
 
     - name: Fix concatenated file carriage returns
-      command: dos2unix {{ ssl_certs_path }}/{{ server_certificate_name }}.crt
+      command: dos2unix {{ ssl_certificates_path }}/{{ ssl_certificate_name }}
 
   when: deployment_environment_id in ['test', 'stable']
