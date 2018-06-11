@@ -9,7 +9,7 @@
 - include_role: name=certificates
 
 - name: NGINX | Generate Diffie-Hellman PFS (Perfect Forward Secrecy) group
-  command: openssl dhparam -out {{ ssl_certs_path }}/{{ nginx_dh_param_name }} 2048 creates={{ ssl_certs_path }}/{{ nginx_dh_param_name }}
+  command: openssl dhparam -out {{ ssl_certificates_path }}/{{ nginx_dh_param_name }} 2048 creates={{ ssl_certificates_path }}/{{ nginx_dh_param_name }}
 
 - name: NGINX | Create basic auth file
   htpasswd:
