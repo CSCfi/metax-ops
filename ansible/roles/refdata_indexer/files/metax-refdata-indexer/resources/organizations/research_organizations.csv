@@ -1,36 +1,36 @@
-org_code,org_name,unit_main_code,unit_sub_code,unit_name,org_isni,org_csc
-5040011,Geologian tutkimuskeskus,,,,http://isni.org/isni/0000000123753425,00007
-5040011,Geologian tutkimuskeskus,5040300,5040300,Tulosyksiköt,,
-5040011,Geologian tutkimuskeskus,5040300,504030001,Geoenergia GNR,,
-5040011,Geologian tutkimuskeskus,5040300,504030002,Yhdyskunnat ja rakentaminen YRA,,
-5040011,Geologian tutkimuskeskus,5040300,504030003,Kalliorakentaminen ja sijoituspaikat KAS,,
-5040011,Geologian tutkimuskeskus,5040300,504030004,Ympäristögeologia YMP,,
-5040011,Geologian tutkimuskeskus,5040300,504030005,Merigeologia MRG,,
-5040011,Geologian tutkimuskeskus,5040300,504030006,Mineraalitalous ja malmigeologia MIM,,
-5040011,Geologian tutkimuskeskus,5040300,504030007,Mineraalivarannot MIV,,
-5040011,Geologian tutkimuskeskus,5040300,504030008,Teollisuusmineraalit TMI,,
-5040011,Geologian tutkimuskeskus,5040300,504030009,Mineraalitekniikka ja materiaalit MMA,,
-5040011,Geologian tutkimuskeskus,5040300,504030010,Turvevarannot TUR,,
-5040011,Geologian tutkimuskeskus,5040300,504030011,Pohjavesi PVI,,
-5040011,Geologian tutkimuskeskus,5040300,504030012,Geofysiikan sovellukset GSO,,
-5040011,Geologian tutkimuskeskus,5040300,504030013,Tuotantoympäristöt ja kierrätys TUK,,
-5040011,Geologian tutkimuskeskus,5040300,504030014,Alueellinen geotieto ALG,,
-5040011,Geologian tutkimuskeskus,5040300,504030015,Geotietovarannon hallinta GEH,,
-5040011,Geologian tutkimuskeskus,5040300,504030016,Digitaaliset tuotteet ja palvelut DIP,,
-5040011,Geologian tutkimuskeskus,5040200,5040200,Toiminnan johtaminen,,
-5040011,Geologian tutkimuskeskus,5040200,50402003,Strateginen johto,,
-5040011,Geologian tutkimuskeskus,50402003,5040200310,"Henkilöstö, osaaminen ja työympäristöt",,
-5040011,Geologian tutkimuskeskus,50402003,5040200320,Viestintä ja markkinointi,,
-5040011,Geologian tutkimuskeskus,50402003,5040200330,Strategia ja suunnittelu,,
-5040011,Geologian tutkimuskeskus,50402003,5040200340,Tieteellinen tutkimus,,
-5040011,Geologian tutkimuskeskus,50402003,5040200350,Digitaalisuus ja tietovarannot,,
-4020217,Maanmittauslaitos,,,,http://isni.org/isni/000000040494894X,01229
-404001,Metsäntutkimuslaitos,,,,http://isni.org/isni/0000000122651136,TWV0c8OkbnR1dGtpbXVzbGFpdG9z
-02022481,Suomen Pankki,,,,http://isni.org/isni/0000000404104982,01888
-7020017,Suomen ympäristökeskus,,,,http://isni.org/isni/0000000110191419,01903
-5550012,Säteilyturvakeskus,,,,http://isni.org/isni/000000011534674X,U8OkdGVpbHl0dXJ2YWtlc2t1cw==
-26473754,Teknologiantutkimuskeskus VTT Oy,,,,http://isni.org/isni/0000000121061548,02045
-5610017,Terveyden ja hyvinvoinninlaitos,,,,http://isni.org/isni/0000000110130499,02060
-02202669,Työterveyslaitos,,,,http://isni.org/isni/0000000404105926,VhnDtnRlcnZleXNsYWl0b3M=
-1120017,Ulkopoliittinen instituutti,,,,http://isni.org/isni/0000000406205576,02215
-3060016,Valtion taloudellinen tutkimuskeskus,,,,http://isni.org/isni/0000000121621381,02396
+org_name_fi,org_name_en,org_name_sv,org_code,unit_main_code,unit_sub_code,unit_name,org_isni,org_csc
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,,,,http://isni.org/isni/0000000123753425,7
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,5040300,Tulosyksiköt,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030001,Geoenergia GNR,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030002,Yhdyskunnat ja rakentaminen YRA,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030003,Kalliorakentaminen ja sijoituspaikat KAS,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030004,Ympäristögeologia YMP,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030005,Merigeologia MRG,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030006,Mineraalitalous ja malmigeologia MIM,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030007,Mineraalivarannot MIV,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030008,Teollisuusmineraalit TMI,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030009,Mineraalitekniikka ja materiaalit MMA,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030010,Turvevarannot TUR,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030011,Pohjavesi PVI,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030012,Geofysiikan sovellukset GSO,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030013,Tuotantoympäristöt ja kierrätys TUK,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030014,Alueellinen geotieto ALG,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030015,Geotietovarannon hallinta GEH,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040300,504030016,Digitaaliset tuotteet ja palvelut DIP,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040200,5040200,Toiminnan johtaminen,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,5040200,50402003,Strateginen johto,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,50402003,5040200310,"Henkilöstö, osaaminen ja työympäristöt",,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,50402003,5040200320,Viestintä ja markkinointi,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,50402003,5040200330,Strategia ja suunnittelu,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,50402003,5040200340,Tieteellinen tutkimus,,
+Geologian tutkimuskeskus,Geological Survey of Finland,Geologiska forskningscentralen,5040011,50402003,5040200350,Digitaalisuus ja tietovarannot,,
+Maanmittauslaitos,National Land Survey of Finland,Lantmäteriverket,4020217,,,,http://isni.org/isni/000000040494894X,1229
+Metsäntutkimuslaitos,Finnish Forest Research Institute,Skogsforskningsinstitutet,404001,,,,http://isni.org/isni/0000000122651136,TWV0c8OkbnR1dGtpbXVzbGFpdG9z
+Suomen Pankki,Suomen Pankki,Finlands bank,02022481,,,,http://isni.org/isni/0000000404104982,1888
+Suomen ympäristökeskus,Finnish Environment Institute,Finlands miljöcentral,7020017,,,,http://isni.org/isni/0000000110191419,1903
+Säteilyturvakeskus,Radiation and Nuclear Safety Authority,Strålsäkerhetscentralen,5550012,,,,http://isni.org/isni/000000011534674X,U8OkdGVpbHl0dXJ2YWtlc2t1cw==
+Teknologiantutkimuskeskus VTT Oy,VTT Technical Research Centre of Finland Ltd,Teknologiska forskningscentralen VTT AB,26473754,,,,http://isni.org/isni/0000000121061548,2045
+Terveyden ja hyvinvoinninlaitos,National Institute for Health and Welfare,Institutet för hälsa och välfärd,5610017,,,,http://isni.org/isni/0000000110130499,2060
+Työterveyslaitos,Finnish Institute of Occupational Health,Arbetshälsoinstitutet,02202669,,,,http://isni.org/isni/0000000404105926,VhnDtnRlcnZleXNsYWl0b3M=
+Ulkopoliittinen instituutti,Finnish Institute of International Affairs,Utrikespolitiska institutet,1120017,,,,http://isni.org/isni/0000000406205576,2215
+Valtion taloudellinen tutkimuskeskus,VATT Institute for Economic Research,Statens ekonomiska forskningscentral,3060016,,,,http://isni.org/isni/0000000121621381,2396

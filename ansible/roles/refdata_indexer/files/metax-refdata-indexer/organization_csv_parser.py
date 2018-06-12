@@ -3,7 +3,7 @@
 
 	The first row in a csv file defines the keys that are used to parse the
 	organizations. The following keys are accepted as row headers. Separate column values with commas (,):
-	year,org_name,org_code,unit_main_code,unit_sub_code,unit_name
+	org_name_fi,org_name_en,org_name_sv,org_code,unit_main_code,unit_sub_code,unit_name
 	unit_main_code can be left blank, other fields are required.
 
 	This file is a modified version of the original implementation by Peter Kronström.
@@ -27,7 +27,9 @@ def parse_csv():
 				csv_reader = csv.DictReader(csv_file, delimiter=',', quotechar='"')
 				for row in csv_reader:
 					# parse fields in a single row
-					org_name = row.get('org_name', '')
+					org_name_fi = row.get('org_name_fi', '')
+					org_name_en = row.get('org_name_en', '')
+					org_name_sv = row.get('org_name_sv', '')
 					org_code = row.get('org_code', '')
 					#unit_main_code = row.get('unit_main_code', '')
 					unit_sub_code = row.get('unit_sub_code', '')
@@ -39,7 +41,7 @@ def parse_csv():
 						# save parent ids to parent_organizations dict
 						# and create a root level organization
 						if not org_code in root_orgs:
-							root_org_dict = create_organization(org_code, org_name, org_isni=org_isni, org_csc=org_csc)
+							root_org_dict = create_organization(org_code, org_name_fi, org_name_en=org_name_en, org_name_sv=org_name_sv, org_isni=org_isni, org_csc=org_csc)
 							root_orgs[org_code] = root_org_dict.get('org_id', None)
 							output_orgs.append(root_org_dict)
 
@@ -47,7 +49,7 @@ def parse_csv():
 						if unit_sub_code and unit_name:
 							organization_code = '-'.join([org_code, unit_sub_code])		# Unique
 							parent_id = root_orgs.get(org_code, None)
-							output_orgs.append(create_organization(organization_code, unit_name, parent_name=org_name, parent_id=parent_id))
+							output_orgs.append(create_organization(organization_code, unit_name, parent_id=parent_id))
 
 		except IOError:
 			pprint.pprint('File {} could not be found.'.format(csvfile))
@@ -62,25 +64,31 @@ def govern(row):
 	'''
 
 	# root-level organization only
-	if all(row[i] for i in ['org_name', 'org_code']):
+	if all(row[i] for i in ['org_name_fi', 'org_code']):
 		# check if sub-unit fields are present
 		if not all(row[i] for i in ['unit_sub_code', 'unit_name']):
 			print('Missing unit codes (unit_sub_code, unit_name). Creating root organization only: {}'.format(row))
 		return True
 	else:
-		print('Missing root organization fields (org_name, org_code). Skipping row {}'.format(row))
+		print('Missing root organization fields (org_name_fi, org_code). Skipping row {}'.format(row))
 		return False
 
 
-def create_organization(org_id_str, org_name, org_isni=None, org_csc=None, parent_name=None, parent_id=None):
+def create_organization(org_id_str, org_name_fi, org_name_en=None, org_name_sv=None, org_isni=None, org_csc=None, parent_id=None):
 	'''
 		create organization data_dict that is suitable for ES indexing
 	'''
 	org_dict = {}
 	org_dict['org_id'] = org_id_str
-	org_dict['label'] = {'und': org_name}
 
-	if parent_id and parent_name:
+	org_dict['label'] = {'fi': org_name_fi, 'und': org_name_fi}
+	if org_name_en:
+		org_dict['label']['en'] = org_name_en
+
+	if org_name_sv:
+		org_dict['label']['sv'] = org_name_sv
+
+	if parent_id:
 		org_dict['parent_id'] = parent_id
 
 	if org_isni:
