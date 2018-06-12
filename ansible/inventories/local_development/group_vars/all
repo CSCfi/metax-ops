@@ -46,7 +46,7 @@ elasticsearch_instance:
   is_master_node: "true"
   is_data_node: "true"
   cluster_name: metax-es-cluster
-  network_host: [_local_, _site_]
+  network_host: [0.0.0.0, "{{ dataserver_1_internal_ip }}"]
 
 elasticsearch:
   hosts: 127.0.0.1
