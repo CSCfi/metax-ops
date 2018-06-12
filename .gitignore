@@ -9,7 +9,7 @@
 metax-api/
 
 # ansible retry-file
-ansible/site.retry
+ansible/*.retry
 
 ubuntu*.log
 local_settings.py
