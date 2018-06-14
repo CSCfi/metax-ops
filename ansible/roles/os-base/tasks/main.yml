@@ -52,6 +52,8 @@
 
 - name: Reinstall glibc-common just in case to make Finnish locale available using yum
   shell: yum -y reinstall glibc-common
+  args:
+    warn: False
   when: deployment_environment_id == 'local_development'
 
 - name: Disable SELinux
