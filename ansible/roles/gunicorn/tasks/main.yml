@@ -1,7 +1,20 @@
 ---
 
+
 - name: Copy gunicorn config file
   template: src=templates/gunicorn_conf.py dest=/etc/gunicorn.py
+
+- name: Create gunicorn logging directory
+  file: path=/var/log/gunicorn state=directory owner={{ app_user }} group=metax
+
+- name: Create gunicorn log files and ensure file permissions
+  copy: content="" dest=/var/log/gunicorn/{{ item }}.log force=no owner={{ app_user }} group=metax mode=0755
+  with_items:
+    - gunicorn
+    - gunicorn_error
+
+- name: Create logrotate entry for gunicorn log file
+  template: src=templates/logrotate_gunicorn dest=/etc/logrotate.d/gunicorn
 
 - block:
 
