@@ -1,0 +1,10 @@
+/var/log/gunicorn/gunicorn.log
+/var/log/gunicorn/gunicorn_error.log
+{
+    daily
+    rotate 30
+    copytruncate
+    dateext
+    compress
+    su {{ app_user }} metax
+}
