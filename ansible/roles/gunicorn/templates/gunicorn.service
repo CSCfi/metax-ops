@@ -6,7 +6,7 @@ After=network.target
 [Service]
 PIDFile={{ metax_base_path }}/gunicorn/pid
 User={{ app_user }}
-Group=nginx
+Group=metax
 WorkingDirectory={{ metax_django_base_path }}
 ExecStart={{ python_virtualenv_path }}/bin/gunicorn --pid {{ metax_base_path }}/gunicorn/pid --bind unix:{{ metax_base_path }}/gunicorn/socket --access-logfile /var/log/gunicorn/gunicorn.log --error-logfile /var/log/gunicorn/gunicorn_error.log --log-level info --pythonpath {{ metax_django_base_path }} --config /etc/gunicorn.py  metax_api.wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
