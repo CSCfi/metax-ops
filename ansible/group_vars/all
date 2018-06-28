@@ -18,7 +18,7 @@ metax_db_archive_path: "{{ metax_db_base_path }}/backup/archive"
 metax_db_backup_path: "{{ db_backup_dir_base_path }}/metax_{{ deployment_environment_id }}"
 
 oai:
-  base_url: "http://{{ server_domain_name }}/oai"
+  base_url: "http://{{ server_domain_name }}/oai/"
   batch_size: 25
   repository_name: Metax ({{ deployment_environment_id }})
   etsin_url_template: "{{ etsin_base_url }}/dataset/%s"
