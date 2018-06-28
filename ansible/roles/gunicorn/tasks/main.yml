@@ -18,6 +18,7 @@
 
 - block:
 
+    # This folder must be owned by nginx, otherwise connection between nginx and gunicorn won't work
     - name: Create {{ metax_base_path }}/gunicorn for Gunicorn socket and PID
       file: path={{ metax_base_path }}/gunicorn state=directory owner={{ app_user }} group=nginx mode=770
 
