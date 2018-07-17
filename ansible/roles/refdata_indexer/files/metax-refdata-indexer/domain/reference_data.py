@@ -66,7 +66,8 @@ class ReferenceData(IndexableData):
         wkt='',
         input_file_format='',
         output_format_version='',
-        scheme=''):
+        scheme='',
+        internal_code=''):
 
         super(ReferenceData, self).__init__(data_id, data_type, label, uri, same_as, scheme)
 
@@ -77,6 +78,8 @@ class ReferenceData(IndexableData):
         self.parent_ids = []
         self.child_ids = []
         self.has_children = False
+
+        self.internal_code = internal_code
 
         if len(parent_ids) > 0:
             self.parent_ids = [self._create_es_document_id(p_id) for p_id in parent_ids]
@@ -101,5 +104,6 @@ class ReferenceData(IndexableData):
                 "\"child_ids\":" + json.dumps(self.child_ids) + ","
                 "\"has_children\":" + json.dumps(self.has_children) + ","
                 "\"same_as\":" + json.dumps(self.same_as) + ","
+                "\"internal_code\":\"" + self.internal_code + "\","
                 "\"scheme\":\"" + self.scheme + "\""
             "}")
