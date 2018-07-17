@@ -55,6 +55,10 @@
     },
     "scheme": {
       "type": "keyword"
+    },
+    "internal_code": {
+      "type": "keyword",
+      "index": false
     }
   }
 }
