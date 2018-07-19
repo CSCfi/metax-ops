@@ -32,7 +32,7 @@ REDIS:
 
 # Variables related to rabbitmq
 RABBITMQ:
-  HOSTS: {{ rabbitmq.hosts }}
+  HOSTS: {{ rabbitmq.hosts | to_nice_json }}
   PORT: {{ rabbitmq.port }}
 
   USER: {{ rabbitmq.user }}

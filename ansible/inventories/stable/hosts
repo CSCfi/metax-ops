@@ -7,11 +7,7 @@ metax-web-stable ansible_host="{{ webserver_1_external_ip }}" ansible_connection
 [dataservers]
 metax-data-stable ansible_host="{{ dataserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
 
-[cacheservers]
-metax-web-stable ansible_host="{{ cacheserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
-
 [stable:children]
 dbservers
 webservers
 dataservers
-cacheservers
