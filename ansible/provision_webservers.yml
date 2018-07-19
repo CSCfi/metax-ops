@@ -8,6 +8,7 @@
     - python
     - redis
     - nginx
+    #- rabbitmq TODO: Uncomment this when rabbitmq cluster is to be created
     - provision_app
   handlers:
     - name: restart sshd
