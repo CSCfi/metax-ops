@@ -7,11 +7,7 @@ metax-playground ansible_host="{{ external_ip }}" ansible_connection=ssh ansible
 [dataservers]
 metax-playground ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
 
-[cacheservers]
-metax-playground ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
-
 [playground:children]
 dbservers
 webservers
 dataservers
-cacheservers

@@ -7,11 +7,7 @@ metax-web-staging ansible_host="{{ webserver_1_external_ip }}" ansible_connectio
 [dataservers]
 metax-data-staging ansible_host="{{ dataserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
 
-[cacheservers]
-metax-web-staging ansible_host="{{ cacheserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
-
 [staging:children]
 dbservers
 webservers
 dataservers
-cacheservers
