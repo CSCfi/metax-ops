@@ -7,11 +7,7 @@ metax-web-test ansible_host="{{ webserver_1_external_ip }}" ansible_connection=s
 [dataservers]
 metax-data-test ansible_host="{{ dataserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
 
-[cacheservers]
-metax-web-test ansible_host="{{ cacheserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
-
 [test:children]
 dbservers
 webservers
 dataservers
-cacheservers

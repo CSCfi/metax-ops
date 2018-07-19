@@ -7,6 +7,7 @@
     - update_packages
     - postgres
     - backup
+    #- rabbitmq TODO: Uncomment this when rabbitmq cluster is to be created
   handlers:
     - name: restart sshd
       service: name=sshd state=restarted

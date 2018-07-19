@@ -1,7 +1,6 @@
 webserver_1_external_ip: 193.166.24.134
 dbserver_1_external_ip: 193.167.189.37
 dataserver_1_external_ip: 193.167.189.10
-cacheserver_1_external_ip: 193.166.24.134
 
 metax_app_base_path: "{{ metax_base_path }}/{{ app_name }}"
 deployment_environment_id: stable

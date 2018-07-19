@@ -11,20 +11,28 @@
     - name: Install RabbitMQ server
       yum: name=rabbitmq-server state=present
 
-    - name: Start RabbitMQ server
-      service: name=rabbitmq-server enabled=yes state=started
-
     - name: Enable RabbitMQ management plugin (access it via <ip_address>:15672)
       rabbitmq_plugin: names=rabbitmq_management state=enabled
 
-    - name: Enable RabbitMQ disk_free_limit configuration
-      lineinfile:
-        dest: "/etc/rabbitmq/rabbitmq.config"
-        state: present
-        regexp: "^.*\\{disk_free_limit, \\{mem_relative"
-        line: "{disk_free_limit, {mem_relative, 1.5}}"
+    - name: Restart RabbitMQ server
+      service: name=rabbitmq-server enabled=yes state=restarted
 
   when: rabbitmq_server.stat.exists == False
+
+- name: Enable RabbitMQ disk_free_limit configuration
+  lineinfile:
+    dest: "/etc/rabbitmq/rabbitmq.config"
+    state: present
+    regexp: "^.*\\{disk_free_limit, \\{mem_relative"
+    line: "{disk_free_limit, {mem_relative, 1.5}}"
+
+- name: Setup .erlang.cookie
+  copy:
+    dest: /var/lib/rabbitmq/.erlang.cookie
+    content: "{{ rabbitmq.erlang_cookie }}"
+
+- name: Restart RabbitMQ
+  service: name=rabbitmq-server state=restarted
 
 - name: Add main virtual host for RabbitMQ
   rabbitmq_vhost:
@@ -71,6 +79,3 @@
 
 - name: Remove default admin user
   rabbitmq_user: user=guest state=absent
-
-- name: Restart RabbitMQ
-  service: name=rabbitmq-server state=restarted
