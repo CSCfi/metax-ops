@@ -89,6 +89,7 @@ redis:
 
 rabbitmq:
   hosts: localhost
+  erlang_cookie: VEALXULUQXTMQIQLVDBVTDQSWDRWGNGL
   port: 5672
   vhost: metax
 
