@@ -17,7 +17,6 @@ ssl_certificates_path: /etc/nginx/ssl_certs
 webserver_1_internal_ip: 127.0.0.1
 dbserver_1_internal_ip: 127.0.0.1
 dataserver_1_internal_ip: 127.0.0.1
-cacheserver_1_internal_ip: 127.0.0.1
 
 deployment_environment_id: local_development
 ssl_certificate_name: nginx-selfsigned.crt
