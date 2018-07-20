@@ -46,9 +46,13 @@ elasticsearch_instance:
   is_data_node: "true"
   cluster_name: metax-es-cluster
   network_host: [_local_, "{{ dataserver_1_internal_ip }}"]
+  http_port: 9200
+  heap_size: 2g
+  min_master_nodes: 1
 
 elasticsearch:
-  hosts: 127.0.0.1
+  hosts:
+    - 127.0.0.1
   port: 9200
   use_ssl: False
 

@@ -12,7 +12,7 @@ METAX_DATABASE_HOST: {{ dbserver_1_internal_ip }}
 
 # Variables related to elasticsearch
 ELASTICSEARCH:
-  HOSTS: ['{{ elasticsearch.hosts}}']
+  HOSTS: {{ elasticsearch.hosts | to_nice_json }}
   PORT: {{ elasticsearch.port }}
   USE_SSL: {{ elasticsearch.use_ssl }}
 
