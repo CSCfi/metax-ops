@@ -8,6 +8,7 @@
     - python
     - rabbitmq
     - elasticsearch
+    - refdata_indexer
   handlers:
     - name: restart sshd
       service: name=sshd state=restarted

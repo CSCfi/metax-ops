@@ -4,6 +4,7 @@
       name: ansible-elasticsearch
     vars:
       es_instance_name: "{{ elasticsearch_instance.node_name }}"
+      es_heap_size: "{{ elasticsearch_instance.heap_size }}"
       es_version: "5.6.9"
       es_major_version: "5.x"
       es_version_lock: true
@@ -16,7 +17,10 @@
         http.cors.allow-origin : "*",
         http.cors.allow-methods : "OPTIONS, HEAD, GET",
         http.cors.allow-headers : "X-Requested-With,X-Auth-Token,Content-Type, Content-Length",
-        network.host: "{{ elasticsearch_instance.network_host }}"
+        bootstrap.memory_lock: true,
+        network.host: "{{ elasticsearch_instance.network_host }}",
+        http.port: "{{ elasticsearch_instance.http_port }}",
+        discovery.zen.ping.unicast.hosts: "{{ elasticsearch_instance.discovery_hosts | default('[\"127.0.0.1\", \"[::1]\"]') }}",
+        transport.tcp.port: "{{ elasticsearch_instance.tcp_transport_port | default('9300') }}",
+        discovery.zen.minimum_master_nodes: "{{ elasticsearch_instance.min_master_nodes | default('1') }}"
       }
-
-  - include_role: name=refdata_indexer
