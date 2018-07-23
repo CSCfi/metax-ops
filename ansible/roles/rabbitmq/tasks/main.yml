@@ -79,3 +79,47 @@
 
 - name: Remove default admin user
   rabbitmq_user: user=guest state=absent
+
+# Setup cluster
+
+- block:
+    - name: Add entry 1 to /etc/hosts file for rabbitmq cluster
+      lineinfile:
+        dest: "/etc/hosts"
+        state: present
+        line: "{{ dataserver_1_external_ip }}\t{{ dataserver_1_hostname }}"
+
+    - name: Add entry 2 to /etc/hosts file for rabbitmq cluster
+      lineinfile:
+        dest: "/etc/hosts"
+        state: present
+        line: "{{ dbserver_1_external_ip }}\t{{ dbserver_1_hostname }}"
+
+    - name: Add entry 3 to /etc/hosts file for rabbitmq cluster
+      lineinfile:
+        dest: "/etc/hosts"
+        state: present
+        line: "{{ webserver_1_external_ip }}\t{{ webserver_1_hostname }}"
+
+    - block:
+        - name: Set RabbitMQ cluster name
+          command: rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name }}
+
+        - name: Set RabbitMQ policy for automatic syncing/mirroring of etsin queues among cluster nodes (in metax virtual host)
+          command: "rabbitmqctl set_policy -p metax autosync-queues \"etsin\" '{\"ha-mode\":\"all\",\"ha-sync-mode\":\"automatic\"}'"
+
+      when: is_rabbitmq_master_node
+
+    - block:
+        - name: Stop RabbitMQ app in a slave node
+          command: rabbitmqctl stop_app
+
+        - name: Join slave node RabbitMQ to master node. NB, Here we assume dataserver is the master node.
+          command: rabbitmqctl join_cluster rabbit@{{ dataserver_1_hostname }}
+
+        - name: Start RabbitMQ app in slave node
+          command: rabbitmqctl start_app
+
+      when: not is_rabbitmq_master_node
+
+  when: "deployment_environment_id not in ['local_development', 'playground']"
