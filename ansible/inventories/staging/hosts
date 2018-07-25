@@ -1,13 +1,48 @@
 [dbservers]
-metax-db-staging ansible_host="{{ dbserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+metax-db-staging-1 ansible_host="{{ dbserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
 
 [webservers]
-metax-web-staging ansible_host="{{ webserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+metax-web-staging-1 ansible_host="{{ webserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
 
-[dataservers]
-metax-data-staging ansible_host="{{ dataserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+[master-cacheservers]
+metax-cache-staging-1 ansible_host="{{ cacheserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+
+[slave-cacheservers]
+metax-cache-staging-2 ansible_host="{{ cacheserver_2_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+metax-cache-staging-3 ansible_host="{{ cacheserver_3_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+
+[master-messageservers]
+metax-message-staging-1 ansible_host="{{ messageserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+
+[slave-messageservers]
+metax-message-staging-2 ansible_host="{{ messageserver_2_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+metax-message-staging-3 ansible_host="{{ messageserver_3_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+
+[searchservers]
+metax-search-staging-1 ansible_host="{{ searchserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+metax-search-staging-2 ansible_host="{{ searchserver_2_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+metax-search-staging-3 ansible_host="{{ searchserver_3_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+
+[refdataservers]
+metax-refdata-staging ansible_host="{{ refdataserver_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+
+[cacheservers:children]
+master-cacheservers
+slave-cacheservers
+
+[messageservers:children]
+master-messageservers
+slave-messageservers
 
 [staging:children]
 dbservers
 webservers
-dataservers
+cacheservers
+messageservers
+searchservers
+refdataservers
+
+[distincthosts]
+metax-host-1 ansible_host="{{ server_1_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+metax-host-2 ansible_host="{{ server_2_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+metax-host-3 ansible_host="{{ server_3_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"

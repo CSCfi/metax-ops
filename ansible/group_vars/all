@@ -27,8 +27,6 @@ oai:
 att_datacatalog_identifier: urn:nbn:fi:att:data-catalog-att
 ida_datacatalog_identifier: urn:nbn:fi:att:data-catalog-ida
 
-rabbitmq_cluster_name: rabbitmq-metax-cluster
-
 spacewalk_repo_gpg_keys:
   - http://spacewalk.csc.fi/pub/rpm-gpg-keys/RPM-GPG-KEY-spacewalk-2015
   - http://spacewalk.csc.fi/pub/RPM-GPG-KEY-CentOS-SIG-SCLo

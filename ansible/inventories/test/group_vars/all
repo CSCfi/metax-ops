@@ -1,11 +1,32 @@
-webserver_1_external_ip: 193.166.24.98
-dbserver_1_external_ip: 86.50.169.34
-dataserver_1_external_ip: 193.166.25.31
+# Server IP addresses
+
+server_1_ip: 86.50.169.34
+server_2_ip: 193.166.24.98
+server_3_ip: 193.166.25.31
+
+# Server IP address - system mapping
+
+dbserver_1_external_ip: "{{ server_1_ip }}"
+
+webserver_1_external_ip: "{{ server_2_ip }}"
+
+cacheserver_1_external_ip: "{{ server_2_ip }}"
+cacheserver_2_external_ip: "{{ server_1_ip }}"
+cacheserver_3_external_ip: "{{ server_3_ip }}"
+
+messageserver_1_external_ip: "{{ server_3_ip }}"
+messageserver_2_external_ip: "{{ server_2_ip }}"
+messageserver_3_external_ip: "{{ server_1_ip }}"
+
+searchserver_1_external_ip: "{{ server_3_ip }}"
+searchserver_2_external_ip: "{{ server_2_ip }}"
+searchserver_3_external_ip: "{{ server_1_ip }}"
+
+refdataserver_external_ip: "{{ server_3_ip }}"
+
+# The rest
 
 metax_app_base_path: "{{ metax_base_path }}/{{ app_name }}"
 deployment_environment_id: test
 project_repo_branch: test
-nginx_gunicorn_proxy_pass: http://unix:{{ metax_base_path }}/gunicorn/socket
-reload_ref_data_on_app_restart: True
-
-etsin_base_url: http://etsin-test.fairdata.fi
+etsin_base_url: https://etsin-test.fairdata.fi

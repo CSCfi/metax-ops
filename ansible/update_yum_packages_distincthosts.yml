@@ -1,0 +1,6 @@
+---
+
+- hosts: distincthosts
+  become: yes
+  roles:
+    - update_packages

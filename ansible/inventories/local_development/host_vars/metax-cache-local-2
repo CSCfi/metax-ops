@@ -1,0 +1,12 @@
+redis_instance:
+  number: 2
+  port: 6380
+  ip: "{{ server_ip }}"
+  is_master_node: false
+  bind_ip_addresses: "{{ server_ip }}"
+
+redis_sentinel_instance:
+  number: 2
+  port: 16380
+  ip: "{{ server_ip }}"
+  bind_ip_addresses: "{{ server_ip }}"
