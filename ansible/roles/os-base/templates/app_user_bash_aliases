@@ -15,7 +15,7 @@ alias loaddata='source-pyvenv && cd {{ metax_django_base_path }} && python manag
 alias runserver='cd {{ metax_django_base_path }} && {{ python_virtualenv_path }}/bin/gunicorn --bind localhost:8000 --access-logfile - --error-logfile - --config /etc/gunicorn.py --reload metax_api.wsgi:application'
 alias runtests='source-pyvenv && cd {{ metax_django_base_path }} && python manage.py test --failfast && cd -'
 alias generate-testdata='source-pyvenv && cd {{ metax_django_base_path }}/metax_api/tests/testdata && python generate_test_data.py && cd -'
-alias dev-init='loadinitialdata && update_datasets'
+alias dev-init='loaddata'
 
 # Make migrations and load them to database
 alias make_and_load_migrations='source-pyvenv && makemigrations && migrate'

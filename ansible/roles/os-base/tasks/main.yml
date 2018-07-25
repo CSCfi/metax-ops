@@ -100,3 +100,5 @@
         - "aliases"
 
   when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
+
+- include_role: name=update_packages

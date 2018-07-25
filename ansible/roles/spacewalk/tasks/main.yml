@@ -2,21 +2,21 @@
   shell: wget -qO- http://spacewalk.csc.fi/pub/bootstrap/bootstrap-centos7-base-with-activationkey | sh -s {{ spacewalk_key }}
   args:
     warn: False
-    
+
 - name: Add repo GPG keys
   shell: rpm --import {{ item }}
   with_items: "{{ spacewalk_repo_gpg_keys }}"
   args:
     warn: False
 
-# - name: Stop iptables service
-#   systemd: name=iptables state=stopped enabled=no
+- name: Stop iptables service
+  systemd: name=iptables state=stopped enabled=no
 
-# - name: Allow all ssh connections
-#   replace:
-#     dest: "/etc/hosts.allow"
-#     regexp: "^sshd"
-#     replace: "#sshd"
+- name: Allow all ssh connections
+  replace:
+    dest: "/etc/hosts.allow"
+    regexp: "^sshd"
+    replace: "#sshd"
 
 # - name: Disable anacron job
 #   file: path=/etc/cron.weekly/update-kernel mode=0644

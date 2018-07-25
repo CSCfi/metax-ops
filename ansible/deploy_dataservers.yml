@@ -1,8 +1,0 @@
----
-
-- hosts: dataservers
-  become: yes
-  roles:
-    - update_packages
-    - deploy_dataservers
-    - { role: reboot, when: "deployment_environment_id not in ['local_development', 'playground', 'staging', 'production']" }

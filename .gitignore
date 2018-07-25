@@ -13,10 +13,14 @@ ansible/*.retry
 
 ubuntu*.log
 local_settings.py
-ansible/inventories/playground/group_vars/playground
-ansible/inventories/test/group_vars/test
+ansible/inventories/playground/group_vars/*
+!ansible/inventories/playground/group_vars/all
+ansible/inventories/playground/host_vars
+ansible/inventories/test/group_vars/*
+!ansible/inventories/test/group_vars/all
 ansible/inventories/test/host_vars
-ansible/inventories/stable/group_vars/stable
+ansible/inventories/stable/group_vars/*
+!ansible/inventories/stable/group_vars/all
 ansible/inventories/stable/host_vars
 ansible/inventories/staging
 ansible/inventories/production

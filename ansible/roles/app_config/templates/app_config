@@ -8,7 +8,7 @@ METAX_ENV: {{ deployment_environment_id }}
 METAX_DATABASE: {{ metax_database.name }}
 METAX_DATABASE_USER: {{ metax_database.user }}
 METAX_DATABASE_PASSWORD: {{ metax_database.password }}
-METAX_DATABASE_HOST: {{ dbserver_1_internal_ip }}
+METAX_DATABASE_HOST: {{ dbserver_1_internal_ip | default('127.0.0.1') }}
 
 # Variables related to elasticsearch
 ELASTICSEARCH:
@@ -18,26 +18,25 @@ ELASTICSEARCH:
 
 # Variables related to redis
 REDIS:
-  HOSTS: [
-    ['{{ redis.sentinel_common.listen_hosts }}', {{ redis.sentinel_1.port }}],
-    ['{{ redis.sentinel_common.listen_hosts }}', {{ redis.sentinel_2.port }}],
-    ['{{ redis.sentinel_common.listen_hosts }}', {{ redis.sentinel_3.port }}]
-  ]
-  PASSWORD: '{{ redis.instance_common.password }}'
-  SERVICE: '{{ redis.sentinel_common.service_name }}'
+  PASSWORD: '{{ redis_common.password }}'
+
   TEST_DB: 15
   # when all instances run on localhost, any instance is fine. when
   # running in other envs, assumption is all instances use identical ports.
-  LOCALHOST_PORT: {{ redis.instance_1.port }}
+  LOCALHOST_PORT: {{ redis_common.localhost_port }}
+
+  SENTINEL:
+    HOSTS: {{redis_common.sentinel.hosts | to_nice_json }}
+    SERVICE: '{{ redis_common.sentinel.service_name }}'
 
 # Variables related to rabbitmq
 RABBITMQ:
-  HOSTS: {{ rabbitmq.hosts | to_nice_json }}
-  PORT: {{ rabbitmq.port }}
+  HOSTS: {{ rabbitmq_common.hosts | to_nice_json }}
+  PORT: {{ rabbitmq_common.port }}
 
-  USER: {{ rabbitmq.user }}
-  PASSWORD: {{ rabbitmq.password }}
-  VHOST: {{ rabbitmq.vhost }}
+  USER: {{ rabbitmq_common.user }}
+  PASSWORD: {{ rabbitmq_common.password }}
+  VHOST: {{ rabbitmq_common.vhost }}
 
   CONSUMERS: {{ rabbitmq_consumers | to_nice_json }}
 

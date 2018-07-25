@@ -1,13 +1,36 @@
 [dbservers]
-localhost ansible_host=127.0.0.1 ansible_connection=local ansible_user=vagrant
+metax-db-local ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
 
 [webservers]
-localhost ansible_host=127.0.0.1 ansible_connection=local ansible_user=vagrant
+metax-web-local ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
 
-[dataservers]
-localhost ansible_host=127.0.0.1 ansible_connection=local ansible_user=vagrant
+[master-cacheservers]
+metax-cache-local-1 ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
+
+[slave-cacheservers]
+metax-cache-local-2 ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
+metax-cache-local-3 ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
+
+[master-messageservers]
+metax-message-local ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
+
+[refdataservers]
+metax-refdata-local ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
+
+[searchservers]
+metax-search-local ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
+
+[cacheservers:children]
+master-cacheservers
+slave-cacheservers
 
 [local_development:children]
 dbservers
 webservers
-dataservers
+cacheservers
+master-messageservers
+refdataservers
+searchservers
+
+[distincthosts]
+metax-host-1 ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant

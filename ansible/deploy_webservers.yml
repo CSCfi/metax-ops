@@ -3,6 +3,5 @@
 - hosts: webservers
   become: yes
   roles:
-    - update_packages
     - deploy_webservers
     - { role: reboot, when: "deployment_environment_id not in ['local_development', 'staging', 'production']" }
