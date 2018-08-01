@@ -34,7 +34,7 @@ slave-cacheservers
 master-messageservers
 slave-messageservers
 
-[test:children]
+[stable:children]
 dbservers
 webservers
 cacheservers
