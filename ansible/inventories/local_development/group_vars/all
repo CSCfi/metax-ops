@@ -1,103 +1,48 @@
-shared_folder_base_path: /metax
-metax_app_base_path: "{{ shared_folder_base_path }}/{{ app_name }}"
+server_ip: 127.0.0.1
 
-nginx_credentials:
-  - { username: metax, password: test-metax }
-  - { username: qvain, password: test-qvain }
-  - { username: ida, password: test-ida }
-  - { username: tpas, password: test-tpas }
-  - { username: etsin, password: test-etsin }
-  - { username: fds, password: test-fds }
-
-nginx_whitelisted_ip_addresses_for_metax_api_writes:
-  - 20.20.20.1
-
-ssl_certificates_path: /etc/nginx/ssl_certs
-
-webserver_1_internal_ip: 127.0.0.1
-dbserver_1_internal_ip: 127.0.0.1
-dataserver_1_internal_ip: 127.0.0.1
+# The rest
 
 deployment_environment_id: local_development
-ssl_certificate_name: nginx-selfsigned.crt
-ssl_key_name: nginx-selfsigned.key
-project_repo_branch: test
-server_domain_name: metax.csc.local
-nginx_gunicorn_proxy_pass: http://127.0.0.1:8000
-reload_ref_data_on_app_restart: False
+shared_folder_base_path: /metax
 
-django_allowed_hosts:
-  - "{{ server_domain_name }}"
-  - 20.20.20.20
-
-webserver_internal_ip_address: 127.0.0.1
+# project_repo_branch: test
+project_repo_branch: CSCETSIN-61-refactor-redis-config
+metax_app_base_path: "{{ shared_folder_base_path }}/{{ app_name }}"
+etsin_base_url: https://etsin-test.fairdata.fi
 
 metax_database:
   name: metax_db
   user: metax_db_user
-  password: YMDLekQMqrVKcs37
+  password: YMDLekQMqrVKcs3
 
-django_secret_key: ^pqn=v2i)%!w1oh=r!m_=wo_#w3)(@-#8%q_8&9z@slu+#q3+b
-django_debug: True
-
-elasticsearch_instance:
-  node_name: "node1"
-  is_master_node: "true"
-  is_data_node: "true"
-  cluster_name: metax-es-cluster
-  network_host: [_local_, "{{ dataserver_1_internal_ip }}"]
-  http_port: 9200
-  heap_size: 2g
-  min_master_nodes: 1
-
-elasticsearch:
-  hosts:
-    - 127.0.0.1
-  port: 9200
-  use_ssl: False
+redis_common:
+  password: cain9Bi9Zaim9phuaiV4siebJe1reiy9Zoi5ziga
+  localhost_port: 6379
+  sentinel:
+    service_name: 'metax-master'
+    hosts:
+      - ['127.0.0.1', 16379]
+      - ['127.0.0.1', 16380]
+      - ['127.0.0.1', 16381]
 
 redis:
-  instance_common:
-    master_host: '127.0.0.1'
-    master_port: 6379
-    listen_hosts: '127.0.0.1' # should be a list for other than local env
-    password: password
-
-  instance_1:
-    number: 1
-    port: 6379
-    listen_hosts: '127.0.0.1'
-
-  instance_2:
-    number: 2
-    port: 6380
-    listen_hosts: '127.0.0.1'
-
-  sentinel_common:
-    service_name: 'metax-master'
+  master_host_ip: "{{ server_ip }}"
+  master_host_port: 6379
+  sentinel:
     quorum: 2 # how many sentinels need to agree before switching master
-    listen_hosts: '127.0.0.1' # should be a list for other than local env
 
-  sentinel_1:
-    number: 1
-    port: 5000
-
-  sentinel_2:
-    number: 2
-    port: 5001
-
-  sentinel_3:
-    number: 3
-    port: 5002
-
-
-rabbitmq:
-  erlang_cookie: VEALXULUQXTMQIQLVDBVTDQSWDRWGNGL
-
+rabbitmq_common:
   hosts:
     - localhost
   port: 5672
   vhost: metax
+
+  # main user/publisher
+  user: metax-user
+  password: tai5ceiXlaeRieC6
+
+rabbitmq:
+  erlang_cookie: VEALXULUQXTMQIQLVDBVTDQSWDRWGNGL
 
   # test_vhost for future use
   test_vhost: metax-test
@@ -106,20 +51,14 @@ rabbitmq:
   admin_user: admin
   admin_password: KDzCnpMsHZFdr6Cc
 
-  # main user/publisher
-  user: metax-user
-  password: tai5ceiXlaeRieC6
-
 rabbitmq_consumers:
 
     # test user
     - name: testaaja
       password: testaaja
-      vhost: "{{ rabbitmq.vhost }}"
+      vhost: "{{ rabbitmq_common.vhost }}"
       is_test_user: true
       permissions:
         conf: ^testaaja-.*$
         write: ^testaaja-.*$
         read: ^(datasets|testaaja-.*)$
-
-etsin_base_url: https://etsin-test.fairdata.fi

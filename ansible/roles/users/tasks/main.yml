@@ -9,8 +9,9 @@
     state: present
     regexp: '^%wheel'
     line: '%wheel ALL=(ALL) NOPASSWD: ALL'
-  when: deployment_environment_id not in ['staging', 'production']
-  
+  # when: deployment_environment_id not in ['staging', 'production']
+  when: deployment_environment_id not in ['production']
+
 - name: Add app user to OS
   user: name={{ app_user }} groups=metax append=yes state=present createhome=yes
 
@@ -27,4 +28,5 @@
       copy: src=files/public_keys/{{ item }}.pub dest=/home/{{ item }}/.ssh/authorized_keys owner={{ item }} mode=0700
       with_items: "{{ os_users }}"
 
-  when: deployment_environment_id not in ['local_development', 'staging', 'production']
+  # when: deployment_environment_id not in ['local_development', 'staging', 'production']
+  when: deployment_environment_id not in ['local_development', 'production']

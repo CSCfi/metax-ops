@@ -1,13 +1,36 @@
 [dbservers]
-metax-playground ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
+metax-db-playground ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
 
 [webservers]
-metax-playground ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
+metax-web-playground ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
 
-[dataservers]
-metax-playground ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
+[master-cacheservers]
+metax-cache-playground-1 ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
+
+[slave-cacheservers]
+metax-cache-playground-2 ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
+metax-cache-playground-3 ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
+
+[master-messageservers]
+metax-message-playground ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
+
+[refdataservers]
+metax-refdata-playground ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
+
+[searchservers]
+metax-search-playground ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user
+
+[cacheservers:children]
+master-cacheservers
+slave-cacheservers
 
 [playground:children]
 dbservers
 webservers
-dataservers
+cacheservers
+master-messageservers
+refdataservers
+searchservers
+
+[distincthosts]
+metax-host-1 ansible_host="{{ external_ip }}" ansible_connection=ssh ansible_user=cloud-user

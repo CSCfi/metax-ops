@@ -1,6 +1,6 @@
 ---
 
-- hosts: dataservers
+- hosts: refdataservers
   become: yes
   roles:
     - refdata_indexer

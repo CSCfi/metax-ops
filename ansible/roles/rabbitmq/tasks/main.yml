@@ -34,51 +34,54 @@
 - name: Restart RabbitMQ
   service: name=rabbitmq-server state=restarted
 
-- name: Add main virtual host for RabbitMQ
-  rabbitmq_vhost:
-    name: "{{ rabbitmq.vhost }}"
-    state: present
+- block:
+    - name: Add main virtual host for RabbitMQ
+      rabbitmq_vhost:
+        name: "{{ rabbitmq_common.vhost }}"
+        state: present
 
-- name: Add new admin user for RabbitMQ
-  rabbitmq_user:
-    user: "{{ rabbitmq.admin_user }}"
-    password: "{{ rabbitmq.admin_password }}"
-    tags: administrator,admin
-    permissions:
-      - vhost: /
+    - name: Add new admin user for RabbitMQ
+      rabbitmq_user:
+        user: "{{ rabbitmq.admin_user }}"
+        password: "{{ rabbitmq.admin_password }}"
+        tags: administrator,admin
+        permissions:
+          - vhost: /
+            configure_priv: .*
+            read_priv: .*
+            write_priv: .*
+          - vhost: "{{ rabbitmq_common.vhost }}"
+            configure_priv: .*
+            read_priv: .*
+            write_priv: .*
+        state: present
+
+    - name: Add metax-user for RabbitMQ
+      rabbitmq_user:
+        user: "{{ rabbitmq_common.user }}"
+        password: "{{ rabbitmq_common.password }}"
+        vhost: "{{ rabbitmq_common.vhost }}"
         configure_priv: .*
-        read_priv: .*
         write_priv: .*
-      - vhost: "{{ rabbitmq.vhost }}"
-        configure_priv: .*
         read_priv: .*
-        write_priv: .*
-    state: present
+        state: present
 
-- name: Add metax-user for RabbitMQ
-  rabbitmq_user:
-    user: "{{ rabbitmq.user }}"
-    password: "{{ rabbitmq.password }}"
-    vhost: "{{ rabbitmq.vhost }}"
-    configure_priv: .*
-    write_priv: .*
-    read_priv: .*
-    state: present
+    - name: Add known consumer users for RabbitMQ
+      rabbitmq_user:
+        user: "{{ item.name }}"
+        password: "{{ item.password }}"
+        vhost: "{{ item.vhost }}"
+        configure_priv: "{{ item.permissions.conf }}"
+        write_priv: "{{ item.permissions.write }}"
+        read_priv: "{{ item.permissions.read }}"
+        state: present
+      with_items:
+        - "{{ rabbitmq_consumers }}"
 
-- name: Add known consumer users for RabbitMQ
-  rabbitmq_user:
-    user: "{{ item.name }}"
-    password: "{{ item.password }}"
-    vhost: "{{ rabbitmq.vhost }}"
-    configure_priv: "{{ item.permissions.conf }}"
-    write_priv: "{{ item.permissions.write }}"
-    read_priv: "{{ item.permissions.read }}"
-    state: present
-  with_items:
-    - "{{ rabbitmq_consumers }}"
+    - name: Remove default admin user
+      rabbitmq_user: user=guest state=absent
 
-- name: Remove default admin user
-  rabbitmq_user: user=guest state=absent
+  when: is_rabbitmq_master_node
 
 # Setup cluster
 
@@ -87,23 +90,23 @@
       lineinfile:
         dest: "/etc/hosts"
         state: present
-        line: "{{ dataserver_1_external_ip }}\t{{ dataserver_1_hostname }}"
+        line: "{{ messageserver_1_external_ip }}\t{{ messageserver_1_hostname }}"
 
     - name: Add entry 2 to /etc/hosts file for rabbitmq cluster
       lineinfile:
         dest: "/etc/hosts"
         state: present
-        line: "{{ dbserver_1_external_ip }}\t{{ dbserver_1_hostname }}"
+        line: "{{ messageserver_2_external_ip }}\t{{ messageserver_2_hostname }}"
 
     - name: Add entry 3 to /etc/hosts file for rabbitmq cluster
       lineinfile:
         dest: "/etc/hosts"
         state: present
-        line: "{{ webserver_1_external_ip }}\t{{ webserver_1_hostname }}"
+        line: "{{ messageserver_3_external_ip }}\t{{ messageserver_3_hostname }}"
 
     - block:
         - name: Set RabbitMQ cluster name
-          command: rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name }}
+          command: rabbitmqctl set_cluster_name {{ rabbitmq.cluster_name }}
 
         - name: Set RabbitMQ policy for automatic syncing/mirroring of etsin queues among cluster nodes (in metax virtual host)
           command: "rabbitmqctl set_policy -p metax autosync-queues \"etsin\" '{\"ha-mode\":\"all\",\"ha-sync-mode\":\"automatic\"}'"
@@ -114,8 +117,8 @@
         - name: Stop RabbitMQ app in a slave node
           command: rabbitmqctl stop_app
 
-        - name: Join slave node RabbitMQ to master node. NB, Here we assume dataserver is the master node.
-          command: rabbitmqctl join_cluster rabbit@{{ dataserver_1_hostname }}
+        - name: Join slave node RabbitMQ to master node. NB, Here we assume messageserver_1 is the master node.
+          command: rabbitmqctl join_cluster rabbit@{{ messageserver_1_hostname }}
 
         - name: Start RabbitMQ app in slave node
           command: rabbitmqctl start_app

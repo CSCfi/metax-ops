@@ -1,5 +1,8 @@
 ---
 
 - import_playbook: provision_dbservers.yml
-- import_playbook: provision_dataservers.yml
+- import_playbook: provision_cacheservers.yml
+- import_playbook: provision_messageservers.yml
+- import_playbook: provision_searchservers.yml
+- import_playbook: provision_refdataservers.yml
 - import_playbook: provision_webservers.yml

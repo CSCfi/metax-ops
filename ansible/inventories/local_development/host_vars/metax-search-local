@@ -1,0 +1,9 @@
+elasticsearch_instance:
+  node_name: "node1"
+  is_master_node: "true"
+  is_data_node: "true"
+  cluster_name: metax-es-cluster
+  network_host: [_local_, "{{ server_ip }}"]
+  http_port: 9200
+  heap_size: 2g
+  min_master_nodes: 1

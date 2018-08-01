@@ -1,11 +1,32 @@
-webserver_1_external_ip: 193.166.24.134
-dbserver_1_external_ip: 193.167.189.37
-dataserver_1_external_ip: 193.167.189.10
+# Server IP addresses
+
+server_1_ip: 193.167.189.37
+server_2_ip: 193.166.24.134
+server_3_ip: 193.167.189.10
+
+# Server IP address - system mapping
+
+dbserver_1_external_ip: "{{ server_1_ip }}"
+
+webserver_1_external_ip: "{{ server_2_ip }}"
+
+cacheserver_1_external_ip: "{{ server_2_ip }}"
+cacheserver_2_external_ip: "{{ server_1_ip }}"
+cacheserver_3_external_ip: "{{ server_3_ip }}"
+
+messageserver_1_external_ip: "{{ server_3_ip }}"
+messageserver_2_external_ip: "{{ server_2_ip }}"
+messageserver_3_external_ip: "{{ server_1_ip }}"
+
+searchserver_1_external_ip: "{{ server_3_ip }}"
+searchserver_2_external_ip: "{{ server_2_ip }}"
+searchserver_3_external_ip: "{{ server_1_ip }}"
+
+refdataserver_external_ip: "{{ server_3_ip }}"
+
+# The rest
 
 metax_app_base_path: "{{ metax_base_path }}/{{ app_name }}"
 deployment_environment_id: stable
 project_repo_branch: stable
-nginx_gunicorn_proxy_pass: http://unix:{{ metax_base_path }}/gunicorn/socket
-reload_ref_data_on_app_restart: True
-
 etsin_base_url: https://etsin-stable.fairdata.fi
