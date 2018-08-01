@@ -1,0 +1,13 @@
+---
+
+- hosts: master-messageservers
+  become: yes
+  roles:
+    - { role: os-base, when: "deployment_environment_id not in ['local_development', 'playground']" }
+    - rabbitmq
+
+- hosts: slave-messageservers
+  become: yes
+  roles:
+    - { role: os-base, when: "deployment_environment_id not in ['local_development', 'playground']" }
+    - { role: rabbitmq, when: "deployment_environment_id not in ['local_development', 'playground']" }

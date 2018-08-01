@@ -1,0 +1,13 @@
+---
+
+- hosts: master-cacheservers
+  become: yes
+  roles:
+    - { role: os-base, when: "deployment_environment_id not in ['local_development', 'playground']" }
+    - redis
+
+- hosts: slave-cacheservers
+  become: yes
+  roles:
+    - { role: os-base, when: "deployment_environment_id not in ['local_development', 'playground']" }
+    - redis
