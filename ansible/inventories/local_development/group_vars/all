@@ -5,8 +5,7 @@ server_ip: 127.0.0.1
 deployment_environment_id: local_development
 shared_folder_base_path: /metax
 
-# project_repo_branch: test
-project_repo_branch: CSCETSIN-61-refactor-redis-config
+project_repo_branch: test
 metax_app_base_path: "{{ shared_folder_base_path }}/{{ app_name }}"
 etsin_base_url: https://etsin-test.fairdata.fi
 
