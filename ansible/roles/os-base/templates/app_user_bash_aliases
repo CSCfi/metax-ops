@@ -4,6 +4,8 @@
 alias aliases='cat ~/.bash_aliases'
 alias metax-src='cd {{ metax_django_base_path }}'
 alias source-pyvenv='source {{ python_virtualenv_path }}/bin/activate'
+alias run_flake8='metax-src && source-pyvenv && flake8 . && cd -'
+alias install_requirements='metax-src && cd .. && source-pyvenv && pip install -r requirements.txt && cd -'
 alias tail-log='tail -f -n 200 /var/log/{{ app_name }}/{{ app_log_file }}'
 
 # django-specific aliases
