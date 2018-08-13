@@ -1,0 +1,3 @@
+[{"id":"Success","uri":"http://purl.org/att/es/reference_data/event_outcome/event_outcome_success","label":{"en":"Success", "fi":"Onnistunut", "sv":"Framgångsrik"}},
+{"id":"Failure","uri":"http://purl.org/att/es/reference_data/event_outcome/event_outcome_failure","label":{"en":"Failure", "fi":"Epäonnistunut", "sv":"Misslyckad"}},
+{"id":"Unknown","uri":"http://purl.org/att/es/reference_data/event_outcome/event_outcome_unknown","label":{"en":"Unknown", "fi":"Tuntematon", "sv":"Okänt"}}]
