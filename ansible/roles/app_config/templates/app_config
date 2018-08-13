@@ -67,7 +67,7 @@ API_ACCESS: {
     },
     "files": {
         "read":  ["metax", "ida", "fds", "tpas"],
-        "write": ["metax", "ida"]
+        "write": ["metax", "ida", "tpas"]
     },
     "filestorages": {
         "read":  ["metax"],
