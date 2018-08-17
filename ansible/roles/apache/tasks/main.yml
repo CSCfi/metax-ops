@@ -1,0 +1,20 @@
+---
+
+- name: APACHE | Install httpd
+  yum: name=httpd state=latest
+
+- name: APACHE | Install mod_auth_openidc
+  yum: name=mod_auth_openidc state=latest
+
+- name: APACHE | Copy httpd conf file
+  template: src=templates/metax_httpd.conf dest=/etc/httpd/conf.d/metax_httpd.conf
+
+- name: APACHE | Disable httpd listening on port 80 by default
+  lineinfile:
+    dest: "/etc/httpd/conf/httpd.conf"
+    state: present
+    regexp: "Listen 80"
+    line: "# Listen 80"
+
+- name: APACHE | Restart httpd
+  service: name=httpd enabled=yes state=restarted
