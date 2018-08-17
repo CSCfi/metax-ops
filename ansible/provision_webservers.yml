@@ -6,4 +6,5 @@
     - { role: os-base, when: "deployment_environment_id not in ['local_development', 'playground']" }
     - { role: python, when: "deployment_environment_id not in ['local_development', 'playground']" }
     - nginx
+    - apache
     - provision_app
