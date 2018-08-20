@@ -6,15 +6,32 @@
 - name: APACHE | Install mod_auth_openidc
   yum: name=mod_auth_openidc state=latest
 
-- name: APACHE | Copy httpd conf file
+- name: APACHE | Copy metax httpd conf file
   template: src=templates/metax_httpd.conf dest=/etc/httpd/conf.d/metax_httpd.conf
 
-- name: APACHE | Disable httpd listening on port 80 by default
+- name: APACHE | Copy metax httpd modules file
+  template: src=templates/00-metax_modules.conf dest=/etc/httpd/conf.modules.d/00-metax_modules.conf
+
+- name: APACHE | Disable listening on port 80 by default
   lineinfile:
     dest: "/etc/httpd/conf/httpd.conf"
     state: present
     regexp: "Listen 80"
     line: "# Listen 80"
+
+- name: APACHE | Load custom list of httpd modules, instead of all default modules
+  lineinfile:
+    dest: "/etc/httpd/conf/httpd.conf"
+    state: present
+    regexp: "Include conf.modules.d"
+    line: "Include conf.modules.d/00-metax_modules.conf"
+
+- name: APACHE | Only load custom metax.conf, not all confs from conf.d/
+  lineinfile:
+    dest: "/etc/httpd/conf/httpd.conf"
+    state: present
+    regexp: "IncludeOptional conf.d"
+    line: "IncludeOptional conf.d/metax_httpd.conf"
 
 - name: APACHE | Restart httpd
   service: name=httpd enabled=yes state=restarted
