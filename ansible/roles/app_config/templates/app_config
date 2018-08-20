@@ -40,6 +40,10 @@ RABBITMQ:
 
   CONSUMERS: {{ rabbitmq_consumers | to_nice_json }}
 
+# allowed api auth methods in HTTP Authorization header. to disable End User access
+# altogether, remove "Bearer" from below list.
+ALLOWED_AUTH_METHODS: {{ allowed_auth_methods | to_nice_json }}
+
 # Variables related to api credentials
 API_USERS: {{ nginx_credentials | to_nice_json }}
 
@@ -59,7 +63,7 @@ API_ACCESS: {
     },
     "datasets": {
         "read":  ["all"],
-        "write": ["metax", "qvain", "etsin", "tpas"]
+        "write": ["metax", "qvain", "etsin", "tpas", "endusers"]
     },
     "directories": {
         "read":  ["metax", "qvain", "etsin", "tpas", "fds"],
