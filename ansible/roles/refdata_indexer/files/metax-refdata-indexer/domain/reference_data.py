@@ -21,6 +21,7 @@ class ReferenceData(IndexableData):
     DATA_TYPE_IDENTIFIER_TYPE = 'identifier_type'
     DATA_TYPE_RESTRICTION_GROUNDS = 'restriction_grounds'
     DATA_TYPE_CONTRIBUTOR_ROLE = 'contributor_role'
+    DATA_TYPE_CONTRIBUTOR_TYPE = 'contributor_type'
     DATA_TYPE_FUNDER_TYPE = 'funder_type'
     DATA_TYPE_LICENSES = 'license'
     DATA_TYPE_FILE_TYPE = 'file_type'
@@ -45,6 +46,7 @@ class ReferenceData(IndexableData):
         DATA_TYPE_IDENTIFIER_TYPE,
         DATA_TYPE_RESTRICTION_GROUNDS,
         DATA_TYPE_CONTRIBUTOR_ROLE,
+        DATA_TYPE_CONTRIBUTOR_TYPE,
         DATA_TYPE_FUNDER_TYPE,
         DATA_TYPE_LICENSES,
         DATA_TYPE_FILE_TYPE,
