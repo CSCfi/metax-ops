@@ -4,3 +4,12 @@
   become: yes
   roles:
     - app_config
+
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Restart gunicorn
+      service:
+        name: gunicorn
+        state: restarted
+      when: deployment_environment_id != 'local_development'
