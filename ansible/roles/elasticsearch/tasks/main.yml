@@ -5,7 +5,7 @@
     vars:
       es_instance_name: "{{ elasticsearch_instance.node_name }}"
       es_heap_size: "{{ elasticsearch_instance.heap_size }}"
-      es_version: "5.6.9"
+      es_version: "5.6.10"
       es_major_version: "5.x"
       es_version_lock: true
       es_config: {
