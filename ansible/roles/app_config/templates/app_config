@@ -47,6 +47,9 @@ ALLOWED_AUTH_METHODS: {{ allowed_auth_methods | to_nice_json }}
 # Variables related to api credentials
 API_USERS: {{ nginx_credentials | to_nice_json }}
 
+ATT_DATACATALOG_IDENTIFIER: {{ att_datacatalog_identifier }}
+IDA_DATACATALOG_IDENTIFIER: {{ ida_datacatalog_identifier }}
+
 # specify read and write access of services per api, or if an api is readable by world
 API_ACCESS: {
     "apierrors": {
