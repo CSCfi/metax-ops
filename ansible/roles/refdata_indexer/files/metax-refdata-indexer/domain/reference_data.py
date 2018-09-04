@@ -16,7 +16,6 @@ class ReferenceData(IndexableData):
     DATA_TYPE_MIME_TYPE = 'mime_type'
 
     DATA_TYPE_ACCESS_TYPE = 'access_type'
-    DATA_TYPE_CHECKSUM_ALGORITHM = 'checksum_algorithm'
     DATA_TYPE_RESOURCE_TYPE = 'resource_type'
     DATA_TYPE_IDENTIFIER_TYPE = 'identifier_type'
     DATA_TYPE_RESTRICTION_GROUNDS = 'restriction_grounds'
@@ -41,7 +40,6 @@ class ReferenceData(IndexableData):
 
     LOCAL_REFERENCE_DATA_TYPES = [
         DATA_TYPE_ACCESS_TYPE,
-        DATA_TYPE_CHECKSUM_ALGORITHM,
         DATA_TYPE_RESOURCE_TYPE,
         DATA_TYPE_IDENTIFIER_TYPE,
         DATA_TYPE_RESTRICTION_GROUNDS,
