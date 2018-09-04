@@ -35,6 +35,8 @@ class IndexableData:
                 self.label[key] = val.replace("'", "&quot;")
 
             set_default_label(self.label)
+        else:
+            self.label = {"und": self.code}
 
         self.uri = uri if uri else ''
 
