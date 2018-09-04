@@ -69,11 +69,11 @@ API_ACCESS: {
         "write": ["metax", "qvain", "etsin", "tpas", "endusers"]
     },
     "directories": {
-        "read":  ["metax", "qvain", "etsin", "tpas", "fds"],
+        "read":  ["metax", "qvain", "etsin", "tpas", "fds", "endusers"],
         "write": []
     },
     "files": {
-        "read":  ["metax", "ida", "fds", "tpas"],
+        "read":  ["metax", "ida", "fds", "tpas", "endusers"],
         "write": ["metax", "ida", "tpas"]
     },
     "filestorages": {
