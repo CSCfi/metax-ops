@@ -28,6 +28,16 @@
     - name: Copy gunicorn socket file
       template: src=templates/gunicorn.socket dest=/usr/lib/systemd/system/gunicorn.socket
 
+    # apache needs a directory owned by it to access the socket, similar to nginx above...
+    - name: Create {{ metax_base_path }}/gunicorn_apache
+      file: path={{ metax_base_path }}/gunicorn state=directory owner={{ app_user }} group=apache mode=770
+
+    - name: Symlink gunicorn_apache/socket to gunicorn/socket
+      file:
+        src: '{{ metax_base_path }}/gunicorn/socket'
+        dest: '{{ metax_base_path }}/gunicorn_apache/socket'
+        state: link
+
     - name: Systemctl daemon-reload
       shell: "systemctl daemon-reload"
 

@@ -10,6 +10,8 @@ nginx_whitelisted_ip_addresses_for_metax_api_writes:
   - 20.20.20.1
 
 nginx_gunicorn_proxy_pass: http://127.0.0.1:8000
+httpd_gunicorn_proxy_pass: http://127.0.0.1:8000
+
 reload_ref_data_on_app_restart: False
 django_secret_key: ^pqn=v2i)%!w1oh=r!m_=wo_#w3)(@-#8%q_8&9z@slu+#q3+b
 django_debug: True
