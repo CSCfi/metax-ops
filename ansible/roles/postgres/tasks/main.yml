@@ -166,28 +166,28 @@
   lineinfile:
     dest: "{{ metax_db_data_path }}/postgresql.conf"
     state: present
-    regexp: "#wal_level ="
+    regexp: "^#?wal_level ="
     line: "wal_level = replica"
 
 - name: Change Postgres configuration max_wal_senders to 1
   lineinfile:
     dest: "{{ metax_db_data_path }}/postgresql.conf"
     state: present
-    regexp: "#max_wal_senders ="
+    regexp: "^#?max_wal_senders ="
     line: "max_wal_senders = 1"
 
 - name: Change Postgres configuration archive_mode to on
   lineinfile:
     dest: "{{ metax_db_data_path }}/postgresql.conf"
     state: present
-    regexp: "#archive_mode ="
+    regexp: "^#?archive_mode ="
     line: "archive_mode = on"
 
 - name: Change Postgres configuration archive_command
   lineinfile:
     dest: "{{ metax_db_data_path }}/postgresql.conf"
     state: present
-    regexp: "#archive_command ="
+    regexp: "^#?archive_command ="
     line: "archive_command = 'test ! -f {{ metax_db_archive_path }}/%f && cp %p {{ metax_db_archive_path }}/%f && chmod 660 {{ metax_db_archive_path }}/%f'"
 
 - name: Create wal archive directory

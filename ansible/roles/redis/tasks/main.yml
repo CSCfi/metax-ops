@@ -104,7 +104,7 @@
 - name: Set default Redis service to not auto-restart
   lineinfile:
     path: /usr/lib/systemd/system/redis.service
-    regexp: '^Restart=always'
+    regexp: '^Restart='
     line: 'Restart=no'
   when: redis_default_service.stat.exists == True
 

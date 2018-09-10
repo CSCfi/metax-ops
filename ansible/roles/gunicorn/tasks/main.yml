@@ -30,7 +30,7 @@
 
     # apache needs a directory owned by it to access the socket, similar to nginx above...
     - name: Create {{ metax_base_path }}/gunicorn_apache
-      file: path={{ metax_base_path }}/gunicorn state=directory owner={{ app_user }} group=apache mode=770
+      file: path={{ metax_base_path }}/gunicorn_apache state=directory owner={{ app_user }} group=apache mode=770
 
     - name: Symlink gunicorn_apache/socket to gunicorn/socket
       file:
