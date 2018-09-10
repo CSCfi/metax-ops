@@ -3,6 +3,8 @@
   file:
     path: "{{ metax_app_base_path }}/docs/build"
     state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
 
 - name: Sphinx | Build documentation
   shell: su - {{ app_user }} -c 'source {{ python_virtualenv_path }}/bin/activate; sphinx-build -b html {{ metax_app_base_path }}/docs/source {{ metax_app_base_path }}/docs/build'
