@@ -1,0 +1,12 @@
+
+- name: Sphinx | Create documentation build directory
+  file:
+    path: "{{ metax_app_base_path }}/docs/build"
+    state: directory
+
+- name: Sphinx | Build documentation
+  shell: su - {{ app_user }} -c 'source {{ python_virtualenv_path }}/bin/activate; sphinx-build -b html {{ metax_app_base_path }}/docs/source {{ metax_app_base_path }}/docs/build'
+
+# todo search/replace for
+# - METAX_BRANCH_NAME
+# - METAX_DOMAIN
