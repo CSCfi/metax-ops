@@ -4,32 +4,32 @@
   yum: name=centos-release-scl
   when: deployment_environment_id ==  'local_development'
 
-- name: APACHE | Install httpd
+- name: APACHE | Install httpd24
   yum: name=httpd24-httpd state=latest
 
-- name: APACHE | Install mod_auth_openidc from centos standard repository
+- name: APACHE | Install mod_auth_openidc from centos standard repository. Installs also vanilla httpd
   yum: name=mod_auth_openidc state=latest
 
-- name: APACHE | Link mod_auth_openidc to custom httpd modules location
+- name: APACHE | Link mod_auth_openidc to custom httpd24 modules location
   file:
     src: '/etc/httpd/modules/mod_auth_openidc.so'
     dest: '/opt/rh/httpd24/root/etc/httpd/modules/mod_auth_openidc.so'
     state: link
 
-- name: APACHE | Copy metax httpd conf file
+- name: APACHE | Copy metax httpd24 conf file
   template: src=templates/metax_httpd.conf dest=/opt/rh/httpd24/root/etc/httpd/conf.d/metax_httpd.conf
 
-- name: APACHE | Copy metax httpd modules file
+- name: APACHE | Copy metax httpd24 modules file
   template: src=templates/00-metax_modules.conf dest=/opt/rh/httpd24/root/etc/httpd/conf.modules.d/00-metax_modules.conf
 
-- name: APACHE | Disable listening on port 80 by default
+- name: APACHE | Disable httpd24 listening on port 80 by default
   lineinfile:
     dest: "/opt/rh/httpd24/root/etc/httpd/conf/httpd.conf"
     state: present
-    regexp: "Listen 80"
+    regexp: '^#?\s?Listen 80'
     line: "# Listen 80"
 
-- name: APACHE | Load custom list of httpd modules, instead of all default modules
+- name: APACHE | Load custom list of httpd24 modules, instead of all default modules
   lineinfile:
     dest: "/opt/rh/httpd24/root/etc/httpd/conf/httpd.conf"
     state: present
@@ -43,5 +43,14 @@
     regexp: "IncludeOptional conf.d"
     line: "IncludeOptional conf.d/metax_httpd.conf"
 
-- name: APACHE | Restart httpd
+- name: Set vanilla httpd service to not auto-restart
+  lineinfile:
+    path: /usr/lib/systemd/system/httpd.service
+    state: present
+    line: 'Restart=no'
+
+- name: Ensure vanilla httpd is stopped
+  service: name=httpd enabled=no state=stopped
+
+- name: APACHE | Restart httpd24
   service: name=httpd24-httpd enabled=yes state=restarted
