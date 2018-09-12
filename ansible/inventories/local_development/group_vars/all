@@ -8,6 +8,7 @@ shared_folder_base_path: /metax
 project_repo_branch: test
 metax_app_base_path: "{{ shared_folder_base_path }}/{{ app_name }}"
 etsin_base_url: https://etsin-test.fairdata.fi
+datacite_doi_prefix: 10.5072
 
 # allowed api auth methods in HTTP Authorization header. to disable End User access
 # altogether, remove "Bearer" from below list.
@@ -67,3 +68,11 @@ rabbitmq_consumers:
         conf: ^testaaja-.*$
         write: ^testaaja-.*$
         read: ^(datasets|testaaja-.*)$
+
+datacite:
+  doi_base_url: https://mds.datacite.org/doi/
+  metadata_base_url: https://mds.datacite.org/metadata
+  username: <REPLACE_WITH_DATACITE_USERNAME>
+  password: <REPLACE_WITH_DATACITE_PASSWORD>
+  etsin_url_template: "{{ etsin_base_url }}/dataset/%s"
+  prefix: "{{ datacite_doi_prefix }}"

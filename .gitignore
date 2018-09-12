@@ -25,9 +25,12 @@ ansible/inventories/stable/host_vars
 ansible/inventories/staging
 ansible/inventories/production
 
+ansible/group_vars/*
+!ansible/group_vars/all
 ansible/files/
-*.pem
 ansible/roles/ansible-elasticsearch/
+
+*.pem
 *.tar.gz
 __pycache__
 .idea
