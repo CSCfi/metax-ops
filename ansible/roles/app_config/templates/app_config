@@ -103,8 +103,6 @@ OAI:
       - "{{ida_datacatalog_identifier}}"
 
 DATACITE:
-    DOI_BASE_URL: {{ datacite.doi_base_url }}
-    METADATA_BASE_URL: {{ datacite.metadata_base_url }}
     USERNAME: {{ datacite.username }}
     PASSWORD: {{ datacite.password }}
     ETSIN_URL_TEMPLATE: {{ datacite.etsin_url_template }}
