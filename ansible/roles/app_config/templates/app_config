@@ -52,37 +52,44 @@ IDA_DATACATALOG_IDENTIFIER: {{ ida_datacatalog_identifier }}
 
 # specify read and write access of services per api, or if an api is readable by world
 API_ACCESS: {
-    "apierrors": {
-        "read":  ["metax"],
-        "write": []
+    "rest": {
+        "apierrors": {
+            "read":  ["metax"],
+            "write": []
+        },
+        "contracts": {
+            "read":  ["metax", "tpas"],
+            "write": ["metax", "tpas"]
+        },
+        "datacatalogs": {
+            "read":  ["metax", "all"],
+            "write": ["metax", "etsin"]
+        },
+        "datasets": {
+            "read":  ["all"],
+            "write": ["metax", "qvain", "etsin", "tpas", "endusers"]
+        },
+        "directories": {
+            "read":  ["metax", "qvain", "etsin", "tpas", "fds", "endusers"],
+            "write": []
+        },
+        "files": {
+            "read":  ["metax", "ida", "fds", "tpas", "endusers"],
+            "write": ["metax", "ida", "tpas"]
+        },
+        "filestorages": {
+            "read":  ["metax"],
+            "write": ["metax"]
+        },
+        "schemas": {
+            "read":  ["all"],
+            "write": []
+        }
     },
-    "contracts": {
-        "read":  ["metax", "tpas"],
-        "write": ["metax", "tpas"]
-    },
-    "datacatalogs": {
-        "read":  ["metax", "all"],
-        "write": ["metax", "etsin"]
-    },
-    "datasets": {
-        "read":  ["all"],
-        "write": ["metax", "qvain", "etsin", "tpas", "endusers"]
-    },
-    "directories": {
-        "read":  ["metax", "qvain", "etsin", "tpas", "fds", "endusers"],
-        "write": []
-    },
-    "files": {
-        "read":  ["metax", "ida", "fds", "tpas", "endusers"],
-        "write": ["metax", "ida", "tpas"]
-    },
-    "filestorages": {
-        "read":  ["metax"],
-        "write": ["metax"]
-    },
-    "schemas": {
-        "read":  ["all"],
-        "write": []
+    "rpc": {
+        "datasets": {
+            "get_minimal_dataset_template": { "use": ["all"] }
+        }
     }
 }
 
