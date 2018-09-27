@@ -8,7 +8,7 @@ class OrganizationData(IndexableData):
     Model class for organization data that can be indexed into Metax Elasticsearch
     '''
 
-    ORGANIZATION_PURL_BASE_URL = 'http://purl.org/att/es/' + ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME + "/" + IndexableData.DATA_TYPE_ORGANIZATION + '/organization_'
+    ORGANIZATION_PURL_BASE_URL = 'http://uri.suomi.fi/codelist/fairdata/' + IndexableData.DATA_TYPE_ORGANIZATION + '/code/'
 
     def __init__(
         self,
