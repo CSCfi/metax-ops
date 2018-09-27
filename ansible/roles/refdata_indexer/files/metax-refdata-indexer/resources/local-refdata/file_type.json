@@ -1,9 +1,9 @@
-[{"id":"audiovisual", "uri":"http://purl.org/att/es/reference_data/file_type/file_type_audiovisual", "label":{"fi":"Audiovisuaalinen", "en":"Audiovisual"}},
- {"id":"video", "uri":"http://purl.org/att/es/reference_data/file_type/file_type_video", "label":{"fi":"Video", "en":"Video"}},
- {"id":"image", "uri":"http://purl.org/att/es/reference_data/file_type/file_type_image", "label":{"fi":"Kuva","en":"Image"},"same_as":["http://purl.org/dc/dcmitype/Image"]},
- {"id":"source_code", "uri":"http://purl.org/att/es/reference_data/file_type/file_type_source_code", "label":{"fi":"Lähdekoodi","en":"Source code"}},
- {"id":"software", "uri":"http://purl.org/att/es/reference_data/file_type/file_type_software", "label":{"fi":"Sovellus","en":"Software"},"same_as":["http://purl.org/dc/dcmitype/Software"]},
- {"id":"sound", "uri":"http://purl.org/att/es/reference_data/file_type/file_type_sound", "label":{"fi":"Ääni","en":"Sound"},"same_as":["http://purl.org/dc/dcmitype/Sound"]},
- {"id":"text", "uri":"http://purl.org/att/es/reference_data/file_type/file_type_text", "label":{"fi":"Teksti","en":"Text"},"same_as":["http://purl.org/dc/dcmitype/Text"]},
- {"id":"binary", "uri":"http://purl.org/att/es/reference_data/file_type/file_type_binary", "label":{"fi":"Binääri","en":"Binary"}},
- {"id":"other", "uri":"http://purl.org/att/es/reference_data/file_type/file_type_other", "label":{"fi":"Muu","en":"Other"}}]
+[{"id":"audiovisual", "uri":"http://uri.suomi.fi/codelist/fairdata/file_type/code/audiovisual", "label":{"fi":"Audiovisuaalinen", "en":"Audiovisual"}},
+ {"id":"video", "uri":"http://uri.suomi.fi/codelist/fairdata/file_type/code/video", "label":{"fi":"Video", "en":"Video"}},
+ {"id":"image", "uri":"http://uri.suomi.fi/codelist/fairdata/file_type/code/image", "label":{"fi":"Kuva","en":"Image"},"same_as":["http://purl.org/dc/dcmitype/Image"]},
+ {"id":"source_code", "uri":"http://uri.suomi.fi/codelist/fairdata/file_type/code/source_code", "label":{"fi":"Lähdekoodi","en":"Source code"}},
+ {"id":"software", "uri":"http://uri.suomi.fi/codelist/fairdata/file_type/code/software", "label":{"fi":"Sovellus","en":"Software"},"same_as":["http://purl.org/dc/dcmitype/Software"]},
+ {"id":"sound", "uri":"http://uri.suomi.fi/codelist/fairdata/file_type/code/sound", "label":{"fi":"Ääni","en":"Sound"},"same_as":["http://purl.org/dc/dcmitype/Sound"]},
+ {"id":"text", "uri":"http://uri.suomi.fi/codelist/fairdata/file_type/code/text", "label":{"fi":"Teksti","en":"Text"},"same_as":["http://purl.org/dc/dcmitype/Text"]},
+ {"id":"binary", "uri":"http://uri.suomi.fi/codelist/fairdata/file_type/code/binary", "label":{"fi":"Binääri","en":"Binary"}},
+ {"id":"other", "uri":"http://uri.suomi.fi/codelist/fairdata/file_type/code/other", "label":{"fi":"Muu","en":"Other"}}]
