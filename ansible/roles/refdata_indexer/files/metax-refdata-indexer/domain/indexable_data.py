@@ -5,6 +5,7 @@ class IndexableData:
     Base class for any data that can be indexed into Metax Elasticsearch
     '''
 
+    DATA_TYPE_RELATION_TYPE = 'relation_type'
     DATA_TYPE_ORGANIZATION = 'organization'
 
     def __init__(
@@ -22,12 +23,12 @@ class IndexableData:
         self.same_as = same_as
         self.code = doc_id
 
+        self.scheme = ''
         if scheme:
             self.scheme = scheme
         else:
-            self.scheme = 'https://metax.fairdata.fi/es/'
-            self.scheme += 'organization_data/' if self.doc_type == IndexableData.DATA_TYPE_ORGANIZATION else 'reference_data/'
-            self.scheme += self.doc_type + '/_search?pretty'
+            if self.doc_type != IndexableData.DATA_TYPE_RELATION_TYPE:
+                self.scheme = 'http://uri.suomi.fi/codelist/fairdata/' + self.doc_type
 
         # Replace quotes with corresponding html entity not to break outbound json
         if label:
