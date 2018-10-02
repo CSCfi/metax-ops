@@ -1,29 +1,13 @@
 ---
 
-- block:
+  - name: Copy backup script in place
+    template: src=templates/db_backup.sh dest={{ db_backup_dir_base_path }} owner=postgres group=postgres mode=0770
 
-    - name: Copy backup script in place
-      template: src=templates/metax_backup.sh dest={{ metax_db_backup_path }} owner=postgres group=postgres mode=0770
-
-    - name: Create cronjob for running backup script
-      cron:
-        name: "Backup data"
-        minute: "30"
-        hour: "2"
-        job: "{{ metax_db_backup_path }}/metax_backup.sh > /dev/null 2>&1"
-        state: present
-        user: postgres
-
-    - name: Copy backup cleaning script in place
-      template: src=templates/metax_backup_clean.sh dest={{ metax_db_backup_path }} owner=root group=postgres mode=0770
-
-    - name: Create cronjob for running backup cleaning script
-      cron:
-        name: "Clean backup data"
-        minute: "30"
-        hour: "3"
-        job: "{{ metax_db_backup_path }}/metax_backup_clean.sh > /dev/null 2>&1"
-        state: present
-        user: root
-
-  when: deployment_environment_id not in ['staging', 'production']
+  - name: Create cronjob for running backup script
+    cron:
+      name: "Backup metax_{{ deployment_environment_id }} database and clean database backups and archives"
+      minute: "30"
+      hour: "2"
+      job: "{{ db_backup_dir_base_path }}/db_backup.sh metax_{{ deployment_environment_id }} pg96 5432 {{ metax_db_archive_path }} {{ metax_db_backup_path }} > /dev/null 2>&1"
+      state: present
+      user: postgres

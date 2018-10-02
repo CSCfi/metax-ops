@@ -59,8 +59,8 @@
 - name: Disable SELinux
   selinux: state=permissive policy=targeted
 
-- name: Set locale LANG to fi_FI.UTF-8
-  shell: localectl set-locale LANG=fi_FI.UTF-8
+- name: Set locale LANG to en_US.UTF-8
+  shell: localectl set-locale LANG=en_US.UTF-8
 
 - name: Set default locale as LC_ALL to fi_FI.UTF-8
   lineinfile:
