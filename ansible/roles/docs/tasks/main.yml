@@ -9,6 +9,16 @@
 - name: Sphinx | Build documentation
   shell: su - {{ app_user }} -c 'source {{ python_virtualenv_path }}/bin/activate; sphinx-build -b html {{ metax_app_base_path }}/docs/source {{ metax_app_base_path }}/docs/build'
 
-# todo search/replace for
-# - METAX_BRANCH_NAME
-# - METAX_DOMAIN
+- name: Sphinx | Form list of built html doc files
+  find:
+    paths: "{{ metax_app_base_path }}/docs/build"
+    patterns: "*.html"
+  register: built_doc_files
+
+- name: Sphinx | Replace placeholder domain values with environment-specific values
+  replace: dest={{item.path}} regexp="__METAX_ENV_DOMAIN__" replace={{server_domain_name}}
+  with_items: "{{built_doc_files.files}}"
+
+- name: Sphinx | Replace placeholder branch name values with environment-specific values
+  replace: dest={{item.path}} regexp="__METAX_ENV_BRANCH__" replace={{project_repo_branch}}
+  with_items: "{{built_doc_files.files}}"
