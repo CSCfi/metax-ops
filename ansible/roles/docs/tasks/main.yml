@@ -15,8 +15,13 @@
     patterns: "*.html"
   register: built_doc_files
 
-- name: Sphinx | Replace placeholder domain values with environment-specific values
+- name: Sphinx | Replace placeholder Metax domain values with environment-specific values
   replace: dest={{item.path}} regexp="__METAX_ENV_DOMAIN__" replace={{server_domain_name}}
+  with_items: "{{built_doc_files.files}}"
+
+# note: etsin_base_url contais https:// prefix
+- name: Sphinx | Replace placeholder Etsin domain values with environment-specific values
+  replace: dest={{item.path}} regexp="__ETSIN_ENV_BASE_URL__" replace={{etsin_base_url}}
   with_items: "{{built_doc_files.files}}"
 
 - name: Sphinx | Replace placeholder branch name values with environment-specific values
