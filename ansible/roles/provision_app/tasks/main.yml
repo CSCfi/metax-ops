@@ -67,7 +67,7 @@
   django_manage: command=loaddata fixtures=metax_api/tests/testdata/test_data.json app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
   become_user: "{{ app_user }}"
   # when: deployment_environment_id in ['playground', 'test', 'stable']
-  when: deployment_environment_id in ['playground', 'test', 'stable', 'staging']
+  when: deployment_environment_id in ['playground', 'test', 'stable']
 
 - name: Load Metax initial production data
   django_manage: command=loadinitialdata app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
@@ -77,7 +77,7 @@
 - name: Run PUT requests on Django testdata
   shell: su - {{ app_user }} -c '{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path }}/metax_api/tests/testdata/fetch_and_update_datasets.py'
   # when: deployment_environment_id in ['playground', 'test', 'stable']
-  when: deployment_environment_id in ['playground', 'test', 'stable', 'staging']
+  when: deployment_environment_id in ['playground', 'test', 'stable']
 
 - debug:
     msg: "Local dev environment successfully set up. Switch to using {{ app_user }} by saying 'sudo su - {{ app_user }}', then run the application by saying 'runserver' and finally, in another terminal, switch to {{ app_user }} and run 'dev-init'."
