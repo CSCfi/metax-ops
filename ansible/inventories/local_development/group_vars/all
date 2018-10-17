@@ -69,6 +69,16 @@ rabbitmq_consumers:
         write: ^testaaja-.*$
         read: ^(datasets|testaaja-.*)$
 
+    # User for etsin research data finder
+    - name: etsin
+      password: test-etsin
+      vhost: "{{ rabbitmq_common.vhost }}"
+      is_test_user: false
+      permissions:
+        conf: ^etsin-.*$
+        write: ^etsin-.*$
+        read: ^(datasets|etsin-.*)$
+
 datacite:
   doi_base_url: https://mds.datacite.org/doi/
   metadata_base_url: https://mds.datacite.org/metadata
