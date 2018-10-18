@@ -10,7 +10,7 @@ static_root: "{{ metax_django_base_path }}/static"
 nginx_dh_param_name: nginx_dhparam.pem
 
 data_dir_base_path: /data
-db_backup_dir_base_path: "{{ data_dir_base_path }}/backup"
+db_backup_dir_base_path: /backup
 
 metax_db_base_path: "{{ data_dir_base_path }}/pg96/metax_{{ deployment_environment_id }}"
 metax_db_data_path: "{{ metax_db_base_path }}/data"

@@ -1,5 +1,8 @@
 ---
 
+  - name: Create database backup directory
+    file: path={{ metax_db_backup_path }} state=directory owner=postgres group=postgres mode=0760 recurse=yes
+
   - name: Copy backup script in place
     template: src=templates/db_backup.sh dest={{ db_backup_dir_base_path }} owner=postgres group=postgres mode=0770
 

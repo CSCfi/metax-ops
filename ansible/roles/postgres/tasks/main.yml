@@ -193,9 +193,6 @@
 - name: Create wal archive directory
   file: path={{ metax_db_archive_path }} state=directory owner=postgres group=postgres mode=0760 recurse=yes
 
-- name: Create database backup directory
-  file: path={{ metax_db_backup_path }} state=directory owner=postgres group=postgres mode=0760 recurse=yes
-
 - name: Restart Postgresql
   systemd: name=postgresql-9.6 state=restarted daemon_reload=yes
 
