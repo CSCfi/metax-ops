@@ -1,4 +1,11 @@
 
+# if build-dir is not removed, the main menu list will not get updated in html-files
+# which did not have updates (each main section is a standalone html page, including the menu)
+- name: Sphinx | Clear /docs/build to ensure all files are rebuilt
+  file:
+    path: "{{ metax_app_base_path }}/docs/build"
+    state: absent
+
 - name: Sphinx | Create documentation build directory
   file:
     path: "{{ metax_app_base_path }}/docs/build"
@@ -27,3 +34,9 @@
 - name: Sphinx | Replace placeholder branch name values with environment-specific values
   replace: dest={{item.path}} regexp="__METAX_ENV_BRANCH__" replace={{project_repo_branch}}
   with_items: "{{built_doc_files.files}}"
+
+- name: Swagger | Generate swagger html
+  shell: su - {{ app_user }} -c '{{ python_virtualenv_path }}/bin/python {{ metax_app_base_path }}/swagger/swagger-yaml-to-html.py < {{ metax_app_base_path }}/swagger/swagger.yaml > {{ metax_app_base_path }}/swagger/index.html'
+
+- name: Swagger | Replace placeholder Metax domain values with environment-specific values
+  replace: dest={{ metax_app_base_path }}/swagger/index.html regexp="__METAX_ENV_DOMAIN__" replace={{server_domain_name}}
