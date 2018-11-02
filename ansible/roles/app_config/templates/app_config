@@ -56,7 +56,7 @@ API_ACCESS: {
     "rest": {
         "apierrors": {
             "read":  ["metax"],
-            "write": []
+            "write": ["metax"]
         },
         "contracts": {
             "read":  ["metax", "tpas"],
