@@ -99,6 +99,6 @@
         - "source .bash_aliases"
         - "aliases"
 
-  when: deployment_environment_id in ['local_development', 'playground', 'test', 'stable']
+  when: deployment_environment_id in ['local_development', 'test', 'stable']
 
 - include_role: name=update_packages

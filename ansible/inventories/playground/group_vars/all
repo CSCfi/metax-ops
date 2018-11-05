@@ -1,7 +1,0 @@
-external_ip: 193.166.25.57
-
-metax_app_base_path: "{{ metax_base_path }}/{{ app_name }}"
-deployment_environment_id: playground
-project_repo_branch: playground
-etsin_base_url: https://etsin-test.fairdata.fi
-datacite_doi_prefix: 10.5072

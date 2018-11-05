@@ -4,4 +4,4 @@
   become: yes
   roles:
     - deploy_dbservers
-    - { role: reboot, when: "deployment_environment_id not in ['local_development', 'playground', 'staging', 'production']" }
+    - { role: reboot, when: "deployment_environment_id not in ['local_development', 'staging', 'production']" }

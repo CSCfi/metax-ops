@@ -3,6 +3,6 @@
 - hosts: refdataservers
   become: yes
   roles:
-    - { role: os-base, when: "deployment_environment_id not in ['local_development', 'playground']" }
+    - { role: os-base, when: "deployment_environment_id != 'local_development'" }
     - python
     - refdata_indexer
