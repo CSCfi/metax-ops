@@ -3,8 +3,8 @@
 - hosts: webservers
   become: yes
   roles:
-    - { role: os-base, when: "deployment_environment_id not in ['local_development', 'playground']" }
-    - { role: python, when: "deployment_environment_id not in ['local_development', 'playground']" }
+    - { role: os-base, when: "deployment_environment_id != 'local_development'" }
+    - { role: python, when: "deployment_environment_id != 'local_development'" }
     - nginx
     - apache
     - provision_app

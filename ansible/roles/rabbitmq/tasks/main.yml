@@ -125,4 +125,4 @@
 
       when: not is_rabbitmq_master_node
 
-  when: "deployment_environment_id not in ['local_development', 'playground']"
+  when: deployment_environment_id != 'local_development'
