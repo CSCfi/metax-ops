@@ -1,0 +1,14 @@
+---
+
+- hosts: dbservers
+  become: yes
+  roles:
+    - pg_hba_conf
+
+- hosts: dbservers
+  become: yes
+  tasks:
+    - name: Restart Postgresql
+      service:
+        name: postgresql-9.6
+        state: restarted

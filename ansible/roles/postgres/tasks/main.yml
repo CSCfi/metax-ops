@@ -13,7 +13,6 @@
         state: present
         line: 'METAX_DATABASE_USER="{{ metax_database.user }}"'
 
-  # when: deployment_environment_id in ['local_development', 'test', 'stable']
   when: deployment_environment_id in ['local_development', 'test', 'stable', 'staging']
 
 - name: Install Postgresql repository
@@ -75,8 +74,7 @@
 - name: Systemctl daemon-reload
   shell: "systemctl daemon-reload"
 
-- name: Copy Postgres host based authentication configuration {{ metax_db_data_path }}/pg_hba.conf
-  template: src=templates/pg_hba.conf dest={{ metax_db_data_path }}/pg_hba.conf owner=postgres group=postgres
+- include_role: name=pg_hba_conf
 
 - name: Change Postgres configuration listen_address to all
   lineinfile:

@@ -1,0 +1,2 @@
+- name: Copy Postgres host based authentication configuration {{ metax_db_data_path }}/pg_hba.conf
+  template: src=templates/pg_hba.conf dest={{ metax_db_data_path }}/pg_hba.conf owner=postgres group=postgres
