@@ -8,7 +8,7 @@ from os import environ
 def max_workers():
     return cpu_count() * 2 + 1
 
-max_requests = 1000
+max_requests = 100
 worker_class = 'gevent'
 workers = max_workers()
 timeout = 259200 # 3 days
