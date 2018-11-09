@@ -1,6 +1,5 @@
 ---
 
-
 - name: Copy gunicorn config file
   template: src=templates/gunicorn_conf.py dest=/etc/gunicorn.py
 
@@ -19,7 +18,7 @@
 - block:
 
     - name: Create {{ metax_base_path }}/gunicorn for Gunicorn socket and PID
-      file: path={{ metax_base_path }}/gunicorn state=directory owner={{ app_user }} group={{ app_user } mode=0755
+      file: path={{ metax_base_path }}/gunicorn state=directory owner={{ app_user }} group={{ app_user }} mode=0755
 
     - name: Copy gunicorn service file
       template: src=templates/gunicorn.service dest=/usr/lib/systemd/system/gunicorn.service
