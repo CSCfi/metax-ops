@@ -19,7 +19,7 @@ class IndexableData:
 
         self.doc_type = doc_type
         self.doc_id = self._create_es_document_id(doc_id)
-        self.label = {} # { 'fi': 'value1', 'en': 'value2',..., 'und': 'default_value' }
+        self.label = label # { 'fi': 'value1', 'en': 'value2',..., 'und': 'default_value' }
         self.same_as = same_as
         self.code = doc_id
 
@@ -31,10 +31,7 @@ class IndexableData:
                 self.scheme = 'http://uri.suomi.fi/codelist/fairdata/' + self.doc_type
 
         # Replace quotes with corresponding html entity not to break outbound json
-        if label:
-            for key, val in label.items():
-                self.label[key] = val.replace("'", "&quot;")
-
+        if self.label:
             set_default_label(self.label)
         else:
             self.label = {"und": self.code}
