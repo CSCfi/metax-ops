@@ -92,19 +92,19 @@ class ReferenceData(IndexableData):
 
     def __str__(self):
         return (
-            "{" +
-                "\"id\":\"" + self.get_es_document_id() + "\","
-                "\"code\":\"" + self.code + "\","
-                "\"type\":\"" + self.doc_type + "\","
-                "\"uri\":\"" + self.uri + "\","
-                "\"wkt\":\"" + self.wkt + "\","
-                "\"input_file_format\":\"" + self.input_file_format + "\","
-                "\"output_format_version\":\"" + self.output_format_version + "\","
-                "\"label\":" + json.dumps(self.label) + ","
-                "\"parent_ids\":" + json.dumps(self.parent_ids) + ","
-                "\"child_ids\":" + json.dumps(self.child_ids) + ","
-                "\"has_children\":" + json.dumps(self.has_children) + ","
-                "\"same_as\":" + json.dumps(self.same_as) + ","
-                "\"internal_code\":\"" + self.internal_code + "\","
-                "\"scheme\":\"" + self.scheme + "\""
-            "}")
+            '{' +
+                '"id":"' + self.get_es_document_id() + '",'
+                '"code":"' + self.code + '",'
+                '"type":"' + self.doc_type + '",'
+                '"uri":"' + self.uri + '",'
+                '"wkt":"' + self.wkt + '",'
+                '"input_file_format":"' + self.input_file_format + '",'
+                '"output_format_version":"' + self.output_format_version + '",'
+                '"label":' + json.dumps(self.label) + ','
+                '"parent_ids":' + json.dumps(self.parent_ids) + ','
+                '"child_ids":' + json.dumps(self.child_ids) + ','
+                '"has_children":' + json.dumps(self.has_children) + ','
+                '"same_as":' + json.dumps(self.same_as) + ','
+                '"internal_code":"' + self.internal_code + '",'
+                '"scheme":"' + self.scheme + '"'
+            '}')

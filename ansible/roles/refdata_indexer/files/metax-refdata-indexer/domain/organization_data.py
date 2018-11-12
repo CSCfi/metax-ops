@@ -27,14 +27,14 @@ class OrganizationData(IndexableData):
 
     def __str__(self):
         return (
-            "{" +
-                "\"id\":\"" + self.get_es_document_id() + "\","
-                "\"code\":\"" + self.code + "\","
-                "\"type\":\"" + IndexableData.DATA_TYPE_ORGANIZATION + "\","
-                "\"uri\":\"" + self.uri + "\","
-                "\"org_csc\":\"" + self.org_csc + "\","
-                "\"parent_id\":\"" + self.parent_id + "\","
-                "\"label\":" + json.dumps(self.label) + ","
-                "\"same_as\":" + json.dumps(self.same_as) + ","
-                "\"scheme\":\"" + self.scheme + "\""
-            "}")
+            '{' +
+                '"id":"' + self.get_es_document_id() + '",'
+                '"code":"' + self.code + '",'
+                '"type":"' + IndexableData.DATA_TYPE_ORGANIZATION + '",'
+                '"uri":"' + self.uri + '",'
+                '"org_csc":"' + self.org_csc + '",'
+                '"parent_id":"' + self.parent_id + '",'
+                '"label":' + json.dumps(self.label) + ','
+                '"same_as":' + json.dumps(self.same_as) + ','
+                '"scheme":"' + self.scheme + '"'
+            '}')

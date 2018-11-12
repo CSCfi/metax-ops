@@ -13,7 +13,7 @@ import csv
 import pprint
 import json
 
-INPUT_FILES = ['resources/organizations/school_organizations.csv','resources/organizations/research_organizations.csv']
+INPUT_FILES = ['resources/organizations/organizations.csv']
 OUTPUT_FILE = '/tmp/metax_organizations.json'
 
 def parse_csv():
