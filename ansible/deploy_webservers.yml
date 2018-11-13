@@ -4,5 +4,5 @@
   become: yes
   roles:
     - deploy_webservers
+    - docs
     - { role: reboot, when: "deployment_environment_id not in ['local_development', 'staging', 'production']" }
-    # - docs
