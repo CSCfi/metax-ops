@@ -12,18 +12,17 @@
       when: deployment_environment_id == 'local_development'
 
     - name: Install Python 3.6
-      yum: name={{ item }} state=latest
-      with_items:
-        - python36u
-        - python36u-pip
-        - python36u-devel
+      yum:
+        state: latest
+        name:
+          - python36u
+          - python36u-pip
+          - python36u-devel
       when: deployment_environment_id == 'local_development'
 
 
     - name: Install Python 3.6
-      yum: name={{ item }} state=latest
-      with_items:
-        - rh-python36
+      yum: name=rh-python36 state=latest
       when: deployment_environment_id != 'local_development'
 
     - name: Create virtual environment directory for Python to {{ python_virtualenv_path }}
