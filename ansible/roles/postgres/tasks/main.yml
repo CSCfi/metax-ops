@@ -25,12 +25,13 @@
   when: deployment_environment_id ==  'local_development'
 
 - name: Install PostgreSQL 9 and python psycopg2
-  yum: name={{ item }} state=present
-  with_items:
-    - postgresql96
-    - postgresql96-server
-    - postgresql96-contrib
-    - python-psycopg2
+  yum:
+    state: present
+    name:
+      - postgresql96
+      - postgresql96-server
+      - postgresql96-contrib
+      - python-psycopg2
 
 - name: Create/ensure data directory {{ data_dir_base_path }}
   file: path={{ data_dir_base_path }} state=directory owner={{ app_user }} group=metax mode=0755
