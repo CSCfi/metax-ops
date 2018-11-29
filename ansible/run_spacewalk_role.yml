@@ -2,5 +2,6 @@
 
 - hosts: distincthosts
   become: yes
+  strategy: free
   roles:
     - { role: spacewalk, when: "deployment_environment_id not in ['local_development', 'production']" }

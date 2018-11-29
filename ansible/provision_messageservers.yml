@@ -8,6 +8,7 @@
 
 - hosts: slave-messageservers
   become: yes
+  strategy: free
   roles:
     - { role: os-base, when: "deployment_environment_id != 'local_development'" }
     - { role: rabbitmq, when: "deployment_environment_id != 'local_development'" }
