@@ -90,6 +90,16 @@ API_ACCESS: {
     "rpc": {
         "datasets": {
             "get_minimal_dataset_template": { "use": ["all"] }
+        },
+        "statistics": {
+            "all_datasets_cumulative":          { "use": ["all"] },
+            "catalog_datasets_cumulative":      { "use": ["all"] },
+            "count_datasets":                   { "use": ["all"] },
+            "deprecated_datasets_cumulative":   { "use": ["all"] },
+            "end_user_datasets_cumulative":     { "use": ["all"] },
+            "harvested_datasets_cumulative":    { "use": ["all"] },
+            "organization_datasets_cumulative": { "use": ["all"] },
+            "unused_files":                     { "use": ["all"] }
         }
     }
 }
