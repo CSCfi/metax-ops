@@ -1,0 +1,6 @@
+---
+
+- hosts: searchservers
+  become: yes
+  roles:
+    - elasticsearch
