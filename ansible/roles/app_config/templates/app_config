@@ -91,6 +91,9 @@ API_ACCESS: {
         "datasets": {
             "get_minimal_dataset_template": { "use": ["all"] }
         },
+        "files": {
+            "flush_project": { "use": ["metax", "ida", "tpas"] }
+        },
         "statistics": {
             "all_datasets_cumulative":          { "use": ["all"] },
             "catalog_datasets_cumulative":      { "use": ["all"] },
