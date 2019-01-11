@@ -90,7 +90,7 @@ API_ACCESS: {
     "rpc": {
         "datasets": {
             "get_minimal_dataset_template": { "use": ["all"] },
-            "set_preservation_identifier": { "use": ["tpas"] }
+            "set_preservation_identifier": { "use": ["metax", "tpas"] }
         },
         "files": {
             "flush_project": { "use": ["metax", "ida", "tpas"] }
