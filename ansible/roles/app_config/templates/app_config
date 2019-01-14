@@ -51,6 +51,10 @@ ATT_DATACATALOG_IDENTIFIER: {{ att_datacatalog_identifier }}
 IDA_DATACATALOG_IDENTIFIER: {{ ida_datacatalog_identifier }}
 LEGACY_DATACATALOG_IDENTIFIER: {{ legacy_datacatalog_identifier }}
 
+END_USER_ALLOWED_DATA_CATALOGS:
+  - {{ att_datacatalog_identifier }}
+  - {{ legacy_datacatalog_identifier }}
+
 # specify read and write access of services per api, or if an api is readable by world
 API_ACCESS: {
     "rest": {
