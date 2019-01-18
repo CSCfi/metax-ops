@@ -1,0 +1,59 @@
+---
+
+- block:
+
+  - name: Find json log files in non-production envs
+    find:
+      paths: "/var/log/{{ app_name }}/"
+      patterns: "{{ app_log_file_json }}*"
+    register: find_results
+
+  - name: Delete json log files in non-production envs to ensure old log fields dont litter ES schema
+    file:
+      path: "{{ item['path'] }}"
+      state: absent
+    with_items: "{{ find_results['files'] }}"
+
+  - name: Restart gunicorn
+    service: name=gunicorn state=restarted enabled=yes
+    when: deployment_environment_id in ['test', 'stable', 'staging']
+
+  when: deployment_environment_id != 'production'
+
+- block:
+
+    - name: Set Filebeat rpm filename
+      set_fact: filebeat_rpm="filebeat-{{ fd_analytics.elk_version }}-x86_64.rpm"
+
+    - name: Check if Filebeat rpm is already downloaded
+      stat:
+        path: "/root/{{ filebeat_rpm }}"
+      register: filebeat_rpm_file
+
+    - name: Download Filebeat from Elastic artifacts
+      get_url: url="https://artifacts.elastic.co/downloads/beats/filebeat/{{ filebeat_rpm }}" dest="/root/{{ filebeat_rpm }}"
+      when: not filebeat_rpm_file.stat.exists
+
+    - name: Install Filebeat
+      yum: name="/root/{{ filebeat_rpm }}" state=present
+
+    - name: Copy Filebeat conf file
+      template: src=templates/filebeat.yml dest=/etc/filebeat/filebeat.yml
+
+    - name: Enable Filebeat nginx module
+      command: filebeat modules enable nginx
+
+    - name: Enable Filebeat apache module
+      command: filebeat modules enable apache2
+
+    - name: Copy custom Filebeat apache conf file to set custom log file paths
+      template: src=templates/apache2.yml dest=/etc/filebeat/modules.d/apache2.yml
+
+    - name: Restart Filebeat
+      service: name=filebeat enabled=yes state=restarted
+
+  when: fd_analytics.enabled
+
+- name: Stop Filebeat
+  service: name=filebeat enabled=no state=stopped
+  when: not fd_analytics.enabled

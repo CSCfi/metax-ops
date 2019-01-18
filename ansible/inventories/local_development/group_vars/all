@@ -86,3 +86,16 @@ datacite:
   password: <REPLACE_WITH_DATACITE_PASSWORD>
   etsin_url_template: "{{ etsin_base_url }}/dataset/%s"
   prefix: "{{ datacite_doi_prefix }}"
+
+
+# note: filebeat automatically uses same credentials for kibana as for elasticsearch
+fd_analytics:
+  enabled: false
+  elk_version: "6.5.4"
+  kibana:
+    dashboards_url: "https://domain:port"
+  elasticsearch:
+    urls:
+      - "https://domain:port/es"
+    username: "fd-service"
+    password: "pw"

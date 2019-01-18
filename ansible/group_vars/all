@@ -1,5 +1,6 @@
 app_name: metax-api
 app_log_file: metax_api.log
+app_log_file_json: metax_api.json.log
 app_user: metax-user
 project_repo: https://github.com/CSCfi/metax-api
 
