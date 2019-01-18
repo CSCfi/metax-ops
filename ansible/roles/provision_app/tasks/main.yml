@@ -9,7 +9,7 @@
 - name: Create django app log file and ensure file permissions
   copy: content="" dest=/var/log/{{ app_name }}/{{ app_log_file }} force=no owner={{ app_user }} group=metax mode=0755
 
-- name: Create logrotate entry for django app log file
+- name: Create logrotate entry for django app log files
   template: src=templates/logrotate_metax dest=/etc/logrotate.d/{{ app_name }}
 
 - name: Clone project remote repo from branch {{ project_repo_branch }} to {{ metax_app_base_path }}
