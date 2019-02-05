@@ -51,66 +51,10 @@ ATT_DATACATALOG_IDENTIFIER: {{ att_datacatalog_identifier }}
 IDA_DATACATALOG_IDENTIFIER: {{ ida_datacatalog_identifier }}
 LEGACY_DATACATALOG_IDENTIFIER: {{ legacy_datacatalog_identifier }}
 
-END_USER_ALLOWED_DATA_CATALOGS:
-  - {{ att_datacatalog_identifier }}
-  - {{ legacy_datacatalog_identifier }}
+END_USER_ALLOWED_DATA_CATALOGS: {{ end_user_allowed_data_catalogs | to_nice_json }}
 
 # specify read and write access of services per api, or if an api is readable by world
-API_ACCESS: {
-    "rest": {
-        "apierrors": {
-            "read":  ["metax"],
-            "write": ["metax"]
-        },
-        "contracts": {
-            "read":  ["metax", "tpas"],
-            "write": ["metax", "tpas"]
-        },
-        "datacatalogs": {
-            "read":  ["metax", "all"],
-            "write": ["metax", "etsin"]
-        },
-        "datasets": {
-            "read":  ["all"],
-            "write": ["metax", "qvain", "etsin", "tpas", "endusers"]
-        },
-        "directories": {
-            "read":  ["metax", "qvain", "etsin", "tpas", "fds", "endusers"],
-            "write": []
-        },
-        "files": {
-            "read":  ["metax", "ida", "fds", "tpas", "endusers"],
-            "write": ["metax", "ida", "tpas"]
-        },
-        "filestorages": {
-            "read":  ["metax"],
-            "write": ["metax"]
-        },
-        "schemas": {
-            "read":  ["all"],
-            "write": []
-        }
-    },
-    "rpc": {
-        "datasets": {
-            "get_minimal_dataset_template": { "use": ["all"] },
-            "set_preservation_identifier": { "use": ["metax", "tpas"] }
-        },
-        "files": {
-            "flush_project": { "use": ["metax", "ida", "tpas"] }
-        },
-        "statistics": {
-            "all_datasets_cumulative":          { "use": ["all"] },
-            "catalog_datasets_cumulative":      { "use": ["all"] },
-            "count_datasets":                   { "use": ["all"] },
-            "deprecated_datasets_cumulative":   { "use": ["all"] },
-            "end_user_datasets_cumulative":     { "use": ["all"] },
-            "harvested_datasets_cumulative":    { "use": ["all"] },
-            "organization_datasets_cumulative": { "use": ["all"] },
-            "unused_files":                     { "use": ["all"] }
-        }
-    }
-}
+API_ACCESS: {{ api_access | to_nice_json }}
 
 # Variables for the OAI-PMH API
 OAI:
