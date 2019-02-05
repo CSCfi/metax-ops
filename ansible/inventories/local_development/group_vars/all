@@ -99,3 +99,66 @@ fd_analytics:
       - "https://domain:port/es"
     username: "fd-service"
     password: "pw"
+
+
+end_user_allowed_data_catalogs:
+  - "{{ ida_datacatalog_identifier }}"
+  - "{{ att_datacatalog_identifier }}"
+  - "{{ legacy_datacatalog_identifier }}"
+
+
+api_access: {
+    "rest": {
+        "apierrors": {
+            "read":  ["metax"],
+            "write": ["metax"]
+        },
+        "contracts": {
+            "read":  ["metax", "tpas"],
+            "write": ["metax", "tpas"]
+        },
+        "datacatalogs": {
+            "read":  ["metax", "all"],
+            "write": ["metax", "etsin"]
+        },
+        "datasets": {
+            "read":  ["all"],
+            "write": ["metax", "qvain", "etsin", "tpas", "endusers"]
+        },
+        "directories": {
+            "read":  ["metax", "qvain", "etsin", "tpas", "fds", "endusers"],
+            "write": []
+        },
+        "files": {
+            "read":  ["metax", "ida", "fds", "tpas", "endusers"],
+            "write": ["metax", "ida", "tpas"]
+        },
+        "filestorages": {
+            "read":  ["metax"],
+            "write": ["metax"]
+        },
+        "schemas": {
+            "read":  ["all"],
+            "write": []
+        }
+    },
+    "rpc": {
+        "datasets": {
+            "get_minimal_dataset_template": { "use": ["all"] },
+            "set_preservation_identifier": { "use": ["metax", "tpas"] }
+        },
+        "files": {
+            "flush_project": { "use": ["metax", "ida", "tpas"] }
+        },
+        "statistics": {
+            "all_datasets_cumulative":          { "use": ["all"] },
+            "catalog_datasets_cumulative":      { "use": ["all"] },
+            "count_datasets":                   { "use": ["all"] },
+            "deprecated_datasets_cumulative":   { "use": ["all"] },
+            "end_user_datasets_cumulative":     { "use": ["all"] },
+            "harvested_datasets_cumulative":    { "use": ["all"] },
+            "organization_datasets_cumulative": { "use": ["all"] },
+            "unused_files":                     { "use": ["all"] }
+        }
+    }
+}
