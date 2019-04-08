@@ -19,8 +19,12 @@ ansible/inventories/test/host_vars
 ansible/inventories/stable/group_vars/*
 !ansible/inventories/stable/group_vars/all
 ansible/inventories/stable/host_vars
+ansible/inventories/demo/group_vars/*
+!ansible/inventories/demo/group_vars/all
+ansible/inventories/demo/host_vars
 ansible/inventories/staging
 ansible/inventories/production
+
 
 ansible/group_vars/*
 !ansible/group_vars/all
