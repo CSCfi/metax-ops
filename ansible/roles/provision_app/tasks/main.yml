@@ -59,13 +59,12 @@
 - name: Django collectstatic
   django_manage: command=collectstatic app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
   become_user: "{{ app_user }}"
-  when: deployment_environment_id in ['local_development', 'test', 'stable']
+  when: deployment_environment_id in ['local_development', 'test', 'stable', 'demo']
 
 - name: Load Django testdata to database
   django_manage: command=loaddata fixtures=metax_api/tests/testdata/test_data.json app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
   become_user: "{{ app_user }}"
-  # when: deployment_environment_id in ['test', 'stable']
-  when: deployment_environment_id in ['test', 'stable']
+  when: deployment_environment_id in ['test', 'stable', 'demo']
 
 - name: Load Metax initial production data
   django_manage: command=loadinitialdata app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
@@ -75,7 +74,7 @@
 - name: Run PUT requests on Django testdata
   shell: su - {{ app_user }} -c '{{ python_virtualenv_path }}/bin/python {{ metax_django_base_path }}/metax_api/tests/testdata/fetch_and_update_datasets.py'
   # when: deployment_environment_id in ['test', 'stable']
-  when: deployment_environment_id in ['test', 'stable']
+  when: deployment_environment_id in ['test', 'stable', 'demo']
 
 - debug:
     msg: "Local dev environment successfully set up. Switch to using {{ app_user }} by saying 'sudo su - {{ app_user }}', then run the application by saying 'runserver' and finally, in another terminal, switch to {{ app_user }} and run 'dev-init'."

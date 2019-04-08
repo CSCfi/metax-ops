@@ -1,0 +1,33 @@
+# Server IP addresses
+
+server_1_ip: 192.168.1.26
+server_2_ip: 192.168.1.25
+server_3_ip: 192.168.1.16
+
+# Server IP address - system mapping
+
+dbserver_1_external_ip: "{{ server_1_ip }}"
+
+webserver_1_external_ip: "{{ server_2_ip }}"
+
+cacheserver_1_external_ip: "{{ server_2_ip }}"
+cacheserver_2_external_ip: "{{ server_1_ip }}"
+cacheserver_3_external_ip: "{{ server_3_ip }}"
+
+messageserver_1_external_ip: "{{ server_3_ip }}"
+messageserver_2_external_ip: "{{ server_2_ip }}"
+messageserver_3_external_ip: "{{ server_1_ip }}"
+
+searchserver_1_external_ip: "{{ server_3_ip }}"
+searchserver_2_external_ip: "{{ server_2_ip }}"
+searchserver_3_external_ip: "{{ server_1_ip }}"
+
+refdataserver_external_ip: "{{ server_3_ip }}"
+
+# The rest
+
+metax_app_base_path: "{{ metax_base_path }}/{{ app_name }}"
+deployment_environment_id: demo
+project_repo_branch: master
+etsin_base_url: https://etsin-demo.fairdata.fi
+datacite_doi_prefix: 10.5072

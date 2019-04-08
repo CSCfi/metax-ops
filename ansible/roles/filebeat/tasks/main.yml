@@ -16,7 +16,7 @@
 
   - name: Restart gunicorn
     service: name=gunicorn state=restarted enabled=yes
-    when: deployment_environment_id in ['test', 'stable', 'staging']
+    when: deployment_environment_id in ['test', 'stable', 'staging', 'demo']
 
   when: deployment_environment_id != 'production'
 

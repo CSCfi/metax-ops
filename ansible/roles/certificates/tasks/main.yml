@@ -1,6 +1,6 @@
 - name: Create directory for SSL certificates
   file: path={{ ssl_certificates_path }} state=directory
-  when: deployment_environment_id in ['local_development', 'test', 'stable', 'staging']
+  when: deployment_environment_id in ['local_development', 'test', 'stable', 'staging', 'demo']
 
 - name: Create self-signed SSL cert and private key
   command: openssl req -x509 -nodes -subj "/C=FI/ST=Uusimaa/L=Espoo/O=CSC/CN={{ server_domain_name }}" -days 365 -newkey rsa:2048 -keyout {{ ssl_certificates_path }}/{{ ssl_key_name }} -out {{ ssl_certificates_path }}/{{ ssl_certificate_name }} creates={{ ssl_certificates_path }}/{{ ssl_certificate_name }}
@@ -26,4 +26,4 @@
     - name: Fix concatenated file carriage returns
       command: dos2unix {{ ssl_certificates_path }}/{{ ssl_certificate_name }}
 
-  when: deployment_environment_id in ['test', 'stable']
+  when: deployment_environment_id in ['test', 'stable', 'demo']
