@@ -110,36 +110,51 @@ end_user_allowed_data_catalogs:
 api_access: {
     "rest": {
         "apierrors": {
-            "read":  ["metax"],
-            "write": ["metax"]
+            "read":   ["metax"],
+            "create": ["metax"],
+            "delete": ["metax"]
         },
         "contracts": {
-            "read":  ["metax", "tpas"],
-            "write": ["metax", "tpas"]
+            "read":   ["metax", "tpas"],
+            "create": ["metax", "tpas"],
+            "update": ["metax", "tpas"],
+            "delete": ["metax", "tpas"]
         },
         "datacatalogs": {
-            "read":  ["metax", "all"],
-            "write": ["metax", "etsin"]
+            "read":   ["metax", "all"],
+            "create": ["metax", "etsin"],
+            "update": ["metax", "etsin"],
+            "delete": ["metax", "etsin"]
         },
         "datasets": {
-            "read":  ["all"],
-            "write": ["metax", "qvain", "etsin", "tpas", "endusers"]
+            "read":   ["all"],
+            "create": ["metax", "qvain", "etsin", "tpas", "endusers"],
+            "update": ["metax", "qvain", "etsin", "tpas", "endusers"],
+            "delete": ["metax", "qvain", "etsin", "tpas", "endusers"]
         },
         "directories": {
-            "read":  ["metax", "qvain", "etsin", "tpas", "fds", "endusers"],
-            "write": []
+            "read":   ["metax", "qvain", "etsin", "tpas", "fds", "endusers"],
+            "create": [],
+            "update": [],
+            "delete": []
         },
         "files": {
-            "read":  ["metax", "ida", "fds", "tpas", "endusers"],
-            "write": ["metax", "ida", "tpas"]
+            "read":   ["metax", "ida", "fds", "tpas", "endusers"],
+            "create": ["metax", "ida", "tpas"],
+            "update": ["metax", "ida", "tpas", "endusers"],
+            "delete": ["metax", "ida", "tpas"]
         },
         "filestorages": {
-            "read":  ["metax"],
-            "write": ["metax"]
+            "read":   ["metax"],
+            "create": ["metax"],
+            "update": ["metax"],
+            "delete": ["metax"]
         },
         "schemas": {
-            "read":  ["all"],
-            "write": []
+            "read":   ["all"],
+            "create": [],
+            "update": [],
+            "delete": []
         }
     },
     "rpc": {
