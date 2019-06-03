@@ -148,7 +148,8 @@ api_access: {
             "set_preservation_identifier": { "use": ["metax", "tpas"] }
         },
         "files": {
-            "flush_project": { "use": ["metax", "ida", "tpas"] }
+            "flush_project": { "use": ["metax", "ida", "tpas"] },
+            "delete_project": { "use": ["metax", "ida", "tpas"] }
         },
         "statistics": {
             "all_datasets_cumulative":          { "use": ["all"] },
