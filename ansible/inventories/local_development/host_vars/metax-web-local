@@ -25,8 +25,10 @@ ssl_certificate_name: nginx-selfsigned.crt
 ssl_key_name: nginx-selfsigned.key
 
 httpd_listen_port: 8080
-oidc_provider_metadata_url: https://fd-auth.csc.fi/.well-known/openid-configuration
-oidc_auth_verify_jwks_uri: https://fd-auth.csc.fi/oidc/keyset.jwk
+auth_server_domain_name: auth.domain.fi
+auth_server_logout_url: https://{{ auth_server_domain_name}}/idp/profile/Logout
+oidc_provider_metadata_url: https://{{ auth_server_domain_name }}/.well-known/openid-configuration
+oidc_auth_verify_jwks_uri: https://{{ auth_server_domain_name }}/oidc/keyset.jwk
 oidc_client_id: consult_your_oidc_provider
 oidc_client_secret: consult_your_oidc_provider
 oidc_crypto_passphrase: your_madeup_passphrase

@@ -1,8 +1,12 @@
+SERVER_DOMAIN_NAME: {{ server_domain_name }}
 DJANGO_SECRET_KEY: {{ django_secret_key }}
 DEBUG: {{ django_debug }}
 ALLOWED_HOSTS: {{ django_allowed_hosts | to_nice_json }}
 ALWAYS_RELOAD_REFERENCE_DATA_ON_RESTART: {{ reload_ref_data_on_app_restart }}
 METAX_ENV: {{ deployment_environment_id }}
+
+# url on the auth server where logout button on /secure page will finally redirect the user
+AUTH_SERVER_LOGOUT_URL: {{ auth_server_logout_url }}
 
 # Variables related to database
 METAX_DATABASE: {{ metax_database.name }}
