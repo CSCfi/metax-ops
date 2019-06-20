@@ -13,7 +13,7 @@
         state: present
         line: 'METAX_DATABASE_USER="{{ metax_database.user }}"'
 
-  when: deployment_environment_id in ['local_development', 'test', 'stable', staging', 'demo']
+  when: deployment_environment_id in ['local_development', 'test', 'stable', 'staging', 'demo']
 
 - name: Install Postgresql repository
   yum_repository:
