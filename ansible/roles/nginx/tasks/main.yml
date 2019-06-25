@@ -6,6 +6,18 @@
 - name: NGINX | Replace NGINX conf file
   template: src=templates/metax_nginx.conf dest=/etc/nginx/nginx.conf
 
+- name: NGINX | Copy shared_headers.conf
+  template: src=templates/shared_headers.conf dest=/etc/nginx/shared_headers.conf
+
+- name: NGINX | Copy api_response_headers.conf
+  template: src=templates/api_response_headers.conf dest=/etc/nginx/api_response_headers.conf
+
+- name: NGINX | Copy static_file_headers.conf
+  template: src=templates/static_file_headers.conf dest=/etc/nginx/static_file_headers.conf
+
+- name: NGINX | Copy elastic_headers.conf
+  template: src=templates/elastic_headers.conf dest=/etc/nginx/elastic_headers.conf
+
 - include_role: name=certificates
 
 - name: NGINX | Generate Diffie-Hellman PFS (Perfect Forward Secrecy) group
