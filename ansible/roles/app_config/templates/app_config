@@ -48,6 +48,9 @@ RABBITMQ:
 # altogether, remove "Bearer" from below list.
 ALLOWED_AUTH_METHODS: {{ allowed_auth_methods | to_nice_json }}
 
+# this file does not have to exist, but if it exists, it is looked up from below path.
+ADDITIONAL_USER_PROJECTS_PATH: "/home/{{ app_user }}/additional_projects.json"
+
 # Variables related to api credentials
 API_USERS: {{ nginx_credentials | to_nice_json }}
 
