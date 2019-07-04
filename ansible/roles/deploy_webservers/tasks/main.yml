@@ -77,11 +77,11 @@
   pip: requirements={{ metax_app_base_path }}/requirements.txt virtualenv={{ python_virtualenv_path }}
   become_user: "{{ app_user }}"
 
-- name: Restart NGINX
-  service: name=nginx state=restarted enabled=yes
+- name: Reload NGINX
+  service: name=nginx state=reloaded enabled=yes
 
-- name: Restart Gunicorn
-  service: name=gunicorn state=restarted enabled=yes
+- name: Reload Gunicorn
+  service: name=gunicorn state=reloaded enabled=yes
   when: deployment_environment_id != 'local_development'
 
 - include_role: name=django_migrate
