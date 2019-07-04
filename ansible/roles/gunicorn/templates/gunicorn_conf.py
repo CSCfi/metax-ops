@@ -12,6 +12,7 @@ max_requests = 100
 worker_class = 'gevent'
 workers = max_workers()
 timeout = 259200 # 3 days
+graceful_timeout = 60 * 30 # 30 minutes
 
 secure_scheme_headers = {
     'X-FORWARDED-PROTOCOL': 'ssl',
