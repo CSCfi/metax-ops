@@ -1,9 +1,13 @@
 import json
-import requests
+import logging
 import os
-from domain.reference_data import ReferenceData
+import requests
 from time import sleep
+
+from domain.reference_data import ReferenceData
 from service.service_utils import file_exists
+
+_logger = logging.getLogger('refdata_indexer.infra_data_service')
 
 
 class InfraDataService:
@@ -35,7 +39,7 @@ class InfraDataService:
     def _parse_infra_data(self):
         index_data_models = []
 
-        print("Extracting relevant data from the fetched data")
+        _logger.info("Extracting relevant data from the fetched data")
         with open(self.TEMP_FILENAME, 'r') as f:
             data = json.load(f)
             for item in data:
@@ -56,7 +60,7 @@ class InfraDataService:
 
     def _fetch_infra_data(self):
         url = self.INFRA_REFERENCE_DATA_SOURCE_URL
-        print("Fetching data from url " + url)
+        _logger.info("Fetching data from url " + url)
 
         sleep_time = 2
         num_retries = 7

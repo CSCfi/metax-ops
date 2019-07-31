@@ -1,12 +1,17 @@
+import json
+import logging
+import logging.config
 import sys
+
 from domain.indexable_data import IndexableData
 from domain.reference_data import ReferenceData
 from service.elasticsearch_service import ElasticSearchService
 from service.finto_data_service import FintoDataService
-from service.local_data_service import LocalDataService
-from service.organization_service import OrganizationService
 from service.infra_data_service import InfraDataService
+from service.local_data_service import LocalDataService
 from service.mime_data_service import MimeDataService
+from service.organization_service import OrganizationService
+
 
 def main():
     '''
@@ -25,19 +30,19 @@ def main():
     types_to_reindex = None
 
     if not REMOVE_AND_RECREATE_INDEX in run_args and not TYPES_TO_REINDEX in run_args:
-        print(instructions)
+        _logger.error(instructions)
         sys.exit(1)
 
     if REMOVE_AND_RECREATE_INDEX in run_args:
         remove_and_recreate_index = run_args[REMOVE_AND_RECREATE_INDEX]
         if remove_and_recreate_index not in [NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME]:
-            print(instructions)
+            _logger.error(instructions)
             sys.exit(1)
 
     if TYPES_TO_REINDEX in run_args:
         types_to_reindex = run_args[TYPES_TO_REINDEX]
         if types_to_reindex not in ([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, IndexableData.DATA_TYPE_ORGANIZATION] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]):
-            print(instructions)
+            _logger.error(instructions)
             sys.exit(1)
 
     es = ElasticSearchService()
@@ -87,7 +92,7 @@ def main():
         for data_type in ReferenceData.FINTO_REFERENCE_DATA_TYPES:
             finto_es_data_models = finto_service.get_data(data_type)
             if len(finto_es_data_models) == 0:
-                print("No data models to reindex for finto data type {0}".format(data_type))
+                _logger.info("No data models to reindex for finto data type {0}".format(data_type))
                 continue
 
             es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, data_type, finto_es_data_models)
@@ -96,7 +101,7 @@ def main():
         if len(finto_es_data_models) > 0:
             es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, types_to_reindex, finto_es_data_models)
         else:
-            print("No data models to reindex for finto data type {0}".format(types_to_reindex))
+            _logger.info("No data models to reindex for finto data type {0}".format(types_to_reindex))
 
     # Reindexing local data
     if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME]:
@@ -115,7 +120,7 @@ def main():
         if len(infra_es_data_models) > 0:
             es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA, infra_es_data_models)
         else:
-            print("No data models to reindex for infra data type")
+            _logger.info("No data models to reindex for infra data type")
 
     # Reindexing mime types
     if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_MIME_TYPE]:
@@ -123,12 +128,18 @@ def main():
         if len(mime_es_data_models) > 0:
             es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_MIME_TYPE, mime_es_data_models)
         else:
-            print("no data models to reindex for mime type data type")
+            _logger.info("no data models to reindex for mime type data type")
 
-    print("Done")
+    _logger.info("Done")
     sys.exit(0)
 
 
 if __name__ == '__main__':
+    # setting up logger
+    with open('logconf.json', 'r') as f:
+        json_file = json.load(f)
+    _logger = logging.getLogger('refdata_indexer')
+    logging.config.dictConfig(json_file)
+
     # calling main function
     main()

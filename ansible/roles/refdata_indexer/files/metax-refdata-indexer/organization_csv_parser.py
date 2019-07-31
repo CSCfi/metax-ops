@@ -10,8 +10,10 @@
 '''
 
 import csv
-import pprint
 import json
+import logging
+
+_logger = logging.getLogger('refdata_indexer.organization_csv_parser')
 
 INPUT_FILES = ['resources/organizations/organizations.csv']
 OUTPUT_FILE = '/tmp/metax_organizations.json'
@@ -21,7 +23,7 @@ def parse_csv():
 	output_orgs = []
 
 	for csvfile in INPUT_FILES:
-		pprint.pprint('Now parsing file {}'.format(csvfile))
+		_logger.info('Now parsing file {}'.format(csvfile))
 		try:
 			with open(csvfile, 'r') as csv_file:
 				csv_reader = csv.DictReader(csv_file, delimiter=',', quotechar='"')
@@ -52,7 +54,7 @@ def parse_csv():
 							output_orgs.append(create_organization(organization_code, unit_name, parent_id=parent_id))
 
 		except IOError:
-			pprint.pprint('File {} could not be found.'.format(csvfile))
+			_logger.error('File {} could not be found.'.format(csvfile))
 
 	with open(OUTPUT_FILE, 'w+') as outfile:
 		json.dump(output_orgs, outfile)
@@ -67,10 +69,10 @@ def govern(row):
 	if all(row[i] for i in ['org_name_fi', 'org_code']):
 		# check if sub-unit fields are present
 		if not all(row[i] for i in ['unit_sub_code', 'unit_name']):
-			print('Missing unit codes (unit_sub_code, unit_name). Creating root organization only: {}'.format(row))
+			_logger.error('Missing unit codes (unit_sub_code, unit_name). Creating root organization only: {}'.format(row))
 		return True
 	else:
-		print('Missing root organization fields (org_name_fi, org_code). Skipping row {}'.format(row))
+		_logger.error('Missing root organization fields (org_name_fi, org_code). Skipping row {}'.format(row))
 		return False
 
 
