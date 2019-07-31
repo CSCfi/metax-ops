@@ -1,5 +1,10 @@
 import json
+import logging
+
 from elasticsearch import Elasticsearch
+
+_logger = logging.getLogger('refdata_indexer.elasticsearch_service')
+
 
 class ElasticSearchService:
     '''
@@ -28,31 +33,31 @@ class ElasticSearchService:
         return self.es.indices.exists(index=index)
 
     def create_index(self, index, filename):
-        print("Trying to create index " + index)
+        _logger.info("Trying to create index " + index)
         return self._operation_ok(self.es.indices.create(index=index,body=self._get_json_file_as_str(filename)))
 
     def delete_index(self, index):
-        print("Trying to delete index " + index)
+        _logger.info("Trying to delete index " + index)
         return self._operation_ok(self.es.indices.delete(index=index, ignore=[404]))
 
     def create_type_mapping(self, index, doc_type, filename):
-        print("Trying to create mapping type " + doc_type + " for index " + index)
+        _logger.info("Trying to create mapping type " + doc_type + " for index " + index)
         return self._operation_ok(self.es.indices.put_mapping(index=index, doc_type=doc_type, body=self._get_json_file_as_str(filename)))
 
     def delete_and_update_indexable_data(self, index, doc_type, indexable_data_list):
         if len(indexable_data_list) > 0:
             bulk_update_str = "\n".join(map(lambda idx_data: self._create_bulk_update_row_for_indexable_data(index, doc_type, idx_data), indexable_data_list))
             self._delete_all_documents_from_index_with_type(index, doc_type)
-            print("Trying to bulk update reference data with type " + doc_type + " to index " + index)
+            _logger.info("Trying to bulk update reference data with type " + doc_type + " to index " + index)
             return self._operation_ok(self.es.bulk(body=bulk_update_str, request_timeout=30))
         return None
 
     def _delete_all_documents_from_index(self, index):
-        print("Trying to delete all documents from index " + index)
+        _logger.info("Trying to delete all documents from index " + index)
         return self._operation_ok(self.es.delete_by_query(index=index, body="{\"query\": { \"match_all\": {}}}"))
 
     def _delete_all_documents_from_index_with_type(self, index, doc_type):
-        print("Trying to delete all documents from index " + index + " having type " + doc_type)
+        _logger.info("Trying to delete all documents from index " + index + " having type " + doc_type)
         return self._operation_ok(self.es.delete_by_query(index=index, doc_type=doc_type, body="{\"query\": { \"match_all\": {}}}"))
 
     def _create_bulk_update_row_for_indexable_data(self, index, doc_type, indexable_data_item):
@@ -63,7 +68,7 @@ class ElasticSearchService:
 
     def _operation_ok(self, op_response):
         if op_response.get('acknowledged'):
-            print("OK")
+            _logger.info("OK")
             return True
         return False
 

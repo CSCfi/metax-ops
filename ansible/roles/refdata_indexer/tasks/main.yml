@@ -12,13 +12,13 @@
   copy: content="" dest=/var/log/refdata_indexer/reindex.log force=no owner={{ app_user }} group=metax mode=0755
 
 - name: Index reference and organization data
-  shell: su - {{ app_user }} -c '{{ metax_base_path }}/refdata_indexer/reindex_all.sh delete_and_reindex >> /var/log/refdata_indexer/reindex.log'
+  shell: su - {{ app_user }} -c '{{ metax_base_path }}/refdata_indexer/reindex_all.sh delete_and_reindex'
 
 - name: Create cronjob for running reindexing script
   cron:
     name: "Reindex reference and organization data"
     minute: "00"
     hour: "3"
-    job: "{{ metax_base_path }}/refdata_indexer/reindex_all.sh only_reindex >> /var/log/refdata_indexer/reindex.log"
+    job: "{{ metax_base_path }}/refdata_indexer/reindex_all.sh only_reindex"
     state: present
     user: "{{ app_user }}"

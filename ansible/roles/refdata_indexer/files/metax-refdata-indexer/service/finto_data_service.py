@@ -1,12 +1,14 @@
 import json
+import logging
 import requests
-from service.service_utils import file_exists
-from domain.reference_data import ReferenceData
-import rdflib
-from rdflib import URIRef, RDF
-from rdflib.namespace import SKOS
 from time import sleep
-import os
+
+from rdflib import Graph, URIRef, RDF
+from rdflib.namespace import SKOS
+
+from domain.reference_data import ReferenceData
+
+_logger = logging.getLogger('refdata_indexer.finto_data_service')
 
 
 class FintoDataService:
@@ -49,7 +51,7 @@ class FintoDataService:
                 with open(self.WKT_FILENAME, 'w') as outfile:
                     outfile.write('{\n')
 
-        print("Extracting relevant data from the fetched data")
+        _logger.info("Extracting relevant data from the fetched data")
 
         in_scheme = ''
         for concept in graph.subjects(RDF.type, SKOS.Concept):
@@ -97,15 +99,15 @@ class FintoDataService:
                 with open(self.WKT_FILENAME, 'a') as outfile:
                     outfile.write('}')
 
-        print("Done with all")
+        _logger.info("Done with all")
         return index_data_models
 
     def _fetch_finto_data(self, data_type):
         url = self.FINTO_REFERENCE_DATA_SOURCE_URLS[data_type]
-        print("Fetching data from url " + url)
+        _logger.info("Fetching data from url " + url)
         sleep_time = 2
         num_retries = 7
-        g = rdflib.Graph()
+        g = Graph()
 
         for x in range(0, num_retries):
             try:
@@ -123,7 +125,7 @@ class FintoDataService:
         if not str_error:
             return g
         else:
-            print("Failed to read Finto data of type %s, skipping.." % data_type)
+            _logger.error("Failed to read Finto data of type %s, skipping.." % data_type)
             return None
 
     def _get_uri_end_part(self, uri):
@@ -134,7 +136,7 @@ class FintoDataService:
         num_retries = 4
 
         if 'wikidata' in url:
-            g = rdflib.Graph()
+            g = Graph()
             for x in range(0, num_retries):
                 try:
                     g.parse(url + '.rdf')
@@ -143,7 +145,7 @@ class FintoDataService:
                     str_error = e
 
                 if str_error:
-                    print("Unable to read wikidata, trying again..")
+                    _logger.error("Unable to read wikidata, trying again..")
                     sleep(sleep_time)  # wait before trying to fetch the data again
                     sleep_time *= 2  # exponential backoff
                 else:
@@ -155,7 +157,7 @@ class FintoDataService:
                 for o in g.objects(subject, predicate):
                     return str(o).upper()
             else:
-                print("Failed to read wikidata, skipping..")
+                _logger.error("Failed to read wikidata, skipping..")
 
         elif 'paikkatiedot' in url:
             for x in range(0, num_retries):
@@ -166,7 +168,7 @@ class FintoDataService:
                     str_error = e
 
                 if str_error:
-                    print("Unable to read paikkatiedot, trying again..")
+                    _logger.error("Unable to read paikkatiedot, trying again..")
                     sleep(sleep_time)  # wait before trying to fetch the data again
                     sleep_time *= 2  # exponential backoff
                 else:
@@ -180,7 +182,7 @@ class FintoDataService:
                             'geo').get('longitude', False):
                         return 'POINT(' + str(data['geo']['longitude']) + ' ' + str(data['geo']['latitude']) + ')'
             else:
-                print("Failed to read pakkatiedot, skipping..")
+                _logger.error("Failed to read pakkatiedot, skipping..")
 
         return ''
 
