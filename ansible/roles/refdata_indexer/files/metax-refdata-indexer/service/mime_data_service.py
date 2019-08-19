@@ -1,9 +1,13 @@
-import requests
-import xml.etree.cElementTree as ET
+import logging
 import os
-from domain.reference_data import ReferenceData
+import requests
 from time import sleep
+from xml.etree import cElementTree as ET
+
+from domain.reference_data import ReferenceData
 from service.service_utils import file_exists
+
+_logger = logging.getLogger('refdata_indexer.mime_data_service')
 
 
 class MimeDataService:
@@ -45,7 +49,7 @@ class MimeDataService:
     def _parse_mime_data(self):
         data_type = ReferenceData.DATA_TYPE_MIME_TYPE
         index_data_models = []
-        print("Extracting relevant data from the fetched data")
+        _logger.info("Extracting relevant data from the fetched data")
 
         is_parsing_model_elem = False
         found_valid_file_elem = False
@@ -81,7 +85,7 @@ class MimeDataService:
         sleep_time = 2
         num_retries = 7
 
-        print("Fetching data from url " + url)
+        _logger.info("Fetching data from url " + url)
 
         for x in range(0, num_retries):
             try:
