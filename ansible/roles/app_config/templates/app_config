@@ -80,7 +80,8 @@ OAI:
       - "{{ida_datacatalog_identifier}}"
 
 DATACITE:
-    USERNAME: {{ datacite.username }}
-    PASSWORD: {{ datacite.password }}
-    ETSIN_URL_TEMPLATE: {{ datacite.etsin_url_template }}
-    PREFIX: {{ datacite.prefix }}
+    USERNAME: {{ datacite_username }}
+    PASSWORD: {{ datacite_password }}
+    ETSIN_URL_TEMPLATE: {{ datacite_etsin_url_template }}
+    PREFIX: {{ datacite_prefix }}
+    URL: {{ datacite_url }}
