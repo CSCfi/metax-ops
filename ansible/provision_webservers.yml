@@ -4,7 +4,14 @@
   become: yes
   roles:
     - { role: os-base, when: "deployment_environment_id != 'local_development'" }
-    - { role: python, when: "deployment_environment_id != 'local_development'" }
+    - {
+      role: python,
+      when: "deployment_environment_id != 'local_development'",
+      vars: {
+        owner_user: "{{ app_user }}",
+        python_venv_path: "{{ python_virtualenv_path }}"
+      }
+    }
     - nginx
     - apache
     - provision_app
