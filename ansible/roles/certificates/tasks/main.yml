@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
 - name: Create directory for SSL certificates
   file: path={{ ssl_certificates_path }} state=directory
   when: deployment_environment_id in ['local_development', 'test', 'stable', 'staging', 'demo']
