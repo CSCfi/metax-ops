@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
 from domain.indexable_data import IndexableData
 from service.elasticsearch_service import ElasticSearchService
 from service.service_utils import set_default_label

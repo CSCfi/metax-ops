@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
 - name: Copy reference and organization data indexing script
   copy: src=metax-refdata-indexer/ dest={{ metax_base_path }}/refdata_indexer owner={{ app_user}} group=metax mode=740
 
