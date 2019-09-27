@@ -20,27 +20,35 @@
           - python36u-devel
       when: deployment_environment_id == 'local_development'
 
-
     - name: Install Python 3.6
       yum: name=rh-python36 state=latest
       when: deployment_environment_id != 'local_development'
 
-    - name: Create virtual environment directory for Python to {{ python_virtualenv_path }}
-      file: path={{ python_virtualenv_path }} state=directory owner={{ app_user }} group=metax mode=0755
-
-    - name: Install virtual environment for Python to {{ python_virtualenv_path }}
-      command: /usr/bin/python3.6 -m venv {{ python_virtualenv_path }}
-      when: deployment_environment_id == 'local_development'
-
-    - name: Install virtual environment for Python to {{ python_virtualenv_path }}
-      command: /opt/rh/rh-python36/root/usr/bin/python3 -m venv {{ python_virtualenv_path }}
-      when: deployment_environment_id != 'local_development'
 
   when: not python36u_installed.stat.exists and not rh_python36_installed.stat.exists
 
-- name: Set owner of pyvenv to {{ app_user }} user
-  file: path={{ python_virtualenv_path }} owner={{ app_user }} group=metax recurse=yes mode=0755
+- name: Is python virtual env installed?
+  stat: path={{ python_venv_path }}
+  register: virtualenv_installed
 
-- name: install wheel python package to enable using pip for installing requirements as {{ app_user }}
-  pip: name=wheel virtualenv={{ python_virtualenv_path }}
-  become_user: "{{ app_user }}"
+- block:
+
+    - name: Create virtual environment directory for Python to {{ python_venv_path }}
+      file: path={{ python_venv_path }} state=directory owner={{ owner_user }} group=metax mode=0755
+
+    - name: Install virtual environment for Python to {{ python_venv_path }}
+      command: /usr/bin/python3.6 -m venv {{ python_venv_path }}
+      when: deployment_environment_id == 'local_development'
+
+    - name: Install virtual environment for Python to {{ python_venv_path }}
+      command: /opt/rh/rh-python36/root/usr/bin/python3 -m venv {{ python_venv_path }}
+      when: deployment_environment_id != 'local_development'
+
+  when: not virtualenv_installed.stat.exists
+
+- name: Set owner of pyvenv to {{ owner_user }} user
+  file: path={{ python_venv_path }} owner={{ owner_user }} group=metax recurse=yes mode=0755
+
+- name: install wheel python package to enable using pip for installing requirements as {{ owner_user }}
+  pip: name=wheel virtualenv={{ python_venv_path }}
+  become_user: "{{ owner_user }}"
