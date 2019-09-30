@@ -6,6 +6,7 @@ project_repo: https://github.com/CSCfi/metax-api
 
 metax_base_path: /usr/local/metax
 python_virtualenv_path: "{{ metax_base_path }}/pyenv"
+python_virtualenv_path_docs: "{{ metax_base_path }}/pyenv_docs"
 metax_django_base_path: "{{ metax_app_base_path }}/src"
 static_root: "{{ metax_django_base_path }}/static"
 nginx_dh_param_name: nginx_dhparam.pem

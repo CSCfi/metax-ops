@@ -1,10 +1,20 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
 ---
 
 - hosts: webservers
   become: yes
   roles:
     - { role: os-base, when: "deployment_environment_id != 'local_development'" }
-    - { role: python, when: "deployment_environment_id != 'local_development'" }
+    - {
+      role: python,
+      when: "deployment_environment_id != 'local_development'",
+      vars: {
+        owner_user: "{{ app_user }}",
+        python_venv_path: "{{ python_virtualenv_path }}"
+      }
+    }
     - nginx
     - apache
     - provision_app

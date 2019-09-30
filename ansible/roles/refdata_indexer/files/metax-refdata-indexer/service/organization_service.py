@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
 import json
 import os
 from organization_csv_parser import OUTPUT_FILE as PARSER_OUTPUT_FILE_PATH

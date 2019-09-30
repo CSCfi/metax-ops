@@ -1,3 +1,29 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+- name: Install python virtualenv for docs
+  include_role:
+    name: python
+  vars:
+    owner_user: "{{ app_user }}"
+    python_venv_path: "{{ python_virtualenv_path_docs }}"
+
+- name: Copy docs requirements.txt to /tmp
+  copy:
+    src: files/requirements.txt
+    dest: /tmp/requirements.txt
+    owner: "{{ app_user }}"
+    group: "metax"
+    mode: "0400"
+
+- name: Install docs python package requirements
+  pip: requirements=/tmp/requirements.txt virtualenv={{ python_virtualenv_path_docs }}
+  become_user: "{{ app_user }}"
+
+- name: Delete docs requirements.txt from /tmp
+  file:
+    state: absent
+    path: /tmp/requirements.txt
 
 # if build-dir is not removed, the main menu list will not get updated in html-files
 # which did not have updates (each main section is a standalone html page, including the menu)
@@ -14,7 +40,7 @@
     group: "{{ app_user }}"
 
 - name: Sphinx | Build documentation
-  shell: su - {{ app_user }} -c 'source {{ python_virtualenv_path }}/bin/activate; sphinx-build -b html {{ metax_app_base_path }}/docs/source {{ metax_app_base_path }}/docs/build'
+  shell: su - {{ app_user }} -c 'source {{ python_virtualenv_path_docs }}/bin/activate; sphinx-build -b html {{ metax_app_base_path }}/docs/source {{ metax_app_base_path }}/docs/build'
 
 - name: Sphinx | Form list of built html doc files
   find:
@@ -36,7 +62,7 @@
   with_items: "{{built_doc_files.files}}"
 
 - name: Swagger | Generate swagger html
-  shell: su - {{ app_user }} -c '{{ python_virtualenv_path }}/bin/python {{ metax_app_base_path }}/swagger/swagger-yaml-to-html.py < {{ metax_app_base_path }}/swagger/swagger.yaml > {{ metax_app_base_path }}/swagger/index.html'
+  shell: su - {{ app_user }} -c '{{ python_virtualenv_path_docs }}/bin/python {{ metax_app_base_path }}/swagger/swagger-yaml-to-html.py < {{ metax_app_base_path }}/swagger/swagger.yaml > {{ metax_app_base_path }}/swagger/index.html'
 
 - name: Swagger | Replace placeholder Metax domain values with environment-specific values
   replace: dest={{ metax_app_base_path }}/swagger/index.html regexp="__METAX_ENV_DOMAIN__" replace={{server_domain_name}}
