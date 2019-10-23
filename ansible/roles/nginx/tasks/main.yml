@@ -21,6 +21,10 @@
 - name: NGINX | Copy elastic_headers.conf
   template: src=templates/elastic_headers.conf dest=/etc/nginx/elastic_headers.conf
 
+- name: NGINX | Copy robots.txt
+  template: src=templates/robots.txt dest=/etc/nginx/robots.txt
+  when: deployment_environment_id not in ['production']
+
 - include_role: name=certificates
 
 - name: NGINX | Generate Diffie-Hellman PFS (Perfect Forward Secrecy) group
@@ -36,6 +40,7 @@
     state: present
     mode: 0640
   with_items: "{{ nginx_credentials }}"
+  no_log: True
 
 - name: NGINX | Restart NGINX
   service: name=nginx enabled=yes state=restarted
