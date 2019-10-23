@@ -92,7 +92,7 @@
 - name: Django collectstatic
   django_manage: command=collectstatic app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
   become_user: "{{ app_user }}"
-  when: deployment_environment_id in ['local_development', 'test', 'stable', 'demo']
+  when: deployment_environment_id in ['local_development', 'test', 'stable']
 
 - name: Load Django testdata to database
   django_manage: command=loaddata fixtures=metax_api/tests/testdata/test_data.json app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}

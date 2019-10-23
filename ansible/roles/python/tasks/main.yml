@@ -41,11 +41,11 @@
 
     - name: Install virtual environment for Python to {{ python_venv_path }}
       command: /usr/bin/python3.6 -m venv {{ python_venv_path }}
-      when: deployment_environment_id == 'local_development'
+      when: deployment_environment_id in ['local_development', 'demo']
 
     - name: Install virtual environment for Python to {{ python_venv_path }}
       command: /opt/rh/rh-python36/root/usr/bin/python3 -m venv {{ python_venv_path }}
-      when: deployment_environment_id != 'local_development'
+      when: deployment_environment_id not in ['local_development', 'demo']
 
   when: not virtualenv_installed.stat.exists
 
