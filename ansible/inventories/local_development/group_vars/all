@@ -158,6 +158,7 @@ api_access: {
     "rpc": {
         "datasets": {
             "get_minimal_dataset_template": { "use": ["all"] },
+            "change_cumulative_state": { "use": ["metax", "qvain", "etsin", "tpas", "endusers"] },
             "set_preservation_identifier": { "use": ["metax", "tpas"] }
         },
         "files": {
