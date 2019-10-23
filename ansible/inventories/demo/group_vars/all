@@ -1,7 +1,10 @@
 # Server IP addresses
 
-server_1_ip: 192.168.1.26
-server_2_ip: 192.168.1.25
+# note: actually internal ips, as demo-env is deployed from a jump machine in the same network.
+# there is no reason for these to be public in the repo, but for now they are just to follow
+# the same pattern as other envs.
+server_1_ip: 192.168.1.14
+server_2_ip: 192.168.1.27
 server_3_ip: 192.168.1.16
 
 # Server IP address - system mapping
