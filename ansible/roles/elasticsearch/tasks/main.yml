@@ -28,3 +28,28 @@
         transport.tcp.port: "{{ elasticsearch_instance.tcp_transport_port | default('9300') }}",
         discovery.zen.minimum_master_nodes: "{{ elasticsearch_instance.min_master_nodes | default('1') }}"
       }
+
+
+  - name: Create elasticsearch systemd drop-in unitfile
+
+    block:
+
+      - name: Create directory for elasticsearch service drop-in unitfile
+        file:
+          path: "/etc/systemd/system/{{ elasticsearch_instance.node_name }}_elasticsearch.service.d"
+          state: directory
+
+      - name: Copy drop-in unitfile
+        template:
+          src: templates/Restart.conf
+          dest: "/etc/systemd/system/{{ elasticsearch_instance.node_name }}_elasticsearch.service.d/Restart.conf"
+
+      - name: Systemctl daemon-reload
+        shell: "systemctl daemon-reload"
+
+      - name: Restart elasticsearch service
+        service: name={{ elasticsearch_instance.node_name }}_elasticsearch state=restarted
+
+    when: deployment_environment_id not in ['local_development']
+    tags:
+      - es-drop-in
