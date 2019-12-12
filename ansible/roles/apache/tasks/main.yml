@@ -4,14 +4,14 @@
 ---
 
 - name: Install centos-release-scl software collections
-  yum: name=centos-release-scl
+  shell: yum -y install centos-release-scl warn=false
   when: deployment_environment_id ==  'local_development'
 
 - name: APACHE | Install httpd24
-  yum: name=httpd24-httpd state=latest
+  shell: yum -y install httpd24-httpd warn=false
 
 - name: APACHE | Install mod_auth_openidc from centos standard repository. Installs also vanilla httpd
-  yum: name=mod_auth_openidc state=latest
+  shell: yum -y install mod_auth_openidc warn=false
 
 - name: APACHE | Link mod_auth_openidc to custom httpd24 modules location
   file:

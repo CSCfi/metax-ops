@@ -38,7 +38,7 @@
       when: not filebeat_rpm_file.stat.exists
 
     - name: Install Filebeat
-      yum: name="/root/{{ filebeat_rpm }}" state=present
+      shell: "yum -y install /root/{{ filebeat_rpm }} warn=false"
 
     - name: Copy Filebeat conf file
       template: src=templates/filebeat.yml dest=/etc/filebeat/filebeat.yml

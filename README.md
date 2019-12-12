@@ -3,6 +3,8 @@
 
 Repository for ansible scripts to set up [Metax API](https://github.com/cscfi/metax-api) instances.
 
+In case python3 is not yet installed on managed nodes, consider using [this playbook](https://github.com/CSCfi/ansible-provision-python3) for provisioning python3 first.
+
 # License
 
 Copyright (c) 2019 The Ministry of Education and Culture of Finland

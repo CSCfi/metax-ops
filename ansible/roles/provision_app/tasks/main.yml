@@ -18,6 +18,7 @@
 - name: Clone project remote repo from branch {{ project_repo_branch }} to {{ metax_app_base_path }}
   git: repo={{ project_repo }} dest={{ metax_app_base_path }} version={{ project_repo_branch }}
   become_user: "{{ app_user }}"
+  ignore_errors: "{{ true if deployment_environment_id == 'local_development' else false }}"
 
 - block:
 
@@ -76,9 +77,18 @@
   when: deployment_environment_id in ['test', 'stable', 'demo']
 
 - debug:
-    msg: "Local dev environment successfully set up. Switch to using {{ app_user }} by saying 'sudo su - {{ app_user }}', then run the application by saying 'runserver' and finally, in another terminal, switch to {{ app_user }} and run 'dev-init'."
-  when: deployment_environment_id == 'local_development'
-
-- debug:
     msg: "{{ deployment_environment_id }} environment successfully set up."
   when: deployment_environment_id != 'local_development'
+
+- block:
+
+  # note - pur is never executed automatically during provisioning because changed apis
+  # can break the app. run pur manually to update packages in requirements.txt
+  - name: Install pur
+    pip: name=pur state=latest virtualenv={{ python_virtualenv_path }}
+    become_user: "{{ app_user }}"
+
+  - debug:
+      msg: "Local dev environment successfully set up. Switch to using {{ app_user }} by saying 'sudo su - {{ app_user }}', then run the application by saying 'runserver' and finally, in another terminal, switch to {{ app_user }} and run 'dev-init'."
+
+  when: deployment_environment_id == 'local_development'
