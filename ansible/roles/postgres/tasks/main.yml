@@ -19,22 +19,12 @@
   when: deployment_environment_id in ['local_development', 'test', 'stable', 'staging', 'demo']
 
 - name: Install Postgresql repository
-  yum_repository:
-    name: postgresql
-    description: Postresql
-    baseurl: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7.3-x86_64/
-    gpgcheck: no
-    state: present
-  when: deployment_environment_id ==  'local_development'
+  shell: yum-config-manager --add-repo https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7.3-x86_64/ warn=false
+  when: deployment_environment_id == 'local_development'
+  ignore_errors: true
 
-- name: Install PostgreSQL 9 and python psycopg2
-  yum:
-    state: present
-    name:
-      - postgresql96
-      - postgresql96-server
-      - postgresql96-contrib
-      - python-psycopg2
+- name: Install postgresql96
+  shell: yum -y install postgresql96 postgresql96-server postgresql96-contrib python3-psycopg2 --nogpgcheck warn=false
 
 - name: Create/ensure data directory {{ data_dir_base_path }}
   file: path={{ data_dir_base_path }} state=directory owner={{ app_user }} group=metax mode=0755
@@ -78,7 +68,7 @@
 - name: Systemctl daemon-reload
   shell: "systemctl daemon-reload"
 
-- include_role: name=pg_hba_conf
+- import_role: name=pg_hba_conf
 
 - name: Change Postgres configuration listen_address to all
   lineinfile:
@@ -197,6 +187,8 @@
 
 - name: Restart Postgresql
   systemd: name=postgresql-9.6 state=restarted daemon_reload=yes
+  tags:
+    - update_postgresql_conf
 
 - block:
     - name: Ensure Metax database user exists

@@ -3,6 +3,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 ---
 
+- name: Install selinux python3 bindings
+  pip: name=selinux state=latest executable=pip3
+
 - name: Make sure we have a 'metax' group in OS
   group: name=metax state=present
 
@@ -15,55 +18,25 @@
   notify: restart sshd
 
 - name: Install common yum packages
-  yum:
-    state: latest
-    name:
-      - gcc
-      - gcc-c++
-      - python-devel
-      - git
-      - curl
-      - vim
-      - zip
-      - unzip
-      - python-passlib
-      - xqilla
-      - xqilla-devel
+  shell: yum -y install gcc gcc-c++ git curl vim zip unzip xqilla xqilla-devel warn=false
 
 - name: Install common os packages for development
-  yum:
-    state: latest
-    name:
-      - htop
-      - tcl
-      - ntp
-      - tree
-      - zile
+  shell: yum -y install htop tcl ntp tree zile nano screen warn=false
   when: deployment_environment_id not in ['staging', 'production']
 
-- name: Install pip using yum
-  yum: name=python-pip state=latest
-  when: deployment_environment_id != 'local_development'
-
-- name: Install latest python pip and setuptools using pip
-  pip:
-    state: latest
-    name:
-      - pip
-      - setuptools
-
-- name: Install pur for updating pip dependencies using pip
-  pip: name=pur state=latest
-  when: deployment_environment_id == 'local_development'
-
 - name: Reinstall glibc-common just in case to make Finnish locale available using yum
-  shell: yum -y reinstall glibc-common
-  args:
-    warn: False
+  shell: yum -y reinstall glibc-common warn=false
   when: deployment_environment_id == 'local_development'
 
-- name: Disable SELinux
-  selinux: state=permissive policy=targeted
+- name: Set SELinux to permissive in current session
+  shell: setenforce 0
+
+- name: Set SELinux to permissive in /etc/selinux/config
+  lineinfile:
+    dest: /etc/selinux/config
+    regexp: SELINUX=enforcing
+    line: SELINUX=permissive
+    state: present
 
 - name: Set locale LANG to en_US.UTF-8
   shell: localectl set-locale LANG=en_US.UTF-8
