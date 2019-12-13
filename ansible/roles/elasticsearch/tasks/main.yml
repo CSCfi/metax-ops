@@ -9,6 +9,8 @@
       es_instance_name: "{{ elasticsearch_instance.node_name }}"
       es_heap_size: "{{ elasticsearch_instance.heap_size }}"
       es_version: "5.6.11"
+      es_custom_package_url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.11.rpm"
+      es_use_repository: false
       es_major_version: "5.x"
       es_version_lock: true
       es_xpack_features: []
