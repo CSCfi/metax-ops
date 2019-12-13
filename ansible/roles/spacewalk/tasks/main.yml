@@ -1,17 +1,21 @@
 # SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-- name: Attach VM to Spacewalk as a system
+
+# downloads a lengthy shell script from spacewalk, and executes it.
+# among other things, iptables service is installed and enabled.
+# if you re-run this role, make sure you delete any existing machines
+# with same name from spacewalk, otherwise you can end up having
+# multiple duplicate systems in spacewalk!!
+- name: Attach VM to Spacewalk as a system. Note, this can take a while
   shell: wget -qO- http://spacewalk.csc.fi/pub/bootstrap/bootstrap-centos7-base-with-activationkey | sh -s {{ spacewalk_key }}
   args:
     warn: False
 
-- name: Add repo GPG keys
-  shell: rpm --import {{ item }}
-  with_items: "{{ spacewalk_repo_gpg_keys }}"
-  args:
-    warn: False
-
+# ensure iptables is stopped and ssh access is widely granted. ssh firewall rules
+# are configured through pouta security groups. failing these two tasks can result
+# in losing ssh access to the vm. (might still have access through pouta console,
+# if password login for users is enabled (which should NOT be enabled))
 - name: Stop iptables service
   systemd: name=iptables state=stopped enabled=no
 
@@ -20,6 +24,12 @@
     dest: "/etc/hosts.allow"
     regexp: "^sshd"
     replace: "#sshd"
+
+- name: Add repo GPG keys
+  shell: rpm --import {{ item }}
+  with_items: "{{ spacewalk_repo_gpg_keys }}"
+  args:
+    warn: False
 
 # - name: Disable anacron job
 #   file: path=/etc/cron.weekly/update-kernel mode=0644
