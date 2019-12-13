@@ -5,5 +5,5 @@ elasticsearch_instance:
   cluster_name: metax-es-cluster
   network_host: [_local_, "{{ server_ip }}"]
   http_port: 9200
-  heap_size: 2g
+  heap_size: 512m
   min_master_nodes: 1
