@@ -14,5 +14,5 @@
     - name: Restart gunicorn
       service:
         name: gunicorn
-        state: restarted
+        state: reloaded
       when: deployment_environment_id != 'local_development'
