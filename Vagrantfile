@@ -7,8 +7,9 @@
 # Pre-provisioner shell script installs Ansible into the guest and continues
 # to provision rest of the system in the guest. Works also on Windows.
 $script = <<SCRIPT
+set -e
 if [ ! -f /vagrant_bootstrap_done.info ]; then
-  sudo yum update
+  sudo yum -y update
   sudo yum -y install epel-release python-devel libffi-devel openssl-devel git
   sudo yum -y install python-pip
   sudo pip install pip --upgrade
