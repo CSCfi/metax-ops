@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 ---
 
-  - include_role:
+  - name: Install elasticsearch using ansible-elasticsearch role
+    include_role:
       name: ansible-elasticsearch
     vars:
       es_instance_name: "{{ elasticsearch_instance.node_name }}"

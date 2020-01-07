@@ -1,34 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-- name: Is python36u installed?
-  stat: path=/usr/bin/python3.6
-  register: python36u_installed
-
-- name: Is rh-python36 installed?
-  stat: path=/opt/rh/rh-python36/root/usr/bin/python3
-  register: rh_python36_installed
-
-- block:
-    - name: Install IUS
-      yum: name=https://centos7.iuscommunity.org/ius-release.rpm
-      when: deployment_environment_id == 'local_development'
-
-    - name: Install Python 3.6
-      yum:
-        state: latest
-        name:
-          - python36u
-          - python36u-pip
-          - python36u-devel
-      when: deployment_environment_id == 'local_development'
-
-    - name: Install Python 3.6
-      yum: name=rh-python36 state=latest
-      when: deployment_environment_id != 'local_development'
-
-
-  when: not python36u_installed.stat.exists and not rh_python36_installed.stat.exists
 
 - name: Is python virtual env installed?
   stat: path={{ python_venv_path }}
@@ -40,12 +12,7 @@
       file: path={{ python_venv_path }} state=directory owner={{ owner_user }} group=metax mode=0755
 
     - name: Install virtual environment for Python to {{ python_venv_path }}
-      command: /usr/bin/python3.6 -m venv {{ python_venv_path }}
-      when: deployment_environment_id in ['local_development', 'demo']
-
-    - name: Install virtual environment for Python to {{ python_venv_path }}
-      command: /opt/rh/rh-python36/root/usr/bin/python3 -m venv {{ python_venv_path }}
-      when: deployment_environment_id not in ['local_development', 'demo']
+      command: /usr/bin/python3 -m venv {{ python_venv_path }}
 
   when: not virtualenv_installed.stat.exists
 

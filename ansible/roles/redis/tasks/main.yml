@@ -39,7 +39,7 @@
       command: sysctl vm.overcommit_memory=1
 
     - name: Install Redis server
-      yum: name=redis state=latest
+      shell: yum -y install redis warn=false
 
     - name: Add {{ app_user }} user to redis group
       user: name={{ app_user }} shell=/bin/bash groups=redis append=yes
