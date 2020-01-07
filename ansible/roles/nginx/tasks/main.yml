@@ -4,7 +4,7 @@
 ---
 
 - name: NGINX | Install NGINX
-  yum: name=nginx state=latest
+  shell: yum -y install nginx warn=false
 
 - name: NGINX | Replace NGINX conf file
   template: src=templates/metax_nginx.conf dest=/etc/nginx/nginx.conf
@@ -29,6 +29,9 @@
 
 - name: NGINX | Generate Diffie-Hellman PFS (Perfect Forward Secrecy) group
   command: openssl dhparam -out {{ ssl_certificates_path }}/{{ nginx_dh_param_name }} 2048 creates={{ ssl_certificates_path }}/{{ nginx_dh_param_name }}
+
+- name: NGINX | Install passlib
+  pip: name=passlib state=latest executable=pip3
 
 - name: NGINX | Create basic auth file
   htpasswd:

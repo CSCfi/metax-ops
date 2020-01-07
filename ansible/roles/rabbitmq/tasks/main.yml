@@ -9,10 +9,10 @@
 
 - block:
     - name: Install Erlang package
-      yum: name=erlang state=latest
+      shell: yum -y install erlang warn=false
 
     - name: Install RabbitMQ server
-      yum: name=rabbitmq-server state=present
+      shell: yum -y install rabbitmq-server warn=false
 
     - name: Enable RabbitMQ management plugin (access it via <ip_address>:15672)
       rabbitmq_plugin: names=rabbitmq_management state=enabled

@@ -10,16 +10,11 @@ $script = <<SCRIPT
 set -e
 if [ ! -f /vagrant_bootstrap_done.info ]; then
   sudo yum -y update
-  sudo yum -y install epel-release python-devel libffi-devel openssl-devel git
-  sudo yum -y install python-pip
-  sudo pip install pip --upgrade
-  sudo pip install ansible
-  cd /metax/ansible
-  source install_requirements.sh
-  ansible-playbook site_provision.yml
+  sudo yum -y install epel-release libffi-devel openssl-devel git python3-3.6.8 python3-devel-3.6.8
+  pip3 install ansible
+  su --login -c 'cd /metax/ansible && source install_requirements.sh && ansible-playbook site_provision.yml' vagrant
   sudo touch /vagrant_bootstrap_done.info
 fi
-
 SCRIPT
 
 
