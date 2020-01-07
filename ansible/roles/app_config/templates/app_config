@@ -86,3 +86,12 @@ DATACITE:
     ETSIN_URL_TEMPLATE: {{ datacite_etsin_url_template }}
     PREFIX: {{ datacite_prefix }}
     URL: {{ datacite_url }}
+
+REMS:
+  ENABLED: {{ rems_enabled }}
+  API_KEY: {{ rems_api_key }}
+  BASE_URL: {{ rems_base_url }}
+  ETSIN_URL_TEMPLATE: "{{ etsin_base_url }}/dataset/%s"
+  METAX_USER: {{ rems_metax_user }}
+  AUTO_APPROVER: not-used
+  FORM_ID: {{ rems_form_id }}
