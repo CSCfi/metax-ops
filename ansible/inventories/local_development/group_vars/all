@@ -85,6 +85,13 @@ datacite_prefix: <REPLACE_WITH_DATACITE_PREFIX>
 datacite_etsin_url_template: "{{ etsin_base_url }}/dataset/%s"
 datacite_url: https://mds.test.datacite.org
 
+# rems
+rems_enabled: true
+rems_api_key: something
+rems_base_url: https://rems-instance.somewhere
+rems_metax_user: metax-rems-user
+rems_form_id: 1
+
 
 # note: filebeat automatically uses same credentials for kibana as for elasticsearch
 fd_analytics:
