@@ -6,7 +6,7 @@
   when: deployment_environment_id in ['local_development', 'test', 'stable', 'staging', 'demo']
 
 - name: Create self-signed SSL cert and private key
-  command: openssl req -x509 -nodes -subj "/C=FI/ST=Uusimaa/L=Espoo/O=CSC/CN={{ server_domain_name }}" -addext "subjectAltName = DNS:{{ server_domain_name }}" -addext "extendedKeyUsage = serverAuth" -days 365 -newkey rsa:2048 -keyout {{ ssl_certificates_path }}/{{ ssl_key_name }} -out {{ ssl_certificates_path }}/{{ ssl_certificate_name }} creates={{ ssl_certificates_path }}/{{ ssl_certificate_name }}
+  command: openssl req -x509 -nodes -subj "/C=FI/ST=Uusimaa/L=Espoo/O=CSC/CN={{ server_domain_name }}" -days 365 -newkey rsa:2048 -keyout {{ ssl_certificates_path }}/{{ ssl_key_name }} -out {{ ssl_certificates_path }}/{{ ssl_certificate_name }} creates={{ ssl_certificates_path }}/{{ ssl_certificate_name }}
   when: deployment_environment_id in ['local_development', 'staging']
 
 - block:
