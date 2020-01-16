@@ -1,0 +1,4 @@
+language: python
+script:
+   - ./travis/check_ansible_syntax
+   - ./travis/check_ansible_lint
