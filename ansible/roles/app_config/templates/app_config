@@ -93,5 +93,6 @@ REMS:
   BASE_URL: {{ rems_base_url }}
   ETSIN_URL_TEMPLATE: "{{ etsin_base_url }}/dataset/%s"
   METAX_USER: {{ rems_metax_user }}
+  REPORTER_USER: {{ rems_reporter_user }}
   AUTO_APPROVER: not-used
   FORM_ID: {{ rems_form_id }}
