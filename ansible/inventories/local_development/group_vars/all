@@ -90,6 +90,7 @@ rems_enabled: true
 rems_api_key: something
 rems_base_url: https://rems-instance.somewhere
 rems_metax_user: metax-rems-user
+rems_reporter_user: metax-reporter-user
 rems_form_id: 1
 
 
