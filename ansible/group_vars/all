@@ -31,6 +31,8 @@ ida_datacatalog_identifier: urn:nbn:fi:att:data-catalog-ida
 legacy_datacatalog_identifier: urn:nbn:fi:att:data-catalog-legacy
 pas_datacatalog_identifier: urn:nbn:fi:att:data-catalog-pas
 
+checksum_algorithms: ['SHA-256', 'MD5', 'SHA-512']
+
 spacewalk_repo_gpg_keys:
   - http://spacewalk.csc.fi/pub/rpm-gpg-keys/RPM-GPG-KEY-spacewalk-2015
   - http://spacewalk.csc.fi/pub/RPM-GPG-KEY-CentOS-SIG-SCLo
