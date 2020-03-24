@@ -86,11 +86,11 @@ OAI:
       - "{{ida_datacatalog_identifier}}"
 
 DATACITE:
-    USERNAME: {{ datacite_username }}
-    PASSWORD: {{ datacite_password }}
-    ETSIN_URL_TEMPLATE: {{ datacite_etsin_url_template }}
-    PREFIX: {{ datacite_prefix }}
-    URL: {{ datacite_url }}
+    USERNAME: CSC.NRD
+    PASSWORD: Cultivate!National$unpadded2
+    ETSIN_URL_TEMPLATE: https://etsin-test.fairdata.fi/dataset/%s
+    PREFIX: 10.23729
+    URL: https://mds.test.datacite.org
 
 REMS:
   ENABLED: {{ rems_enabled }}

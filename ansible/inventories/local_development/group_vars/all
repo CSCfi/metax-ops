@@ -138,9 +138,9 @@ api_access: {
         },
         "datasets": {
             "read":   ["all"],
-            "create": ["metax", "qvain", "etsin", "tpas", "endusers"],
-            "update": ["metax", "qvain", "etsin", "tpas", "endusers"],
-            "delete": ["metax", "qvain", "etsin", "tpas", "endusers"]
+            "create": ["metax", "qvain", "etsin", "tpas", "endusers", "external"],
+            "update": ["metax", "qvain", "etsin", "tpas", "endusers", "external"],
+            "delete": ["metax", "qvain", "etsin", "tpas", "endusers", "external"]
         },
         "directories": {
             "read":   ["metax", "qvain", "etsin", "tpas", "fds", "endusers"],

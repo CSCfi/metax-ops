@@ -11,6 +11,9 @@ metax-api/
 # ansible retry-file
 ansible/*.retry
 
+# local ansible files
+ansible/ansible
+
 ubuntu*.log
 local_settings.py
 ansible/inventories/test/group_vars/*
@@ -36,3 +39,5 @@ __pycache__
 
 # Mac stuff
 .DS_Store
+
+Vagrantfile

@@ -4,14 +4,14 @@ metax-db-local ansible_host="{{ server_ip }}" ansible_connection=local ansible_u
 [webservers]
 metax-web-local ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
 
-[master-cacheservers]
+[master_cacheservers]
 metax-cache-local-1 ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
 
-[slave-cacheservers]
+[slave_cacheservers]
 metax-cache-local-2 ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
 metax-cache-local-3 ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
 
-[master-messageservers]
+[master_messageservers]
 metax-message-local ansible_host="{{ server_ip }}" ansible_connection=local ansible_user=vagrant
 
 [refdataservers]
@@ -28,7 +28,7 @@ slave-cacheservers
 dbservers
 webservers
 cacheservers
-master-messageservers
+master_messageservers
 refdataservers
 searchservers
 

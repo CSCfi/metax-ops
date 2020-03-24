@@ -5,6 +5,7 @@ nginx_credentials:
   - { username: tpas, password: test-tpas }
   - { username: etsin, password: test-etsin }
   - { username: fds, password: test-fds }
+  - { username: external, password: test-external }
 
 nginx_whitelisted_ip_addresses_for_metax_api_writes:
   - 20.20.20.1

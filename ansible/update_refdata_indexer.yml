@@ -6,7 +6,7 @@
 - hosts: refdataservers
   become: yes
   roles:
-    - refdata_indexer
+    - refdata_indexer_new
 
 - hosts: webservers
   become: yes
