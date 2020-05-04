@@ -40,7 +40,7 @@
     group: "{{ app_user }}"
 
 - name: Sphinx | Build documentation
-  shell: su - {{ app_user }} -c 'source {{ python_virtualenv_path_docs }}/bin/activate; sphinx-build -b html {{ metax_app_base_path }}/docs/source {{ metax_app_base_path }}/docs/build'
+  shell: su - {{ app_user }} -c 'source {{ python_virtualenv_path_docs }}/bin/activate; sphinx-build -b html -t {{ deployment_environment_id }} {{ metax_app_base_path }}/docs/source {{ metax_app_base_path }}/docs/build'
 
 - name: Sphinx | Form list of built html doc files
   find:
