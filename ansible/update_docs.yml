@@ -5,5 +5,9 @@
 
 - hosts: webservers
   become: yes
+  vars:
+    api_versions:
+      - v1
+      - v2
   roles:
     - docs
