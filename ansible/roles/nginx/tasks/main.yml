@@ -8,22 +8,34 @@
 
 - name: NGINX | Replace NGINX conf file
   template: src=templates/metax_nginx.conf dest=/etc/nginx/nginx.conf
+  tags:
+    - conf
 
 - name: NGINX | Copy shared_headers.conf
   template: src=templates/shared_headers.conf dest=/etc/nginx/shared_headers.conf
+  tags:
+    - conf
 
 - name: NGINX | Copy api_response_headers.conf
   template: src=templates/api_response_headers.conf dest=/etc/nginx/api_response_headers.conf
+  tags:
+    - conf
 
 - name: NGINX | Copy static_file_headers.conf
   template: src=templates/static_file_headers.conf dest=/etc/nginx/static_file_headers.conf
+  tags:
+    - conf
 
 - name: NGINX | Copy elastic_headers.conf
   template: src=templates/elastic_headers.conf dest=/etc/nginx/elastic_headers.conf
+  tags:
+    - conf
 
 - name: NGINX | Copy robots.txt
   template: src=templates/robots.txt dest=/etc/nginx/robots.txt
   when: deployment_environment_id not in ['production']
+  tags:
+    - conf
 
 - include_role: name=certificates
 
@@ -44,6 +56,11 @@
     mode: 0640
   with_items: "{{ nginx_credentials }}"
   no_log: True
+  tags:
+    - credentials
 
 - name: NGINX | Restart NGINX
   service: name=nginx enabled=yes state=restarted
+  tags:
+    - conf
+    - credentials

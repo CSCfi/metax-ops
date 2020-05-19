@@ -113,6 +113,10 @@ end_user_allowed_data_catalogs:
   - "{{ legacy_datacatalog_identifier }}"
 
 
+api_versions_enabled:
+  v1: true
+  v2: true
+
 api_access: {
     "rest": {
         "apierrors": {
@@ -167,6 +171,8 @@ api_access: {
         "datasets": {
             "get_minimal_dataset_template": { "use": ["all"] },
             "change_cumulative_state": { "use": ["metax", "qvain", "etsin", "tpas", "endusers"] },
+            "create_new_version": { "use": ["metax", "qvain", "qvain-light", "endusers"] },
+            "publish_dataset": { "use": ["metax", "qvain", "qvain-light", "endusers"] },
             "set_preservation_identifier": { "use": ["metax", "tpas"] }
         },
         "files": {
