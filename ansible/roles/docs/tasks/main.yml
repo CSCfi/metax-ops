@@ -1,12 +1,15 @@
 # SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 - name: Install python virtualenv for docs
   include_role:
     name: python
   vars:
     owner_user: "{{ app_user }}"
     python_venv_path: "{{ python_virtualenv_path_docs }}"
+  tags:
+    - packages
 
 - name: Copy docs requirements.txt to /tmp
   copy:
@@ -15,54 +18,35 @@
     owner: "{{ app_user }}"
     group: "metax"
     mode: "0400"
+  tags:
+    - packages
 
 - name: Install docs python package requirements
   pip: requirements=/tmp/requirements.txt virtualenv={{ python_virtualenv_path_docs }}
   become_user: "{{ app_user }}"
+  tags:
+    - packages
 
 - name: Delete docs requirements.txt from /tmp
   file:
     state: absent
     path: /tmp/requirements.txt
+  tags:
+    - packages
 
-# if build-dir is not removed, the main menu list will not get updated in html-files
-# which did not have updates (each main section is a standalone html page, including the menu)
-- name: Sphinx | Clear /docs/build to ensure all files are rebuilt
-  file:
-    path: "{{ metax_app_base_path }}/docs/build"
-    state: absent
+- name: Sphinx tasks
+  include_tasks: sphinx.yml
+  loop: "{{ api_versions }}"
+  loop_control:
+    loop_var: api_version
+  tags:
+    - sphinx
 
-- name: Sphinx | Create documentation build directory
-  file:
-    path: "{{ metax_app_base_path }}/docs/build"
-    state: directory
-    owner: "{{ app_user }}"
-    group: "{{ app_user }}"
 
-- name: Sphinx | Build documentation
-  shell: su - {{ app_user }} -c 'source {{ python_virtualenv_path_docs }}/bin/activate; sphinx-build -b html -t {{ deployment_environment_id }} {{ metax_app_base_path }}/docs/source {{ metax_app_base_path }}/docs/build'
-
-- name: Sphinx | Form list of built html doc files
-  find:
-    paths: "{{ metax_app_base_path }}/docs/build"
-    patterns: "*.html"
-  register: built_doc_files
-
-- name: Sphinx | Replace placeholder Metax domain values with environment-specific values
-  replace: dest={{item.path}} regexp="__METAX_ENV_DOMAIN__" replace={{server_domain_name}}
-  with_items: "{{built_doc_files.files}}"
-
-# note: etsin_base_url contais https:// prefix
-- name: Sphinx | Replace placeholder Etsin domain values with environment-specific values
-  replace: dest={{item.path}} regexp="__ETSIN_ENV_BASE_URL__" replace={{etsin_base_url}}
-  with_items: "{{built_doc_files.files}}"
-
-- name: Sphinx | Replace placeholder branch name values with environment-specific values
-  replace: dest={{item.path}} regexp="__METAX_ENV_BRANCH__" replace={{project_repo_branch}}
-  with_items: "{{built_doc_files.files}}"
-
-- name: Swagger | Generate swagger html
-  shell: su - {{ app_user }} -c '{{ python_virtualenv_path_docs }}/bin/python {{ metax_app_base_path }}/swagger/swagger-yaml-to-html.py < {{ metax_app_base_path }}/swagger/swagger.yaml > {{ metax_app_base_path }}/swagger/index.html'
-
-- name: Swagger | Replace placeholder Metax domain values with environment-specific values
-  replace: dest={{ metax_app_base_path }}/swagger/index.html regexp="__METAX_ENV_DOMAIN__" replace={{server_domain_name}}
+- name: Swagger tasks
+  include_tasks: swagger.yml
+  loop: "{{ api_versions }}"
+  loop_control:
+    loop_var: api_version
+  tags:
+    - swagger

@@ -61,6 +61,9 @@ PAS_DATACATALOG_IDENTIFIER: {{ pas_datacatalog_identifier }}
 
 END_USER_ALLOWED_DATA_CATALOGS: {{ end_user_allowed_data_catalogs | to_nice_json }}
 
+# which versions of the API should be enabled (v1, v2, etc...)
+API_VERSIONS_ENABLED: {{ api_versions_enabled | to_nice_json }}
+
 # specify read and write access of services per api, or if an api is readable by world
 API_ACCESS: {{ api_access | to_nice_json }}
 

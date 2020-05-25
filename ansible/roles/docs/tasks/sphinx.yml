@@ -1,0 +1,50 @@
+
+# if build-dir is not removed, the main menu list will not get updated in html-files
+# which did not have updates (each main section is a standalone html page, including the menu)
+- name: Sphinx | Clear /docs/{{ api_version }}/build to ensure all files are rebuilt
+  file:
+    path: "{{ metax_app_base_path }}/docs/{{ api_version }}/build"
+    state: absent
+  tags:
+    - sphinx
+
+- name: Sphinx | Create documentation build directory
+  file:
+    path: "{{ metax_app_base_path }}/docs/{{ api_version }}/build"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+  tags:
+    - sphinx
+
+- name: Sphinx | Build documentation
+  shell: su - {{ app_user }} -c 'source {{ python_virtualenv_path_docs }}/bin/activate; sphinx-build -b html -t {{ deployment_environment_id }} {{ metax_app_base_path }}/docs/{{ api_version }}/source {{ metax_app_base_path }}/docs/{{ api_version }}/build'
+  tags:
+    - sphinx
+
+- name: Sphinx | Form list of built html doc files
+  find:
+    paths: "{{ metax_app_base_path }}/docs/{{ api_version }}/build"
+    patterns: "*.html"
+  register: built_doc_files
+  tags:
+    - sphinx
+
+- name: Sphinx | Replace placeholder Metax domain values with environment-specific values
+  replace: dest={{item.path}} regexp="__METAX_ENV_DOMAIN__" replace={{server_domain_name}}
+  with_items: "{{built_doc_files.files}}"
+  tags:
+    - sphinx
+
+# note: etsin_base_url contais https:// prefix
+- name: Sphinx | Replace placeholder Etsin domain values with environment-specific values
+  replace: dest={{item.path}} regexp="__ETSIN_ENV_BASE_URL__" replace={{etsin_base_url}}
+  with_items: "{{built_doc_files.files}}"
+  tags:
+    - sphinx
+
+- name: Sphinx | Replace placeholder branch name values with environment-specific values
+  replace: dest={{item.path}} regexp="__METAX_ENV_BRANCH__" replace={{project_repo_branch}}
+  with_items: "{{built_doc_files.files}}"
+  tags:
+    - sphinx
