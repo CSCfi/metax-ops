@@ -87,10 +87,10 @@ datacite_url: https://mds.test.datacite.org
 
 # rems
 rems_enabled: true
-rems_api_key: something
-rems_base_url: https://rems-instance.somewhere
-rems_metax_user: metax-rems-user
-rems_reporter_user: metax-reporter-user
+rems_api_key: <REPLACE_WITH_REMS_API_KEY>
+rems_base_url: <REPLACE_WITH_REMS_URL>
+rems_metax_user: <REPLACE_WITH_REMS_METAX_USER>
+rems_reporter_user: <REPLACE_WITH_REMS_REPORTER_USER>
 rems_form_id: 1
 
 
@@ -116,6 +116,8 @@ end_user_allowed_data_catalogs:
 api_versions_enabled:
   v1: true
   v2: true
+
+draft_enabled: true
 
 api_access: {
     "rest": {
