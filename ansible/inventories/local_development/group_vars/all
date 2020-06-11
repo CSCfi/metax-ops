@@ -114,8 +114,8 @@ end_user_allowed_data_catalogs:
 
 
 api_versions_enabled:
-  v1: true
-  v2: true
+  - "v1"
+  - "v2"
 
 api_access: {
     "rest": {
