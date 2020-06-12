@@ -36,16 +36,15 @@
 
 - name: Sphinx tasks
   include_tasks: sphinx.yml
-  loop: "{{ api_versions }}"
+  loop: "{{ api_versions_enabled }}"
   loop_control:
     loop_var: api_version
   tags:
     - sphinx
 
-
 - name: Swagger tasks
   include_tasks: swagger.yml
-  loop: "{{ api_versions }}"
+  loop: "{{ api_versions_enabled }}"
   loop_control:
     loop_var: api_version
   tags:
