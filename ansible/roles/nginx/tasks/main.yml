@@ -41,6 +41,14 @@
 
 - name: NGINX | Generate Diffie-Hellman PFS (Perfect Forward Secrecy) group
   command: openssl dhparam -out {{ ssl_certificates_path }}/{{ nginx_dh_param_name }} 2048 creates={{ ssl_certificates_path }}/{{ nginx_dh_param_name }}
+  when: deployment_environment_id not in ['test', 'stable']
+
+- name: NGINX | For test & stable, remotely copy & rename ssl-dhparams.pem, retrieved using LetsEncrypt, to the correct location
+  copy:
+    src: /etc/letsencrypt/ssl-dhparams.pem
+    dest: /{{ ssl_certificates_path }}/nginx_dhparam.pem
+    remote_src: yes
+  when: deployment_environment_id in ['test', 'stable']
 
 - name: NGINX | Install passlib
   pip: name=passlib state=latest executable=pip3
