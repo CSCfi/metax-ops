@@ -25,8 +25,18 @@ def main():
     REMOVE_AND_RECREATE_INDEX = 'remove_and_recreate_index'
     TYPES_TO_REINDEX = 'types_to_reindex'
 
-    instructions = """\nRun the program as metax-user with pyenv activated using 'python es_index_data.py remove_and_recreate_index=INDEX types_to_reindex=TYPE', where either or both of the arguments should be provided with one of the following values per argument:\n\nINDEX:\n{indices}\n\nTYPE:\n{types}"""
-    instructions = instructions.format(indices=str([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME]), types=str([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, IndexableData.DATA_TYPE_ORGANIZATION] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]))
+    instructions = """
+        \nRun the program as metax-user with pyenv activated using 'python es_index_data.py remove_and_recreate_index=INDEX types_to_reindex=TYPE',
+        where either or both of the arguments should be provided with one of the following values per argument:\n\nINDEX:\n{indices}\n\nTYPE:\n{types}
+    """
+    instructions = instructions.format(
+        indices=str([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME]),
+        types=str(
+            [NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, IndexableData.DATA_TYPE_ORGANIZATION] +
+            ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES +
+            [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]
+        )
+    )
 
     run_args = dict([arg.split('=', maxsplit=1) for arg in sys.argv[1:]])
     remove_and_recreate_index = None
@@ -44,7 +54,10 @@ def main():
 
     if TYPES_TO_REINDEX in run_args:
         types_to_reindex = run_args[TYPES_TO_REINDEX]
-        if types_to_reindex not in ([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, IndexableData.DATA_TYPE_ORGANIZATION] + ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]):
+        if types_to_reindex not in ([NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, IndexableData.DATA_TYPE_ORGANIZATION] +
+                ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + 
+                [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]):
+                
             _logger.error(instructions)
             sys.exit(1)
 
@@ -76,7 +89,8 @@ def main():
         es.create_index(ElasticSearchService.REFERENCE_DATA_INDEX_NAME,
             ElasticSearchService.REFERENCE_DATA_INDEX_FILENAME)
 
-        for doc_type in ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]:
+        for doc_type in ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + \
+                [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]:
             es.create_type_mapping(ElasticSearchService.REFERENCE_DATA_INDEX_NAME,
                 doc_type,
                 ElasticSearchService.REFERENCE_DATA_TYPE_MAPPING_FILENAME)
