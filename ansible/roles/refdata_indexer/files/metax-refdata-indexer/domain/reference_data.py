@@ -55,7 +55,8 @@ class ReferenceData(IndexableData):
         DATA_TYPE_LIFECYCLE_EVENT,
         DATA_TYPE_PRESERVATION_EVENT,
         DATA_TYPE_FILE_FORMAT_VERSION,
-        DATA_TYPE_EVENT_OUTCOME
+        DATA_TYPE_EVENT_OUTCOME,
+        DATA_TYPE_RESEARCH_INFRA
     ]
 
     def __init__(
