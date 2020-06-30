@@ -43,13 +43,13 @@ def main():
     types_to_reindex = None
 
     if not REMOVE_AND_RECREATE_INDEX in run_args and not TYPES_TO_REINDEX in run_args:
-        _logger.error(instructions)
+        print(instructions)
         sys.exit(1)
 
     if REMOVE_AND_RECREATE_INDEX in run_args:
         remove_and_recreate_index = run_args[REMOVE_AND_RECREATE_INDEX]
         if remove_and_recreate_index not in [NO, ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME]:
-            _logger.error(instructions)
+            print(instructions)
             sys.exit(1)
 
     if TYPES_TO_REINDEX in run_args:
@@ -58,7 +58,7 @@ def main():
                 ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + 
                 [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]):
                 
-            _logger.error(instructions)
+            print(instructions)
             sys.exit(1)
 
     es = ElasticSearchService()
@@ -84,25 +84,15 @@ def main():
     if remove_and_recreate_index in [ALL, ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME]:
         es.delete_index(ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME)
 
-    # Create reference data index and type mappings
+    # Create reference data index with mappings
     if not es.index_exists(ElasticSearchService.REFERENCE_DATA_INDEX_NAME):
         es.create_index(ElasticSearchService.REFERENCE_DATA_INDEX_NAME,
             ElasticSearchService.REFERENCE_DATA_INDEX_FILENAME)
 
-        for doc_type in ReferenceData.FINTO_REFERENCE_DATA_TYPES + ReferenceData.LOCAL_REFERENCE_DATA_TYPES + \
-                [ReferenceData.DATA_TYPE_RESEARCH_INFRA, ReferenceData.DATA_TYPE_MIME_TYPE]:
-            es.create_type_mapping(ElasticSearchService.REFERENCE_DATA_INDEX_NAME,
-                doc_type,
-                ElasticSearchService.REFERENCE_DATA_TYPE_MAPPING_FILENAME)
-
-    # Create organization data index and type mapping
+    # Create organization data index with mappings
     if not es.index_exists(ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME):
         es.create_index(ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME,
             ElasticSearchService.ORGANIZATION_DATA_INDEX_FILENAME)
-
-        es.create_type_mapping(ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME,
-            IndexableData.DATA_TYPE_ORGANIZATION,
-            ElasticSearchService.ORGANIZATION_DATA_TYPE_MAPPING_FILENAME)
 
     # Reindexing for Finto data
     if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME]:
@@ -130,14 +120,6 @@ def main():
     # Reindexing organizations
     if types_to_reindex in [ALL, IndexableData.DATA_TYPE_ORGANIZATION]:
         es.delete_and_update_indexable_data(ElasticSearchService.ORGANIZATION_DATA_INDEX_NAME, IndexableData.DATA_TYPE_ORGANIZATION, org_service.get_data())
-
-    # Reindexing infras
-    if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA]:
-        infra_es_data_models = infra_service.get_data()
-        if len(infra_es_data_models) > 0:
-            es.delete_and_update_indexable_data(ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_RESEARCH_INFRA, infra_es_data_models)
-        else:
-            _logger.info("No data models to reindex for infra data type")
 
     # Reindexing mime types
     if types_to_reindex in [ALL, ElasticSearchService.REFERENCE_DATA_INDEX_NAME, ReferenceData.DATA_TYPE_MIME_TYPE]:
