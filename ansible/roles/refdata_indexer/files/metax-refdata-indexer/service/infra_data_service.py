@@ -19,7 +19,7 @@ class InfraDataService:
     so it is first fetched and parsed.
     """
 
-    INFRA_REFERENCE_DATA_SOURCE_URL = 'https://avaa.tdata.fi/api/jsonws/tupa-portlet.Infrastructures/get-all-infrastructures'
+    INFRA_REF_DATA_SOURCE_URL = 'https://avaa.tdata.fi/api/jsonws/tupa-portlet.Infrastructures/get-all-infrastructures'
 
     TEMP_FILENAME = '/tmp/data.json'
 
@@ -31,11 +31,6 @@ class InfraDataService:
 
         index_data_models = self._parse_infra_data()
         os.remove(self.TEMP_FILENAME)
-
-        # i=0
-        # while i < 10:
-        #     print(index_data_models[i], sep='\n\n')
-        #     i = i+1
 
         return index_data_models
 
@@ -57,12 +52,20 @@ class InfraDataService:
                     if item.get('name_EN'):
                         label['en'] = item['name_EN']
 
-                    index_data_models.append(ReferenceData(data_id, data_type, label, uri, same_as=same_as, scheme=InfraDataService.INFRA_REFERENCE_DATA_SOURCE_URL))
+                    ref_item = ReferenceData(
+                        data_id,
+                        data_type,
+                        label,
+                        uri,
+                        same_as=same_as,
+                        scheme=InfraDataService.INFRA_REF_DATA_SOURCE_URL
+                    )
+                    index_data_models.append(ref_item)
 
         return index_data_models
 
     def _fetch_infra_data(self):
-        url = self.INFRA_REFERENCE_DATA_SOURCE_URL
+        url = self.INFRA_REF_DATA_SOURCE_URL
         _logger.info("Fetching data from url " + url)
 
         sleep_time = 2

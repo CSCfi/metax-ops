@@ -20,7 +20,7 @@ class MimeDataService:
     """
 
     IANA_NS = '{http://www.iana.org/assignments}'
-    MIME_TYPE_REFERENCE_DATA_SOURCE_URL = 'https://www.iana.org/assignments/media-types/media-types.xml'
+    MIME_TYPE_REF_DATA_SOURCE_URL = 'https://www.iana.org/assignments/media-types/media-types.xml'
     MIME_TYPE_REGISTRY_IDS = [  'application',
                                 'audio',
                                 'font',
@@ -77,14 +77,21 @@ class MimeDataService:
                     is_parsing_model_elem = False
                 if is_parsing_model_elem and elem.tag == (self.IANA_NS + 'record'):
                     if found_valid_file_elem or found_valid_name_elem:
-                        index_data_models.append(ReferenceData(data_id, data_type, {}, uri, scheme=MimeDataService.MIME_TYPE_REFERENCE_DATA_SOURCE_URL))
+                        ref_item = ReferenceData(
+                            data_id,
+                            data_type,
+                            {},
+                            uri,
+                            scheme=self.MIME_TYPE_REF_DATA_SOURCE_URL
+                        )
+                        index_data_models.append(ref_item)
                     found_valid_file_elem = False
                     found_valid_name_elem = False
 
         return index_data_models
 
     def _fetch_mime_data(self):
-        url = self.MIME_TYPE_REFERENCE_DATA_SOURCE_URL
+        url = self.MIME_TYPE_REF_DATA_SOURCE_URL
         sleep_time = 2
         num_retries = 7
 

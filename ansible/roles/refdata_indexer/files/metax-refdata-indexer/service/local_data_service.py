@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 import json
+
 from domain.reference_data import ReferenceData
 
 
@@ -33,7 +34,7 @@ class LocalDataService:
                     item.get('uri', ''),
                     same_as=item.get('same_as', []),
                     input_file_format=item.get('input_file_format', ''),
-                    output_format_version =item.get('output_format_version', ''),
+                    output_format_version=item.get('output_format_version', ''),
                     internal_code=item.get('internal_code', ''),
                     scheme=self.INFRA_SCHEME if data_type == ReferenceData.DATA_TYPE_RESEARCH_INFRA else ''
                 )
