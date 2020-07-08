@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Is there changes in refdata?
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: if ! test -z "$(git -C {{ ref_data_file }} diff)" || ! test -z "$(git -C {{ ref_data_file }} ls-files --others)"; then git -C {{ ref_data_file }} add .; fi
+  register: output
+  tags: refdata_changes
+
+- name: Print wat happend during diff
+  debug:
+    var: output.stdout_lines
+  tags: refdata_changes
+
+- name: Push reference data to github
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: git -C {{ ref_data_file }} push mirrored master --verbose
+  register: output
+  # tags: refdata_changes
+
+- name: Print wat happend during push
+  debug:
+    var: output.stdout_lines
+  # tags: refdata_changes

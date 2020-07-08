@@ -13,6 +13,7 @@
     owner: "{{ app_user }}"
     group: "{{ app_group }}"
     mode: "0755"
+  #become_user: "{{ app_user }}"
   become: yes
 
 - name: Add .ssh directoriy
@@ -25,142 +26,126 @@
   become_user: "{{ app_user }}"
   become: yes
 
-# - name: Add ssh configurations
-#   template: 
-#     src: templates/ssh.conf
-#     dest: "/home/{{ app_user }}/.ssh/config"
-#     owner: "{{ app_user }}"
-#     group: "{{ app_group }}"
-#     mode: "0640"
-#   become_user: "{{ app_user }}"
-#   become: yes
-#   tags: configuration
+- name: Add ssh configurations
+  template:
+    src: templates/ssh.conf
+    dest: "/home/{{ app_user }}/.ssh/config"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0640"
+  become_user: "{{ app_user }}"
+  become: yes
+  tags: configuration
 
-# # - name: Create ssh config file
-# #   copy:
-# #     content: ""
-# #     dest: "{{ metax_base_path }}/.ssh/config"
-# #     force: no
-# #     owner: "{{ app_user }}"
-# #     group: "{{ app_group }}"
-# #     mode: "0640"
-# #   become_user: "{{ app_user }}"
-# #   become: yes
-  
-# # - name: Add ssh configurations  
-# #   shell: echo -e "Host {{ ref_data_repo }}\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile /dev/null" > {{ metax_base_path }}/.ssh/config
-# #   become_user: "{{ app_user }}"
-# #   become: yes
+- name: Clone a repo for reference data
+  git:
+    repo: "{{ ref_data_repo }}"
+    # key_file: "/home/{{ app_user }}/.ssh/id_rsa.github"
+    dest: "{{ ref_data_file }}"
+    clone: yes
+    update: yes
+  become_user: "{{ app_user }}"
+  become: yes
 
-# - name: Clone a repo for reference data
-#   git:
-#     repo: "{{ ref_data_repo }}"
-#     # key_file: "/home/{{ app_user }}/.ssh/id_rsa.github"
-#     dest: "{{ ref_data_file }}"
-#     clone: yes
-#     update: yes
-#   become_user: "{{ app_user }}"
-#   become: yes
+- name: Give permissions to repo to insure read/write from scripts
+  file:
+    path: "{{ ref_data_file }}/"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0755"
+    recurse: yes
 
-# - name: Give permissions to repo to insure read/write from scripts
-#   file:
-#     path: "{{ ref_data_file }}/"
-#     owner: "{{ app_user }}"
-#     group: "{{ app_group }}"
-#     mode: "0755"
-#     recurse: yes
+- name: Add alternate remote
+  ini_file:
+    dest: '{{ ref_data_file }}/.git/config'
+    section: remote "mirrored"
+    option: url
+    value: git@ref_data_test:genie9/ref_data_test.git
+  tags: configuration
+  become_user: "{{ app_user }}"
 
-# - name: Add alternate remote
-#   ini_file:
-#     dest: '{{ ref_data_file }}/.git/config'
-#     section: remote "mirrored"
-#     option: url
-#     value: git@ref_data_test:genie9/ref_data_test.git
-#   tags: configuration
-#   become_user: "{{ app_user }}"
+# ORIGINAL --> #
+- name: Copy reference and organization data indexing script
+  copy:
+    src: metax-refdata-indexer/
+    dest: "{{ metax_base_path }}/refdata_indexer"
+    owner: "{{ app_user}}"
+    group: "{{ app_group }}"
+    mode: "0740"
 
-# # ORIGINAL --> #
-# - name: Copy reference and organization data indexing script
-#   copy:
-#     src: metax-refdata-indexer/
-#     dest: "{{ metax_base_path }}/refdata_indexer"
-#     owner: "{{ app_user}}"
-#     group: "{{ app_group }}"
-#     mode: "0740"
+- name: Install indexing script dependencies
+  pip:
+    requirements: "{{ metax_base_path }}/refdata_indexer/requirements.txt"
+    virtualenv: "{{ python_virtualenv_path }}"
+  become_user: "{{ app_user }}"
 
-# - name: Install indexing script dependencies
-#   pip:
-#     requirements: "{{ metax_base_path }}/refdata_indexer/requirements.txt"
-#     virtualenv: "{{ python_virtualenv_path }}"
-#   become_user: "{{ app_user }}"
+- name: Create refdata indexer logging directory
+  file:
+    path: /var/log/refdata_indexer
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
 
-# - name: Create refdata indexer logging directory
-#   file:
-#     path: /var/log/refdata_indexer
-#     state: directory
-#     owner: "{{ app_user }}"
-#     group: "{{ app_group }}"
+- name: Create refdata indexer log file and ensure file permissions
+  copy: 
+    content: ""
+    dest: /var/log/refdata_indexer/reindex.log
+    force: no
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0755"
+# ORIGINAL <-- #
 
-# - name: Create refdata indexer log file and ensure file permissions
-#   copy: 
-#     content: "" 
-#     dest: /var/log/refdata_indexer/reindex.log
-#     force: no
-#     owner: "{{ app_user }}"
-#     group: "{{ app_group }}"
-#     mode: "0755"
-# # ORIGINAL <-- #
+- name: Create refdata writer log file and ensure file permissions
+  copy:
+    content: ""
+    dest: /var/log/refdata_indexer/writer.log
+    force: no
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0755"
 
-# - name: Create refdata writer log file and ensure file permissions
-#   copy: 
-#     content: ""
-#     dest: /var/log/refdata_indexer/writer.log 
-#     force: no
-#     owner: "{{ app_user }}"
-#     group: "{{ app_group }}"
-#     mode: "0755"
+- name: Gather reference data to git repository folder
+  become_user: "{{ app_user }}"
+  shell: |
+    source /usr/local/metax/pyenv/bin/activate
+    cd /usr/local/metax/refdata_indexer
+    python3 {{ metax_base_path }}/refdata_indexer/fetch_data.py {{ ref_data_file }}
+  register: output
+  #tags: refdata_changes
 
-# - name: Gather reference data to git repository folder
-#   become_user: "{{ app_user }}"
-#   shell: |
-#     source /usr/local/metax/pyenv/bin/activate
-#     cd /usr/local/metax/refdata_indexer
-#     python3 {{ metax_base_path }}/refdata_indexer/fetch_data.py {{ ref_data_file }}
-#   register: output
+- name: Print wat happend during fetch
+  debug:
+    var: output.stdout_lines
 
-# - name: Print wat happend during fetch
-#   debug:
-#     var: output.stdout_lines
+- name: Add reference data to repo
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: |
+    git -C {{ ref_data_file }} add .
+    git -C {{ ref_data_file }} -c user.name='Metax' -c user.email='<>' commit -m "Updated reference data"
+  register: output
 
-# - name: Add reference data to repo
-#   become_user: "{{ app_user }}"
-#   become: yes
-#   shell: |
-#     git -C {{ ref_data_file }} add .
-#     git -C {{ ref_data_file }} -c user.name='Metax' -c user.email='<>' commit -m "Updated reference data"
-#   register: output
+- name: Push reference data to github
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: git -C {{ ref_data_file }} push mirrored master --verbose
+  # shell: ssh-agent bash -c 'ssh-add {{ metax_base_path }}/.ssh/id_rsa.github; git --git-dir={{ ref_data_file }}/.git push mirrored master --verbose'
+  register: output
 
-# - name: Push reference data to github
-#   become_user: "{{ app_user }}"
-#   become: yes
-#   shell: git -C {{ ref_data_file }} push mirrored master --verbose
-#   # shell: ssh-agent bash -c 'ssh-add {{ metax_base_path }}/.ssh/id_rsa.github; git --git-dir={{ ref_data_file }}/.git push mirrored master --verbose'
-#   register: output
+- name: Print wat happend during push
+  debug:
+    var: output.stdout_lines
 
-# # if ! test -z "$(git diff)" || ! test -z "$(git ls-files --others)"; then git add .; fi
-# - name: Print wat happend during push
-#   debug:
-#     var: output.stdout_lines
+# ORIGINAL --> #
+# - name: Index reference and organization data
+#   shell: su - {{ app_user }} -c '{{ metax_base_path }}/refdata_indexer/reindex_all.sh delete_and_reindex'
 
-# # ORIGINAL --> #
-# # - name: Index reference and organization data
-# #   shell: su - {{ app_user }} -c '{{ metax_base_path }}/refdata_indexer/reindex_all.sh delete_and_reindex'
-
-# # - name: Create cronjob for running reindexing script
-# #   cron:
-# #     name: "Reindex reference and organization data"
-# #     minute: "00"
-# #     hour: "3"
-# #     job: "{{ metax_base_path }}/refdata_indexer/reindex_all.sh only_reindex"
-# #     state: present
-# #     user: "{{ app_user }}"
+# - name: Create cronjob for running reindexing script
+#   cron:
+#     name: "Reindex reference and organization data"
+#     minute: "00"
+#     hour: "3"
+#     job: "{{ metax_base_path }}/refdata_indexer/reindex_all.sh only_reindex"
+#     state: present
+#     user: "{{ app_user }}"
