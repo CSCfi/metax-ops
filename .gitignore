@@ -41,3 +41,7 @@ __pycache__
 .DS_Store
 
 Vagrantfile
+
+# CSCFAIRMETA-182
+ansible/roles/refdata_indexer_new/files/ssh/id_rsa.github.pub
+ansible/roles/refdata_indexer_new/files/ssh/id_rsa.github

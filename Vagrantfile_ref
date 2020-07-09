@@ -32,7 +32,6 @@ Vagrant.configure("2") do |config|
     # Basic VM synced folder mount
     server.vm.synced_folder "./metax-api", "/metax/metax-api", :mount_options => ["dmode=777,fmode=777"], create: true
     server.vm.synced_folder "./ansible", "/metax/ansible", :mount_options => ["dmode=775,fmode=775"]
-    server.vm.synced_folder "./ansible/roles/refdata_indexer_new/files/metax-refdata-indexer", "/refdata", :mount_options => ["dmode=775,fmode=775"]
 
     server.vm.provision "shell", inline: $script
 
