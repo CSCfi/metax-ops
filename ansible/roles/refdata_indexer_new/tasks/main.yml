@@ -13,7 +13,7 @@
     owner: "{{ app_user }}"
     group: "{{ app_group }}"
     mode: "0755"
-  #become_user: "{{ app_user }}"
+  # become_user: "{{ app_user }}"
   become: yes
 
 - name: Add .ssh directoriy
@@ -72,6 +72,7 @@
     owner: "{{ app_user}}"
     group: "{{ app_group }}"
     mode: "0740"
+  tags: update_indexing_script
 
 - name: Install indexing script dependencies
   pip:
@@ -112,11 +113,16 @@
     cd /usr/local/metax/refdata_indexer
     python3 {{ metax_base_path }}/refdata_indexer/fetch_data.py {{ ref_data_file }}
   register: output
-  #tags: refdata_changes
+  tags:
+    - refdata_reload
+    - refdata_changes
 
 - name: Print wat happend during fetch
   debug:
     var: output.stdout_lines
+  tags:
+    - refdata_reload
+    - refdata_changes
 
 - name: Add reference data to repo
   become_user: "{{ app_user }}"
@@ -125,6 +131,7 @@
     git -C {{ ref_data_file }} add .
     git -C {{ ref_data_file }} -c user.name='Metax' -c user.email='<>' commit -m "Updated reference data"
   register: output
+  tags: refdata_reload
 
 - name: Push reference data to github
   become_user: "{{ app_user }}"
@@ -132,10 +139,12 @@
   shell: git -C {{ ref_data_file }} push mirrored master --verbose
   # shell: ssh-agent bash -c 'ssh-add {{ metax_base_path }}/.ssh/id_rsa.github; git --git-dir={{ ref_data_file }}/.git push mirrored master --verbose'
   register: output
+  tags: refdata_reload
 
 - name: Print wat happend during push
   debug:
     var: output.stdout_lines
+  tags: refdata_reload
 
 # ORIGINAL --> #
 # - name: Index reference and organization data

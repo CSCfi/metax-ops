@@ -44,9 +44,9 @@ def main():
             _logger.info("No data models to get for finto data type {0}".format(data_type))
             continue
         else:
-            print('Getting FINTO data')
-            _logger.info('Getting FINTO data')
-            write_to_file(repo, 'finto', finto_data_models)
+            print('Getting FINTO data: finto_' + data_type)
+            _logger.info('Getting FINTO data: finto_' + data_type)
+            write_to_file(repo, 'finto_' + data_type, finto_data_models)
 
     # get local data
     for data_type in ReferenceData.LOCAL_REFERENCE_DATA_TYPES:
@@ -54,9 +54,9 @@ def main():
         if len(local_data_models) == 0:
             _logger.info("No data models to get for local data type {0}".format(data_type))
         else:
-            print('Getting LOCAL data')
-            _logger.info('Getting LOCAL data')
-            write_to_file(repo, 'local', local_data_models)
+            print('Getting LOCAL data: local_' + data_type)
+            _logger.info('Getting LOCAL data: local_' + data_type)
+            write_to_file(repo, 'local_' + data_type, local_data_models)
 
     # get organizations
     org_data_models = org_service.get_data()

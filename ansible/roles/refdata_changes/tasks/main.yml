@@ -5,23 +5,66 @@
 - name: Is there changes in refdata?
   become_user: "{{ app_user }}"
   become: yes
-  shell: if ! test -z "$(git -C {{ ref_data_file }} diff)" || ! test -z "$(git -C {{ ref_data_file }} ls-files --others)"; then git -C {{ ref_data_file }} add .; fi
-  register: output
-  tags: refdata_changes
+  shell: git -C {{ ref_data_file }} diff-index --name-status HEAD && git -C {{ ref_data_file }} ls-files --others --exclude-standard
+  register: changes
 
-- name: Print wat happend during diff
+- name: Print changes
   debug:
-    var: output.stdout_lines
-  tags: refdata_changes
+    var: changes.stdout_lines
+
+# - mail:
+#     host: smtp.gmail.com
+#     port: 587
+#     username: evgenia.lyjina@codento.com
+#     password:
+#     to: Evgenia Lyjina <evgenia.lyjina@codento.com>
+#     subject: "[Metax info] Reference data changed"
+#     body: changes.stdout_lines
+#   delegate_to: localhost
+
+- name: Ansible fact - ansible_date_time
+  debug:
+    var: ansible_date_time
+
+- name: Set name for new branch
+  set_fact:
+    new_branch: Reference-data-changes-{{ ansible_date_time.date }}
+
+- name: Create branch for current changes
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: git -C {{ ref_data_file }} checkout -b {{ new_branch }}
+  when: (changes.stdout_lines | default([])) | length > 0
+  register: branch
+
+- name: Print creating branch
+  debug:
+    var: branch.stdout_lines
+
+- name: Add reference data to repo
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: |
+    git -C {{ ref_data_file }} add .
+    git -C {{ ref_data_file }} -c user.name='Metax' -c user.email='<>' commit -m "Updated reference data"
+  when: (changes.stdout_lines | default([])) | length > 0
 
 - name: Push reference data to github
   become_user: "{{ app_user }}"
   become: yes
-  shell: git -C {{ ref_data_file }} push mirrored master --verbose
-  register: output
-  # tags: refdata_changes
+  shell: git -C {{ ref_data_file }} push --set-upstream mirrored {{ new_branch }} --verbose
+  register: push
 
 - name: Print wat happend during push
   debug:
-    var: output.stdout_lines
-  # tags: refdata_changes
+    var: push.stdout_lines
+
+- name: Return to master branch
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: git -C {{ ref_data_file }} checkout master
+  register: master
+
+- name: Print master
+  debug:
+    var: master.stdout_lines

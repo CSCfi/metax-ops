@@ -6,8 +6,10 @@
 - hosts: refdataservers
   become: yes
   roles:
-    - refdata_indexer_new
-    - refdata_changes
+    - role: refdata_indexer_new
+    - role: refdata_changes
+      tags: refdata_changes
+    #- role: refdata_index
 
 - hosts: webservers
   become: yes

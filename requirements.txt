@@ -1,2 +1,2 @@
-ansible
+ansible==2.9.10
 ansible-lint
