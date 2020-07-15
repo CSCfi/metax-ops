@@ -28,11 +28,12 @@ class FintoDataService:
     }
 
     WKT_FILENAME = './resources/uri_to_wkt.json'
+    # WKT_FILENAME = '/refdata/ref_data_test/uri_to_wkt.es_ref'
 
     # Use this to decide whether to read location coordinates from a file
     # or whether to read coordinates from wikidata and paikkatiedot.fi and
     # at the same time writing the coordinates to a file
-    READ_COORDINATES_FROM_FILE = True
+    READ_COORDINATES_FROM_FILE = True # False
 
     def get_data(self, data_type):
         graph = self._fetch_finto_data(data_type)
@@ -86,21 +87,20 @@ class FintoDataService:
                     if wkt != '':
                         # Stop after first success
                         break
-
             data_id = self._get_uri_end_part(concept)
-
-            ref_item = ReferenceData(
-                data_id,
-                data_type,
-                label,
-                uri,
-                parent_ids=parent_ids,
-                child_ids=child_ids,
-                same_as=same_as,
-                wkt=wkt,
-                scheme=in_scheme
+            index_data_models.append(
+                ReferenceData(
+                    data_id,
+                    data_type,
+                    label,
+                    uri,
+                    parent_ids=parent_ids,
+                    child_ids=child_ids,
+                    same_as=same_as,
+                    wkt=wkt,
+                    scheme=in_scheme
+                )
             )
-            index_data_models.append(ref_item)
 
         if data_type == ReferenceData.DATA_TYPE_LOCATION:
             if not self.READ_COORDINATES_FROM_FILE:
@@ -108,6 +108,13 @@ class FintoDataService:
                     outfile.write('}')
 
         _logger.info("Done with all")
+        # with open('ref_data_test/wkt.json', 'w') as gitfile:
+        #     i = 0
+        #     while i < 10:
+        #         print(index_data_models[i], sep='\n\n')
+        #         i = i + 1
+        #         gitfile.write(str(index_data_models[i]))
+
         return index_data_models
 
     def _fetch_finto_data(self, data_type):
@@ -141,7 +148,7 @@ class FintoDataService:
 
     def _get_coordinates_for_location_from_url(self, url):
         sleep_time = 2
-        num_retries = 4
+        num_retries = 2
 
         if 'wikidata' in url:
             g = Graph()
@@ -151,9 +158,10 @@ class FintoDataService:
                     str_error = None
                 except Exception as e:
                     str_error = e
+                    print('--str_error', str_error)
 
                 if str_error:
-                    _logger.error("Unable to read wikidata, trying again..")
+                    _logger.error("Unable to read wikidata from %s, trying again.." % url)
                     sleep(sleep_time)  # wait before trying to fetch the data again
                     sleep_time *= 2  # exponential backoff
                 else:

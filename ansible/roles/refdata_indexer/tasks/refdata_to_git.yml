@@ -1,0 +1,40 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+############################################################
+### If repository is empty, build reference data to repo ###
+############################################################
+
+- name: Gather reference data to git repository folder
+  become_user: "{{ app_user }}"
+  shell: |
+    source /usr/local/metax/pyenv/bin/activate
+    cd {{ metax_base_path }}/refdata_indexer
+    python3 fetch_data.py {{ ref_data_file }}
+  register: output
+  tags:
+    - refdata_changes
+
+- name: Print wat happend during fetch
+  debug:
+    var: output.stdout_lines
+  tags:
+    - refdata_changes
+
+- name: Add reference data to repo
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: |
+    git -C {{ ref_data_file }} add .
+    git -C {{ ref_data_file }} -c user.name='Metax' -c user.email='<>' commit -m "Updated reference data"
+
+- name: Push reference data to github
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: git -C {{ ref_data_file }} push mirrored master --verbose
+  register: push
+
+- name: Print wat happend during push
+  debug:
+    var: push.stdout_lines

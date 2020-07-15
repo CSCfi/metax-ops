@@ -61,19 +61,19 @@ class ReferenceData(IndexableData):
     ]
 
     def __init__(
-        self,
-        data_id,
-        data_type,
-        label,
-        uri,
-        parent_ids=[],
-        child_ids=[],
-        same_as=[],
-        wkt='',
-        input_file_format='',
-        output_format_version='',
-        scheme='',
-        internal_code=''
+            self,
+            data_id,
+            data_type,
+            label,
+            uri,
+            parent_ids=[],
+            child_ids=[],
+            same_as=[],
+            wkt='',
+            input_file_format='',
+            output_format_version='',
+            scheme='',
+            internal_code=''
     ):
 
         super(ReferenceData, self).__init__(data_id, data_type, label, uri, same_as, scheme)

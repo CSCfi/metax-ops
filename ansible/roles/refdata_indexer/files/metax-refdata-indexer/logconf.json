@@ -13,12 +13,22 @@
             "class": "logging.FileHandler",
             "filename": "/var/log/refdata_indexer/reindex.log",
             "formatter": "standard"
+        },
+        "writer": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "/var/log/refdata_indexer/writer.log",
+            "formatter": "standard"
         }
     },
     "loggers": {
         "refdata_indexer": {
             "level": "INFO",
             "handlers": ["general"]
+        },
+        "refdata_writer": {
+            "level": "INFO",
+            "handlers": ["writer"]
         }
     }
 }

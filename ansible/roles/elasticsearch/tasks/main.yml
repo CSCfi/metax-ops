@@ -4,7 +4,7 @@
 ---
 
   - name: Install elasticsearch using ansible-elasticsearch role
-    import_role:
+    include_role:
       name: ansible-elasticsearch
     vars:
       es_instance_name: "{{ elasticsearch_instance.node_name }}"

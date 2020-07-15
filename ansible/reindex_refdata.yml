@@ -1,0 +1,9 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+---
+
+- hosts: refdataservers
+  become: yes
+  tasks:
+    - include_tasks: roles/refdata_reindex/tasks/index_refdata.yml

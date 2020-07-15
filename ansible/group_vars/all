@@ -2,7 +2,10 @@ app_name: metax-api
 app_log_file: metax_api.log
 app_log_file_json: metax_api.json.log
 app_user: metax-user
+app_group: metax
 project_repo: https://github.com/CSCfi/metax-api
+ref_data_file: /refdata/ref_data_test
+ref_data_repo: https://github.com/genie9/ref_data_test
 
 metax_base_path: /usr/local/metax
 python_virtualenv_path: "{{ metax_base_path }}/pyenv"

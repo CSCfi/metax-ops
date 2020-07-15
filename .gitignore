@@ -33,6 +33,12 @@ ansible/roles/ansible-elasticsearch/
 *.tar.gz
 __pycache__
 .idea
+.vscode/
 
 # Mac stuff
 .DS_Store
+
+# Vagrantfile
+
+# CSCFAIRMETA-182
+ansible/roles/refdata_indexer/files/ssh/*

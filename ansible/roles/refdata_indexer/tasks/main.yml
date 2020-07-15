@@ -1,27 +1,142 @@
 # SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Create refdata directory if it does not exist and set permissions
+  file:
+    path: /refdata/
+    state: directory
+    recurse: yes
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0755"
+  # become_user: "{{ app_user }}"
+  become: yes
+
+- name: Add .ssh directory
+  copy:
+    src: roles/refdata_indexer/files/ssh/
+    dest: "/home/{{ app_user }}/.ssh"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0600"
+  become_user: "{{ app_user }}"
+  become: yes
+
+- name: Add ssh configurations
+  template:
+    src: templates/ssh.conf
+    dest: "/home/{{ app_user }}/.ssh/config"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0640"
+  become_user: "{{ app_user }}"
+  become: yes
+  tags: configuration
+
+- name: Clone a repo for reference data
+  git:
+    repo: "{{ ref_data_repo }}"
+    # key_file: "/home/{{ app_user }}/.ssh/id_rsa.github"
+    dest: "{{ ref_data_file }}"
+    clone: yes
+    update: yes
+    force: yes
+  become_user: "{{ app_user }}"
+  become: yes
+
+- name: Give permissions to repo to insure read/write from scripts
+  file:
+    path: "{{ ref_data_file }}/"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0744"
+    recurse: yes
+
+- name: Add alternate remote
+  ini_file:
+    dest: '{{ ref_data_file }}/.git/config'
+    section: remote "mirrored"
+    option: url
+    value: git@ref_data_test:genie9/ref_data_test.git
+  tags: configuration
+  become_user: "{{ app_user }}"
+  become: yes
+ 
 - name: Copy reference and organization data indexing script
-  copy: src=metax-refdata-indexer/ dest={{ metax_base_path }}/refdata_indexer owner={{ app_user}} group=metax mode=740
+  copy:
+    src: metax-refdata-indexer/
+    dest: "{{ metax_base_path }}/refdata_indexer"
+    owner: "{{ app_user}}"
+    group: "{{ app_group }}"
+    mode: "0740"
+  register: output
+  tags: update_indexing_scripts
 
 - name: Install indexing script dependencies
-  pip: requirements={{ metax_base_path }}/refdata_indexer/requirements.txt virtualenv={{ python_virtualenv_path }}
+  pip:
+    requirements: "{{ metax_base_path }}/refdata_indexer/requirements.txt"
+    virtualenv: "{{ python_virtualenv_path }}"
   become_user: "{{ app_user }}"
 
 - name: Create refdata indexer logging directory
-  file: path=/var/log/refdata_indexer state=directory owner={{ app_user }} group=metax
+  file:
+    path: /var/log/refdata_indexer
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
 
 - name: Create refdata indexer log file and ensure file permissions
-  copy: content="" dest=/var/log/refdata_indexer/reindex.log force=no owner={{ app_user }} group=metax mode=0755
+  copy: 
+    content: ""
+    dest: /var/log/refdata_indexer/reindex.log
+    force: no
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0755"
 
-- name: Index reference and organization data
-  shell: su - {{ app_user }} -c '{{ metax_base_path }}/refdata_indexer/reindex_all.sh delete_and_reindex'
+- name: Create refdata writer log file and ensure file permissions
+  copy:
+    content: ""
+    dest: /var/log/refdata_indexer/writer.log
+    force: no
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0755"
 
-- name: Create cronjob for running reindexing script
-  cron:
-    name: "Reindex reference and organization data"
-    minute: "00"
-    hour: "3"
-    job: "{{ metax_base_path }}/refdata_indexer/reindex_all.sh only_reindex"
-    state: present
-    user: "{{ app_user }}"
+- name: Check if repo has reference data
+  find:
+    paths: 
+      - "{{ ref_data_file }}"
+    patterns: '*.es_ref'
+  register: files
+
+- name: Reference data to git
+  include_tasks: refdata_to_git.yml
+  when: files.matched <= 1
+
+- name: Index refdata
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: |
+    source /usr/local/metax/pyenv/bin/activate
+    cd {{ metax_base_path }}/refdata_indexer
+    python3 index_data.py refdata_path={{ ref_data_file }} remove_and_recreate_index=no types_to_reindex=all
+  register: index
+
+- name: Print wat happen during index
+  debug:
+      var: index.stdout_lines
+
+# ORIGINAL -->
+# - name: Index reference and organization data
+#   shell: su - {{ app_user }} -c '{{ metax_base_path }}/refdata_indexer/reindex_all.sh delete_and_reindex'
+
+# - name: Create cronjob for running reindexing script
+#   cron:
+#     name: "Reindex reference and organization data"
+#     minute: "00"
+#     hour: "3"
+#     job: "{{ metax_base_path }}/refdata_indexer/reindex_all.sh only_reindex"
+#     state: present
+#     user: "{{ app_user }}"

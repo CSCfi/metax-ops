@@ -1,0 +1,87 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Gather reference data to git repository folder
+  become_user: "{{ app_user }}"
+  shell: |
+    source /usr/local/metax/pyenv/bin/activate
+    cd {{ metax_base_path }}/refdata_indexer
+    python3 fetch_data.py {{ ref_data_file }}
+  register: output
+ 
+- name: Is there changes in refdata?
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: git -C {{ ref_data_file }} diff-index --name-status HEAD && git -C {{ ref_data_file }} ls-files --others --exclude-standard
+  register: changes
+
+- name: Print changes
+  debug:
+    var: changes.stdout_lines
+
+# - mail:
+#     host: smtp.gmail.com
+#     port: 587
+#     username: evgenia.lyjina@codento.com
+#     password:
+#     to: Evgenia Lyjina <evgenia.lyjina@codento.com>
+#     subject: "[Metax info] Reference data changed"
+#     body: changes.stdout_lines
+#   delegate_to: localhost
+
+- name: Ansible fact - ansible_date_time
+  debug:
+    var: ansible_date_time
+
+- name: Set name for new branch
+  set_fact:
+    new_branch: Reference-data-changes-{{ ansible_date_time.date }}
+
+- name: Create branch for current changes
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: git -C {{ ref_data_file }} checkout -b {{ new_branch }}
+  when: (changes.stdout_lines | default([])) | length > 0
+  register: branch
+
+- name: Print creating branch
+  debug:
+    var: branch.stdout_lines
+
+- name: Add reference data to repo
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: |
+    git -C {{ ref_data_file }} add .
+    git -C {{ ref_data_file }} -c user.name='Metax' -c user.email='<>' commit -m "Updated reference data"
+  when: (changes.stdout_lines | default([])) | length > 0
+
+- name: Push reference data to github
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: git -C {{ ref_data_file }} push --set-upstream mirrored {{ new_branch }} --verbose
+  register: push
+
+- name: Print wat happend during push
+  debug:
+    var: push.stdout_lines
+
+- name: Return to master branch
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: git -C {{ ref_data_file }} checkout master
+  register: master
+
+- name: Print master
+  debug:
+    var: master.stdout_lines
+
+###########################################################
+## Do this after branch with changes is merged to master ##
+## ansible-playbook index_refdata.yml                    ##
+###########################################################
+
+- name: Index reference data
+  include_tasks: index_refdata.yml
+  when: do_index == true

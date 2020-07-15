@@ -42,6 +42,13 @@ class MimeDataService:
         index_data_models = self._parse_mime_data()
         os.remove(self.TEMP_XML_FILENAME)
 
+        # with open('ref_data_test/mime.json', 'w') as gitfile:
+        #     i = 0
+        #     while i < 10:
+        #         print(index_data_models[i], sep='\n\n')
+        #         i = i + 1
+        #         gitfile.write(str(index_data_models[i]))
+
         return index_data_models
 
     def _parse_mime_data(self):
@@ -72,14 +79,8 @@ class MimeDataService:
                     is_parsing_model_elem = False
                 if is_parsing_model_elem and elem.tag == (self.IANA_NS + 'record'):
                     if found_valid_file_elem or found_valid_name_elem:
-                        ref_item = ReferenceData(
-                            data_id,
-                            data_type,
-                            {},
-                            uri,
-                            scheme=self.MIME_TYPE_REF_DATA_SOURCE_URL
-                        )
-                        index_data_models.append(ref_item)
+                        index_data_models.append(ReferenceData(data_id, data_type, {}, uri,
+                        scheme=MimeDataService.MIME_TYPE_REF_DATA_SOURCE_URL))
                     found_valid_file_elem = False
                     found_valid_name_elem = False
 

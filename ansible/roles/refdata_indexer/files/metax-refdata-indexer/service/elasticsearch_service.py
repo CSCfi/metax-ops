@@ -71,7 +71,11 @@ class ElasticSearchService:
             indexable_data_item.get_es_document_id() + "\"}}"
 
     def _operation_ok(self, op_response):
-        if op_response.get('acknowledged'):
+        p = op_response.get('acknowledged')
+        print('_operation_ok', p, op_response.get('acknowledged'))
+        #if op_response.get('acknowledged'):
+        if p:
+            print('OK')
             _logger.info("OK")
             return True
         return False

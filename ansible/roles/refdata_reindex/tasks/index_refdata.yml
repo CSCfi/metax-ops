@@ -1,0 +1,67 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+##########################################
+## Index reference data from repository ##
+##########################################
+
+#########
+## WIP ##
+#########
+
+- name: Ensure that in master branch
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: git -C {{ ref_data_file }} checkout master
+
+- name: Check if pulled new reference
+  shell: git -C {{ ref_data_file }} fetch
+  register: changed
+
+- name: Print wat happend during fetch
+  debug:
+    var: changed.stdout_lines
+
+- name: Check if changed reference data
+  shell: git -C {{ ref_data_file }} diff --name-only ..origin
+  register: changed
+
+- name: Changed files
+  set_fact:
+    files: "{{ changed.stdout }}"
+
+- name: Print changed files
+  debug:
+    var: files
+
+- name: Pull from reference data master
+  git:
+    repo: "{{ ref_data_repo }}"
+    key_file: "/home/{{ app_user }}/.ssh/id_rsa.github"
+    dest: "{{ ref_data_file }}"
+    update: yes
+    force: yes
+    clone: no
+  become_user: "{{ app_user }}"
+  become: yes
+  register: pull
+
+- name: Print wat happen during pull
+  debug:
+      var: pull.remote_url_changed
+
+- name: Index refdata
+  become_user: "{{ app_user }}"
+  become: yes
+  shell: |
+    source /usr/local/metax/pyenv/bin/activate
+    cd {{ metax_base_path }}/refdata_indexer
+    python3 index_data.py refdata_path={{ ref_data_file }} files_changed=$'{{ files }}'
+  register: reindex
+  when: files|length > 0
+
+- name: Print wat happen during reindex
+  debug:
+      var: reindex.stdout_lines
+  when: files|length > 0

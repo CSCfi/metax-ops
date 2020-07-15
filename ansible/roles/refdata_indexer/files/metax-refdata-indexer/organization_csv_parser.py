@@ -2,14 +2,14 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 '''
-A script that parses csv files and returns a list of organization objects for elasticsearch indexing purposes.
+    A script that parses csv files and returns a list of organization objects for elasticsearch indexing purposes.
 
-The first row in a csv file defines the keys that are used to parse the
-organizations. The following keys are accepted as row headers. Separate column values with commas (,):
-org_name_fi,org_name_en,org_name_sv,org_code,unit_main_code,unit_sub_code,unit_name
-unit_main_code can be left blank, other fields are required.
+    The first row in a csv file defines the keys that are used to parse the
+    organizations. The following keys are accepted as row headers. Separate column values with commas (,):
+    org_name_fi,org_name_en,org_name_sv,org_code,unit_main_code,unit_sub_code,unit_name
+    unit_main_code can be left blank, other fields are required.
 
-This file is a modified version of the original implementation by Peter Kronström.
+    This file is a modified version of the original implementation by Peter Kronström.
 '''
 
 import csv
@@ -41,25 +41,18 @@ def parse_csv():
                     unit_name = row.get('unit_name', '').rstrip()
                     org_isni = row.get('org_isni', '')
                     org_csc = row.get('org_csc', '')
-
                     if govern(row):
                         # save parent ids to parent_organizations dict
                         # and create a root level organization
                         if org_code not in root_orgs:
-                            root_org_dict = create_organization(
-                                org_code,
-                                org_name_fi,
-                                org_name_en=org_name_en,
-                                org_name_sv=org_name_sv,
-                                org_isni=org_isni,
-                                org_csc=org_csc
-                            )
+                            root_org_dict = create_organization(org_code, org_name_fi, org_name_en=org_name_en,
+                                org_name_sv=org_name_sv, org_isni=org_isni, org_csc=org_csc)
                             root_orgs[org_code] = root_org_dict.get('org_id', None)
                             output_orgs.append(root_org_dict)
 
                         # otherwise create an org and append it to existing root's hierarchy
                         if unit_sub_code and unit_name:
-                            organization_code = '-'.join([org_code, unit_sub_code])     # Unique
+                            organization_code = '-'.join([org_code, unit_sub_code])        # Unique
                             parent_id = root_orgs.get(org_code, None)
                             output_orgs.append(create_organization(organization_code, unit_name, parent_id=parent_id))
 
@@ -72,31 +65,24 @@ def parse_csv():
 
 def govern(row):
     '''
-    returns false, if the row does not contain necessary fields.
+        returns false, if the row does not contain necessary fields.
     '''
-
     # root-level organization only
     if all(row[i] for i in ['org_name_fi', 'org_code']):
         # check if sub-unit fields are present
         if not all(row[i] for i in ['unit_sub_code', 'unit_name']):
-            _logger.error(f'Missing unit codes (unit_sub_code, unit_name). Creating root organization only: {row}')
+            _logger.error('Missing unit codes (unit_sub_code, unit_name). \
+            Creating root organization only: {}'.format(row))
         return True
     else:
-        _logger.error(f'Missing root organization fields (org_name_fi, org_code). Skipping row {row}')
+        _logger.error('Missing root organization fields (org_name_fi, org_code). Skipping row {}'.format(row))
         return False
 
 
-def create_organization(
-    org_id_str,
-    org_name_fi,
-    org_name_en=None,
-    org_name_sv=None,
-    org_isni=None,
-    org_csc=None,
-    parent_id=None
-):
+def create_organization(org_id_str, org_name_fi, org_name_en=None, org_name_sv=None,
+                        org_isni=None, org_csc=None, parent_id=None):
     '''
-    create organization data_dict that is suitable for ES indexing
+        create organization data_dict that is suitable for ES indexing
     '''
     org_dict = {}
     org_dict['org_id'] = org_id_str

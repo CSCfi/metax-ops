@@ -1,28 +1,29 @@
 # SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-import json
-
 from domain.indexable_data import IndexableData
+# from service.elasticsearch_service import ElasticSearchService
+# from service.service_utils import set_default_label
+import json
 
 class OrganizationData(IndexableData):
     '''
     Model class for organization data that can be indexed into Metax Elasticsearch
     '''
 
-    ORG_PURL_BASE_URL = 'http://uri.suomi.fi/codelist/fairdata/' + IndexableData.DATA_TYPE_ORGANIZATION + '/code/'
+    ORG_PURL_BASE_URL = 'http://uri.suomi.fi/codelist/fairdata/' + \
+        IndexableData.DATA_TYPE_ORGANIZATION + '/code/'
 
     def __init__(
-        self,
-        org_id,
-        label,
-        parent_id='',
-        same_as=[],
-        org_csc='',
-        scheme=''
-    ):
+            self,
+            org_id,
+            label,
+            parent_id='',
+            same_as=[],
+            org_csc='',
+            scheme=''):
 
-        super().__init__(
+        super(OrganizationData, self).__init__(
             org_id,
             IndexableData.DATA_TYPE_ORGANIZATION,
             label,
@@ -47,5 +48,4 @@ class OrganizationData(IndexableData):
             '"label":' + json.dumps(self.label) + ','
             '"same_as":' + json.dumps(self.same_as) + ','
             '"scheme":"' + self.scheme + '"'
-            '}'
-        )
+            '}')

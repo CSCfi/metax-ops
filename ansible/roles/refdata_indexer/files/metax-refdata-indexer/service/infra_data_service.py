@@ -19,7 +19,8 @@ class InfraDataService:
     so it is first fetched and parsed.
     """
 
-    INFRA_REF_DATA_SOURCE_URL = 'https://avaa.tdata.fi/api/jsonws/tupa-portlet.Infrastructures/get-all-infrastructures'
+    INFRA_REF_DATA_SOURCE_URL = \
+        'https://avaa.tdata.fi/api/jsonws/tupa-portlet.Infrastructures/get-all-infrastructures'
 
     TEMP_FILENAME = '/tmp/data.json'
 
@@ -31,6 +32,17 @@ class InfraDataService:
 
         index_data_models = self._parse_infra_data()
         os.remove(self.TEMP_FILENAME)
+
+        # i=0
+        # while i < 10:
+        #     print(index_data_models[i], sep='\n\n')
+        #     i = i+1
+        # with open('ref_data_test/infra.json', 'w') as gitfile:
+        #     i = 0
+        #     while i < 10:
+        #         print(index_data_models[i], sep='\n\n')
+        #         i = i + 1
+        #         gitfile.write(str(index_data_models[i]))
 
         return index_data_models
 
@@ -52,15 +64,8 @@ class InfraDataService:
                     if item.get('name_EN'):
                         label['en'] = item['name_EN']
 
-                    ref_item = ReferenceData(
-                        data_id,
-                        data_type,
-                        label,
-                        uri,
-                        same_as=same_as,
-                        scheme=InfraDataService.INFRA_REF_DATA_SOURCE_URL
-                    )
-                    index_data_models.append(ref_item)
+                    index_data_models.append(ReferenceData(data_id, data_type, label, uri, same_as=same_as,
+                        scheme=InfraDataService.INFRA_REF_DATA_SOURCE_URL))
 
         return index_data_models
 
