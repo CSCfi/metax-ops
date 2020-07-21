@@ -4,4 +4,4 @@
 ---
 
 - src: https://github.com/CSCfi/ansible-elasticsearch
-  version: CSCFAIRMETA-212-update-elasticsearch-to-v7
+  version: fb0445138b72ee31b03a14aa39d9071f6b88189a
