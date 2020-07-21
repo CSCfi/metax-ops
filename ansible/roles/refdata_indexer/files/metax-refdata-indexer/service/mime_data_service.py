@@ -42,11 +42,6 @@ class MimeDataService:
         index_data_models = self._parse_mime_data()
         os.remove(self.TEMP_XML_FILENAME)
 
-        # i=0
-        # while i < 10:
-        #     print(index_data_models[i], sep='\n\n')
-        #     i = i+1
-
         return index_data_models
 
     def _parse_mime_data(self):

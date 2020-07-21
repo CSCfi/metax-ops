@@ -41,8 +41,4 @@ class LocalDataService:
 
                 index_data_models.append(ref_item)
 
-        # if len(index_data_models) > 0:
-        #     for ref in index_data_models:
-        #         print(ref, sep='\n\n')
-
         return index_data_models
