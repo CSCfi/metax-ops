@@ -4,4 +4,4 @@
 ---
 
 - src: https://github.com/CSCfi/ansible-elasticsearch
-  version: fb0445138b72ee31b03a14aa39d9071f6b88189a
+  version: 9d90f29968be7bb837f3b73bd8a28a7ded69a631
