@@ -33,9 +33,11 @@
   copy:
     dest: /var/lib/rabbitmq/.erlang.cookie
     content: "{{ rabbitmq.erlang_cookie }}"
+  tags: credentials
 
 - name: Restart RabbitMQ
   service: name=rabbitmq-server state=restarted
+  tags: always
 
 - block:
     - name: Add main virtual host for RabbitMQ
@@ -58,6 +60,7 @@
             read_priv: .*
             write_priv: .*
         state: present
+        force: yes
 
     - name: Add metax-user for RabbitMQ
       rabbitmq_user:
@@ -68,6 +71,7 @@
         write_priv: .*
         read_priv: .*
         state: present
+        force: yes
 
     - name: Add known consumer users for RabbitMQ
       rabbitmq_user:
@@ -78,6 +82,7 @@
         write_priv: "{{ item.permissions.write }}"
         read_priv: "{{ item.permissions.read }}"
         state: present
+        force: yes
       with_items:
         - "{{ rabbitmq_consumers }}"
 
@@ -85,6 +90,7 @@
       rabbitmq_user: user=guest state=absent
 
   when: is_rabbitmq_master_node
+  tags: credentials
 
 # Setup cluster
 

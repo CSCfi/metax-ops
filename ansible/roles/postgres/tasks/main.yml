@@ -15,6 +15,7 @@
         dest: /etc/environment
         state: present
         line: 'METAX_DATABASE_USER="{{ metax_database.user }}"'
+      tags: credentials
 
   when: deployment_environment_id in ['local_development', 'test', 'stable', 'staging', 'demo']
 
@@ -193,6 +194,7 @@
 - block:
     - name: Ensure Metax database user exists
       postgresql_user: name={{ metax_database.user }} password={{ metax_database.password }} state=present role_attr_flags=CREATEDB
+      tags: credentials
 
     - name: Ensure Metax database is present
       postgresql_db: template=template0 db={{ metax_database.name }} state=present owner={{ metax_database.user }} encoding=UTF-8 lc_collate=fi_FI.UTF-8 lc_ctype=fi_FI.UTF-8
