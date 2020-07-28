@@ -1,8 +1,9 @@
 # SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-from domain.indexable_data import IndexableData
 import json
+
+from domain.indexable_data import IndexableData
 
 class ReferenceData(IndexableData):
     '''
@@ -33,14 +34,14 @@ class ReferenceData(IndexableData):
     DATA_TYPE_FILE_FORMAT_VERSION = 'file_format_version'
     DATA_TYPE_EVENT_OUTCOME = 'event_outcome'
 
-    FINTO_REFERENCE_DATA_TYPES = [
+    FINTO_REF_DATA_TYPES = [
         DATA_TYPE_FIELD_OF_SCIENCE,
         DATA_TYPE_LANGUAGE,
         DATA_TYPE_LOCATION,
         DATA_TYPE_KEYWORD
     ]
 
-    LOCAL_REFERENCE_DATA_TYPES = [
+    LOCAL_REF_DATA_TYPES = [
         DATA_TYPE_ACCESS_TYPE,
         DATA_TYPE_RESOURCE_TYPE,
         DATA_TYPE_IDENTIFIER_TYPE,
@@ -55,7 +56,8 @@ class ReferenceData(IndexableData):
         DATA_TYPE_LIFECYCLE_EVENT,
         DATA_TYPE_PRESERVATION_EVENT,
         DATA_TYPE_FILE_FORMAT_VERSION,
-        DATA_TYPE_EVENT_OUTCOME
+        DATA_TYPE_EVENT_OUTCOME,
+        DATA_TYPE_RESEARCH_INFRA
     ]
 
     def __init__(
@@ -71,7 +73,8 @@ class ReferenceData(IndexableData):
         input_file_format='',
         output_format_version='',
         scheme='',
-        internal_code=''):
+        internal_code=''
+    ):
 
         super(ReferenceData, self).__init__(data_id, data_type, label, uri, same_as, scheme)
 
@@ -96,18 +99,19 @@ class ReferenceData(IndexableData):
     def __str__(self):
         return (
             '{' +
-                '"id":"' + self.get_es_document_id() + '",'
-                '"code":"' + self.code + '",'
-                '"type":"' + self.doc_type + '",'
-                '"uri":"' + self.uri + '",'
-                '"wkt":"' + self.wkt + '",'
-                '"input_file_format":"' + self.input_file_format + '",'
-                '"output_format_version":"' + self.output_format_version + '",'
-                '"label":' + json.dumps(self.label) + ','
-                '"parent_ids":' + json.dumps(self.parent_ids) + ','
-                '"child_ids":' + json.dumps(self.child_ids) + ','
-                '"has_children":' + json.dumps(self.has_children) + ','
-                '"same_as":' + json.dumps(self.same_as) + ','
-                '"internal_code":"' + self.internal_code + '",'
-                '"scheme":"' + self.scheme + '"'
-            '}')
+            '"id":"' + self.get_es_document_id() + '",'
+            '"code":"' + self.code + '",'
+            '"type":"' + self.doc_type + '",'
+            '"uri":"' + self.uri + '",'
+            '"wkt":"' + self.wkt + '",'
+            '"input_file_format":"' + self.input_file_format + '",'
+            '"output_format_version":"' + self.output_format_version + '",'
+            '"label":' + json.dumps(self.label) + ','
+            '"parent_ids":' + json.dumps(self.parent_ids) + ','
+            '"child_ids":' + json.dumps(self.child_ids) + ','
+            '"has_children":' + json.dumps(self.has_children) + ','
+            '"same_as":' + json.dumps(self.same_as) + ','
+            '"internal_code":"' + self.internal_code + '",'
+            '"scheme":"' + self.scheme + '"'
+            '}'
+        )
