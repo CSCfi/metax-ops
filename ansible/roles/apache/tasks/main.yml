@@ -21,6 +21,7 @@
 
 - name: APACHE | Copy metax httpd24 conf file
   template: src=templates/metax_httpd.conf dest=/opt/rh/httpd24/root/etc/httpd/conf.d/metax_httpd.conf
+  tags: credentials
 
 - name: APACHE | Copy metax httpd24 modules file
   template: src=templates/00-metax_modules.conf dest=/opt/rh/httpd24/root/etc/httpd/conf.modules.d/00-metax_modules.conf
@@ -31,6 +32,7 @@
     state: present
     regexp: '^#?\s?Listen 80'
     line: "# Listen 80"
+  tags: always
 
 - name: APACHE | Load custom list of httpd24 modules, instead of all default modules
   lineinfile:
@@ -38,6 +40,7 @@
     state: present
     regexp: "Include conf.modules.d"
     line: "Include conf.modules.d/00-metax_modules.conf"
+  tags: always
 
 - name: APACHE | Only load custom metax.conf, not all confs from conf.d/
   lineinfile:
@@ -45,6 +48,7 @@
     state: present
     regexp: "IncludeOptional conf.d"
     line: "IncludeOptional conf.d/metax_httpd.conf"
+  tags: always
 
 - name: Set vanilla httpd service to not auto-restart
   lineinfile:
@@ -57,3 +61,4 @@
 
 - name: APACHE | Restart httpd24
   service: name=httpd24-httpd enabled=yes state=restarted
+  tags: always

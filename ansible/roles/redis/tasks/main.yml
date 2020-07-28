@@ -65,6 +65,7 @@
     group: redis
     force: yes
     mode: 0640
+  tags: credentials
 
 - name: Set slave redis instance as slave in slave config file
   lineinfile:
@@ -73,6 +74,7 @@
     line: slaveof {{ redis.master_host_ip }} {{ redis.master_host_port }}
     state: present
   when: not redis_instance.is_master_node
+  tags: credentials
 
 - name: Install redis service to /usr/lib/systemd/system/ folder
   template:
@@ -91,6 +93,7 @@
     group: redis
     force: yes
     mode: 0640
+  tags: credentials
 
 - name: Install redis sentinel service to /usr/lib/systemd/system/ folder
   template:
@@ -119,6 +122,8 @@
 
 - name: Start custom Redis server service
   service: name=redis-{{ redis_instance.number }} state=restarted enabled=yes
+  tags: always
 
 - name: Start custom Redis sentinel service
   service: name=redis-sentinel-{{ redis_sentinel_instance.number }} state=restarted enabled=yes
+  tags: always
