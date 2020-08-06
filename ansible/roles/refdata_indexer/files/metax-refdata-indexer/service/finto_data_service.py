@@ -86,16 +86,21 @@ class FintoDataService:
                     if wkt != '':
                         # Stop after first success
                         break
+
             data_id = self._get_uri_end_part(concept)
-            index_data_models.append(ReferenceData(data_id,
-                                                    data_type,
-                                                    label,
-                                                    uri,
-                                                    parent_ids=parent_ids,
-                                                    child_ids=child_ids,
-                                                    same_as=same_as,
-                                                    wkt=wkt,
-                                                    scheme=in_scheme))
+
+            ref_item = ReferenceData(
+                data_id,
+                data_type,
+                label,
+                uri,
+                parent_ids=parent_ids,
+                child_ids=child_ids,
+                same_as=same_as,
+                wkt=wkt,
+                scheme=in_scheme
+            )
+            index_data_models.append(ref_item)
 
         if data_type == ReferenceData.DATA_TYPE_LOCATION:
             if not self.READ_COORDINATES_FROM_FILE:
@@ -132,7 +137,7 @@ class FintoDataService:
             return None
 
     def _get_uri_end_part(self, uri):
-        return uri[uri.rindex('/')+1:].strip()
+        return uri[uri.rindex('/') + 1:].strip()
 
     def _get_coordinates_for_location_from_url(self, url):
         sleep_time = 2
@@ -165,7 +170,7 @@ class FintoDataService:
         elif 'paikkatiedot' in url:
             for x in range(0, num_retries):
                 try:
-                    response = requests.get(url +'.jsonld')
+                    response = requests.get(url + '.jsonld')
                     str_error = None
                 except Exception as e:
                     str_error = e

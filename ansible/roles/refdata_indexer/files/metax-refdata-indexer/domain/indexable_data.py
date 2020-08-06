@@ -18,7 +18,8 @@ class IndexableData:
         label,
         uri,
         same_as,
-        scheme):
+        scheme
+    ):
 
         self.doc_type = doc_type
         self.doc_id = self._create_es_document_id(doc_id)
