@@ -24,8 +24,12 @@
   when: deployment_environment_id == 'local_development'
   ignore_errors: true
 
-- name: Install postgresql96
-  shell: yum -y install postgresql96 postgresql96-server postgresql96-contrib python3-psycopg2 --nogpgcheck warn=false
+- name: Check that psycopg2 is installed
+  shell: yum -y install python3-psycopg2 --nogpgcheck warn=false
+  tags: always
+
+- name: Install postgresql96 
+  shell: yum -y install postgresql96 postgresql96-server postgresql96-contrib --nogpgcheck warn=false
 
 - name: Create/ensure data directory {{ data_dir_base_path }}
   file: path={{ data_dir_base_path }} state=directory owner={{ app_user }} group=metax mode=0755
