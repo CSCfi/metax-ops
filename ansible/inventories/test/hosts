@@ -20,8 +20,8 @@ metax-message-test-3 ansible_host="{{ messageserver_3_external_ip }}" ansible_co
 
 [searchservers]
 metax-search-test-1 ansible_host="{{ searchserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
-metax-search-test-2 ansible_host="{{ searchserver_2_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
-metax-search-test-3 ansible_host="{{ searchserver_3_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+# metax-search-test-2 ansible_host="{{ searchserver_2_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+# metax-search-test-3 ansible_host="{{ searchserver_3_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
 
 [refdataservers]
 metax-refdata-test ansible_host="{{ refdataserver_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"

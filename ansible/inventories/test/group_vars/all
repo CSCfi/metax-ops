@@ -19,8 +19,8 @@ messageserver_2_external_ip: "{{ server_2_ip }}"
 messageserver_3_external_ip: "{{ server_1_ip }}"
 
 searchserver_1_external_ip: "{{ server_3_ip }}"
-searchserver_2_external_ip: "{{ server_2_ip }}"
-searchserver_3_external_ip: "{{ server_1_ip }}"
+# searchserver_2_external_ip: "{{ server_2_ip }}"
+# searchserver_3_external_ip: "{{ server_1_ip }}"
 
 refdataserver_external_ip: "{{ server_3_ip }}"
 

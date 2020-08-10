@@ -20,8 +20,8 @@ metax-message-stable-3 ansible_host="{{ messageserver_3_external_ip }}" ansible_
 
 [searchservers]
 metax-search-stable-1 ansible_host="{{ searchserver_1_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
-metax-search-stable-2 ansible_host="{{ searchserver_2_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
-metax-search-stable-3 ansible_host="{{ searchserver_3_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+# metax-search-stable-2 ansible_host="{{ searchserver_2_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
+# metax-search-stable-3 ansible_host="{{ searchserver_3_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
 
 [refdataservers]
 metax-refdata-stable ansible_host="{{ refdataserver_external_ip }}" ansible_connection=ssh ansible_user="{{ ssh_user }}"
