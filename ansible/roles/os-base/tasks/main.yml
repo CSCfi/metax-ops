@@ -5,6 +5,7 @@
 
 - name: Install selinux python3 bindings
   pip: name=selinux state=latest executable=pip3
+  tags: always
 
 - name: Make sure we have a 'metax' group in OS
   group: name=metax state=present

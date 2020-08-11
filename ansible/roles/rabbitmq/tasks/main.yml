@@ -29,13 +29,26 @@
     regexp: "^.*\\{disk_free_limit, \\{mem_relative"
     line: "{disk_free_limit, {mem_relative, 1.5}}"
 
+- block:
+    - name: Get full hostname
+      command: hostname
+      register: full_hostname
+    - name: Set node name
+      set_fact:
+        nodename: "NODENAME=rabbit@{{ full_hostname.stdout.split('.')[0] }}"
+    - name: Copy env file to ensure the node name
+      copy: content="{{ nodename }}" dest=/etc/rabbitmq/rabbitmq-env.conf force=yes owner=root group=root mode=0644
+  tags: always
+
 - name: Setup .erlang.cookie
   copy:
     dest: /var/lib/rabbitmq/.erlang.cookie
     content: "{{ rabbitmq.erlang_cookie }}"
+  tags: credentials
 
 - name: Restart RabbitMQ
   service: name=rabbitmq-server state=restarted
+  tags: always
 
 - block:
     - name: Add main virtual host for RabbitMQ
@@ -58,6 +71,7 @@
             read_priv: .*
             write_priv: .*
         state: present
+        force: yes
 
     - name: Add metax-user for RabbitMQ
       rabbitmq_user:
@@ -68,6 +82,7 @@
         write_priv: .*
         read_priv: .*
         state: present
+        force: yes
 
     - name: Add known consumer users for RabbitMQ
       rabbitmq_user:
@@ -78,6 +93,7 @@
         write_priv: "{{ item.permissions.write }}"
         read_priv: "{{ item.permissions.read }}"
         state: present
+        force: yes
       with_items:
         - "{{ rabbitmq_consumers }}"
 
@@ -85,27 +101,31 @@
       rabbitmq_user: user=guest state=absent
 
   when: is_rabbitmq_master_node
+  tags: credentials
 
 # Setup cluster
 
 - block:
+    # when deployed in demo env clustering was not finished because external ips was used.
+    # this was working for every other env with externals so if it breaks in the future,
+    # try changing it to external ip.
     - name: Add entry 1 to /etc/hosts file for rabbitmq cluster
       lineinfile:
         dest: "/etc/hosts"
         state: present
-        line: "{{ messageserver_1_external_ip }}\t{{ messageserver_1_hostname }}"
+        line: "{{ messageserver_1_internal_ip }}\t{{ messageserver_1_hostname }}"
 
     - name: Add entry 2 to /etc/hosts file for rabbitmq cluster
       lineinfile:
         dest: "/etc/hosts"
         state: present
-        line: "{{ messageserver_2_external_ip }}\t{{ messageserver_2_hostname }}"
+        line: "{{ messageserver_2_internal_ip }}\t{{ messageserver_2_hostname }}"
 
     - name: Add entry 3 to /etc/hosts file for rabbitmq cluster
       lineinfile:
         dest: "/etc/hosts"
         state: present
-        line: "{{ messageserver_3_external_ip }}\t{{ messageserver_3_hostname }}"
+        line: "{{ messageserver_3_internal_ip }}\t{{ messageserver_3_hostname }}"
 
     - block:
         - name: Set RabbitMQ cluster name
