@@ -11,7 +11,7 @@
         "general": {
             "level": "INFO",
             "class": "logging.FileHandler",
-            "filename": "/var/log/refdata_indexer/reindex.log",
+            "filename": "/var/log/refdata/indexer.log",
             "formatter": "standard"
         }
     },

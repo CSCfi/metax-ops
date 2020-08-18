@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2020 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Index all reference data
+  shell: |
+    source {{ python_virtualenv_path }}/bin/activate
+    cd {{ metax_base_path }}/refdata_indexer
+    python index_data.py {{ ref_data_path }} all all
+  become_user: "{{ app_user }}"
