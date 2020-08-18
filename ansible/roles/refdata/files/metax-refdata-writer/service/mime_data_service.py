@@ -10,7 +10,7 @@ from xml.etree import cElementTree as ET
 from domain.reference_data import ReferenceData
 from service.service_utils import file_exists
 
-_logger = logging.getLogger('refdata_indexer.mime_data_service')
+_logger = logging.getLogger('refdata_writer.mime_data_service')
 
 
 class MimeDataService:

@@ -10,7 +10,7 @@ from time import sleep
 from domain.reference_data import ReferenceData
 from service.service_utils import file_exists
 
-_logger = logging.getLogger('refdata_indexer.infra_data_service')
+_logger = logging.getLogger('refdata_writer.infra_data_service')
 
 
 class InfraDataService:

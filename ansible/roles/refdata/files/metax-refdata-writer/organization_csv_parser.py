@@ -16,7 +16,7 @@ import csv
 import json
 import logging
 
-_logger = logging.getLogger('refdata_indexer.organization_csv_parser')
+_logger = logging.getLogger('refdata_writer.organization_csv_parser')
 
 INPUT_FILES = ['resources/organizations/organizations.csv']
 OUTPUT_FILE = '/tmp/metax_organizations.json'
