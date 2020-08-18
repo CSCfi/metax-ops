@@ -33,11 +33,11 @@ class ElasticSearchService:
 
     def create_index(self, index, filename):
         _logger.info("Trying to create index " + index)
-        return self._operation_ok(self.es.indices.create(index=index, body=self._get_json_file_as_str(filename)))
+        self._operation_ok(self.es.indices.create(index=index, body=self._get_json_file_as_str(filename)))
 
     def delete_index(self, index):
         _logger.info("Trying to delete index " + index)
-        return self._operation_ok(self.es.indices.delete(index=index, ignore=[404]))
+        self._operation_ok(self.es.indices.delete(index=index, ignore=[404]))
 
     def delete_and_update_indexable_data(self, index, doc_type, indexable_data_list):
         if len(indexable_data_list) > 0:
@@ -50,9 +50,10 @@ class ElasticSearchService:
             self._delete_all_documents_from_index_with_type(index, doc_type)
             _logger.info("Trying to bulk update reference data with type " + doc_type + " to index " + index)
 
-            return self._operation_ok(self.es.bulk(body=bulk_update_str, request_timeout=30))
+            self._operation_ok(self.es.bulk(body=bulk_update_str, request_timeout=30))
 
-        return None
+        else:
+            _logger.info("No data for {}".format(doc_type))
 
     def _delete_all_documents_from_index_with_type(self, index, doc_type):
         _logger.info("Trying to delete all documents from index " + index + " having type " + doc_type)
@@ -61,9 +62,7 @@ class ElasticSearchService:
         )
 
     def _create_bulk_update_row_for_indexable_data(self, index, indexable_data_item):
-        return "{\"index\":{\"_index\": \"" + \
-            index + "\", \"_id\":\"" + \
-            indexable_data_item.get_es_document_id() + "\"}}\n" + indexable_data_item.to_es_document()
+        return "{\"index\":{\"_index\": \"" + index + "\"}}\n" + indexable_data_item
 
     def _create_bulk_delete_row_indexable_data(self, index, indexable_data_item):
         return "{\"delete\":{\"_index\": \"" + \
@@ -71,10 +70,11 @@ class ElasticSearchService:
             indexable_data_item.get_es_document_id() + "\"}}"
 
     def _operation_ok(self, op_response):
-        if op_response.get('acknowledged'):
-            _logger.info("OK")
-            return True
-        return False
+        # bulk ops return errors and others acknowledged
+        if op_response.get('errors') is False or op_response.get('acknowledged') is True:
+            _logger.info('Success')
+        else:
+            _logger.info('Elasticsearch operation failed')
 
     def _get_json_file_as_str(self, filename):
         with open(filename) as json_data:

@@ -2,7 +2,9 @@ app_name: metax-api
 app_log_file: metax_api.log
 app_log_file_json: metax_api.json.log
 app_user: metax-user
+app_group: metax
 project_repo: https://github.com/CSCfi/metax-api
+ref_data_repo: git@{{ app_name }}:genie9/ref_data_test.git
 
 metax_base_path: /usr/local/metax
 python_virtualenv_path: "{{ metax_base_path }}/pyenv"
@@ -10,6 +12,7 @@ python_virtualenv_path_docs: "{{ metax_base_path }}/pyenv_docs"
 metax_django_base_path: "{{ metax_app_base_path }}/src"
 static_root: "{{ metax_django_base_path }}/static"
 nginx_dh_param_name: nginx_dhparam.pem
+ref_data_path: "{{ metax_base_path }}/refdata"
 
 data_dir_base_path: /data
 db_backup_dir_base_path: /backup

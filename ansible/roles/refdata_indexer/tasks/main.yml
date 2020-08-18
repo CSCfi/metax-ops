@@ -1,27 +1,41 @@
-# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+# SPDX-FileCopyrightText: Copyright (c) 2018-2020 Ministry of Education and Culture, Finland
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-- name: Copy reference and organization data indexing script
-  copy: src=metax-refdata-indexer/ dest={{ metax_base_path }}/refdata_indexer owner={{ app_user}} group=metax mode=740
 
-- name: Install indexing script dependencies
-  pip: requirements={{ metax_base_path }}/refdata_indexer/requirements.txt virtualenv={{ python_virtualenv_path }}
+- name: Add .ssh directory
+  file: path=/home/{{ app_user }}/.ssh state=directory owner={{ app_user }} group={{ app_group }} mode=0740
+
+- name: Copy git access key
+  copy: src=files/id_rsa.github dest=/home/{{ app_user }}/.ssh/id_rsa.github owner={{ app_user }} group={{ app_group }} mode=0400
+
+- name: Add ssh configurations
+  template: src=templates/ssh.conf dest=/home/{{ app_user }}/.ssh/config owner={{ app_user }} group={{ app_group }} mode=0640
+
+- name: Create reference data directory and set permissions
+  file: path={{ ref_data_path }} state=directory owner={{ app_user }} group={{ app_group }} mode=0755
+
+- name: Clone a repo for reference data
+  git: repo={{ ref_data_repo }} dest={{ ref_data_path }} force=yes
   become_user: "{{ app_user }}"
 
-- name: Create refdata indexer logging directory
-  file: path=/var/log/refdata_indexer state=directory owner={{ app_user }} group=metax
+- name: Add git username
+  ini_file: dest={{ ref_data_path }}/.git/config section=user option=name value={{ app_user }}
+  become_user: "{{ app_user }}"
 
-- name: Create refdata indexer log file and ensure file permissions
-  copy: content="" dest=/var/log/refdata_indexer/reindex.log force=no owner={{ app_user }} group=metax mode=0755
+- name: Add git user email
+  ini_file: dest={{ ref_data_path }}/.git/config section=user option=email value="<>"
+  become_user: "{{ app_user }}"
 
-- name: Index reference and organization data
-  shell: su - {{ app_user }} -c '{{ metax_base_path }}/refdata_indexer/reindex_all.sh delete_and_reindex'
+- name: Create reference data logging directory
+  file: path=/var/log/refdata state=directory owner={{ app_user }} group={{ app_group }} mode=0755
 
-- name: Create cronjob for running reindexing script
-  cron:
-    name: "Reindex reference and organization data"
-    minute: "00"
-    hour: "3"
-    job: "{{ metax_base_path }}/refdata_indexer/reindex_all.sh only_reindex"
-    state: present
-    user: "{{ app_user }}"
+- name: Create reference data log file and ensure file permissions
+  file: path=/var/log/refdata/{{ task }}.log state=touch owner={{ app_user }} group={{ app_group }} mode=0755
+
+- set_fact: task_src_path=roles/refdata_{{ task }}/files/metax-refdata-{{ task }}/
+
+- name: Copy reference data {{ task }} scripts to target machine
+  copy: src={{ task_src_path }} dest={{ metax_base_path }}/refdata_{{ task }} owner={{ app_user }} group={{ app_group }} mode=0740
+
+- name: Run {{ task }}
+  include: "{{ task }}.yml"
