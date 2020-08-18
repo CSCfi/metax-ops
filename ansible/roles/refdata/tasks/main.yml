@@ -23,7 +23,11 @@
   become_user: "{{ app_user }}"
 
 - name: Add git user email
-  ini_file: dest={{ ref_data_path }}/.git/config section=user option=email value="<>"
+  ini_file: dest={{ ref_data_path }}/.git/config section=user option=email value=<>
+  become_user: "{{ app_user }}"
+
+- name: Ensure correct push mode
+  ini_file: dest={{ ref_data_path }}/.git/config section=push option=default value=simple
   become_user: "{{ app_user }}"
 
 - name: Create reference data logging directory
@@ -39,7 +43,7 @@
 
 - set_fact: task_src_path=roles/refdata/files/metax-refdata-{{ task }}/
 
-- name: Copy task spesific scripts to target machine
+- name: Copy task specific scripts to target machine
   copy: src={{ task_src_path }} dest={{ metax_base_path }}/refdata_{{ task }} owner={{ app_user }} group={{ app_group }} mode=0740
 
 - name: Install indexing script dependencies

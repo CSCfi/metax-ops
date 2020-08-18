@@ -8,4 +8,4 @@
   roles:
     - { role: os-base, when: "deployment_environment_id != 'local_development'" }
     - { role: python, vars: { owner_user: "{{ app_user }}", python_venv_path: "{{ python_virtualenv_path }}" }}
-    - refdata_indexer
+    - { role: refdata, vars: { task: indexer }}
