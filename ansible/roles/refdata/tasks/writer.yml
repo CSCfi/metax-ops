@@ -27,16 +27,17 @@
 
 - block:
 
-    - set_fact: new_branch=Reference-data-changes-{{ ansible_date_time.date }}
+    # a bit ugly branch name, but prevents crashing if multiple changes happen in one day
+    - set_fact: new_branch=Reference-data-changes-{{ ansible_date_time.iso8601_basic_short }}
 
     - name: Create branch for new changes
       shell: cd {{ ref_data_path }} && git checkout -b {{ new_branch }}
 
     - name: Commit the changes
-      shell: cd {{ ref_data_path }} && git add . git commit -m "Updated reference data"
+      shell: cd {{ ref_data_path }} && git add . && git commit -m "Updated reference data"
 
     - name: Push updates to remote
-      shell: cd {{ ref_data_path }} && git push -u {{ new_branch }} --verbose
+      shell: cd {{ ref_data_path }} && git push -u origin {{ new_branch }}
 
     - name: Return to master branch
       shell: cd {{ ref_data_path }} && git checkout master
