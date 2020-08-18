@@ -11,7 +11,7 @@ from rdflib.namespace import SKOS
 
 from domain.reference_data import ReferenceData
 
-_logger = logging.getLogger('refdata_indexer.finto_data_service')
+_logger = logging.getLogger('refdata_writer.finto_data_service')
 
 
 class FintoDataService:

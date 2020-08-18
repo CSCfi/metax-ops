@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Fetch reference data to git repository folder
+  shell: |
+    source {{ python_virtualenv_path }}/bin/activate
+    cd {{ metax_base_path }}/refdata_writer
+    python fetch_data.py {{ ref_data_path }}
+  become_user: "{{ app_user }}"
+
+- name: Register file changes
+  # cd to git dir is the shortest way to deal with ancient git version (1.8.3)
+  shell: cd {{ ref_data_path }} && git diff --name-only
+  become_user: "{{ app_user }}"
+  register: changes
+
+# - mail:
+#     host: smtp.gmail.com
+#     port: 587
+#     username: evgenia.lyjina@codento.com
+#     password:
+#     to: Evgenia Lyjina <evgenia.lyjina@codento.com>
+#     subject: "[Metax info] Reference data changed"
+#     body: changes.stdout_lines
+#   delegate_to: localhost
+
+- block:
+
+    - set_fact: new_branch=Reference-data-changes-{{ ansible_date_time.date }}
+
+    - name: Create branch for new changes
+      shell: cd {{ ref_data_path }} && git checkout -b {{ new_branch }}
+
+    - name: Commit the changes
+      shell: cd {{ ref_data_path }} && git add . git commit -m "Updated reference data"
+
+    - name: Push updates to remote
+      shell: cd {{ ref_data_path }} && git push -u {{ new_branch }} --verbose
+
+    - name: Return to master branch
+      shell: cd {{ ref_data_path }} && git checkout master
+
+  become_user: "{{ app_user }}"
+  when: changes.stdout_lines|length > 0

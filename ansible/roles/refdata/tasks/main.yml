@@ -15,7 +15,7 @@
   file: path={{ ref_data_path }} state=directory owner={{ app_user }} group={{ app_group }} mode=0755
 
 - name: Clone a repo for reference data
-  git: repo={{ ref_data_repo }} dest={{ ref_data_path }} force=yes
+  git: repo={{ ref_data_repo }} dest={{ ref_data_path }} force=yes version=master
   become_user: "{{ app_user }}"
 
 - name: Add git username
@@ -32,10 +32,19 @@
 - name: Create reference data log file and ensure file permissions
   file: path=/var/log/refdata/{{ task }}.log state=touch owner={{ app_user }} group={{ app_group }} mode=0755
 
-- set_fact: task_src_path=roles/refdata_{{ task }}/files/metax-refdata-{{ task }}/
+- set_fact: common_src_path=roles/refdata/files/common/
 
-- name: Copy reference data {{ task }} scripts to target machine
+- name: Copy common script files to target machine
+  copy: src={{ common_src_path }} dest={{ metax_base_path }}/refdata_{{ task }} owner={{ app_user }} group={{ app_group }} mode=0740
+
+- set_fact: task_src_path=roles/refdata/files/metax-refdata-{{ task }}/
+
+- name: Copy task spesific scripts to target machine
   copy: src={{ task_src_path }} dest={{ metax_base_path }}/refdata_{{ task }} owner={{ app_user }} group={{ app_group }} mode=0740
+
+- name: Install indexing script dependencies
+  pip: requirements={{ metax_base_path }}/refdata_{{ task }}/requirements.txt virtualenv={{ python_virtualenv_path }}
+  become_user: "{{ app_user }}"
 
 - name: Run {{ task }}
   include: "{{ task }}.yml"

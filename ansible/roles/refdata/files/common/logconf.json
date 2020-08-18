@@ -8,17 +8,27 @@
         }
     },
     "handlers": {
-        "general": {
+        "indexer": {
             "level": "INFO",
             "class": "logging.FileHandler",
             "filename": "/var/log/refdata/indexer.log",
+            "formatter": "standard"
+        },
+        "writer": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "/var/log/refdata/writer.log",
             "formatter": "standard"
         }
     },
     "loggers": {
         "refdata_indexer": {
             "level": "INFO",
-            "handlers": ["general"]
+            "handlers": ["indexer"]
+        },
+        "refdata_writer": {
+            "level": "INFO",
+            "handlers": ["writer"]
         }
     }
 }
