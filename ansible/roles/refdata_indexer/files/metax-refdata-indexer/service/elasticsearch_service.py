@@ -57,7 +57,10 @@ class ElasticSearchService:
     def _delete_all_documents_from_index_with_type(self, index, doc_type):
         _logger.info("Trying to delete all documents from index " + index + " having type " + doc_type)
         return self._operation_ok(
-            self.es.delete_by_query(index=index, body="{\"query\": { \"match\": {\"type\": \"%s\"}}}" % doc_type)
+            self.es.delete_by_query(
+                index=index,
+                request_timeout=30,
+                body="{\"query\": { \"match\": {\"type\": \"%s\"}}}" % doc_type)
         )
 
     def _create_bulk_update_row_for_indexable_data(self, index, indexable_data_item):
