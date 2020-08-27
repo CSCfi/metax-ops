@@ -23,7 +23,6 @@ class OrganizationService:
         with open(self.INPUT_FILE) as org_data_file:
             data = json.load(org_data_file)
 
-        print(len(data))
         for org in data:
             parent_id = org.get('parent_id', '')
             same_as = org.get('same_as', [])
