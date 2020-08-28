@@ -10,7 +10,6 @@
       es_instance_name: "{{ elasticsearch_instance.node_name }}"
       es_heap_size: "{{ elasticsearch_instance.heap_size }}"
       es_version: "7.8.0"
-      # es_custom_package_url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.11.rpm"
       es_use_repository: true
       es_major_version: "7.x"
       es_version_lock: true
@@ -40,19 +39,19 @@
 
       - name: Create directory for elasticsearch service drop-in unitfile
         file:
-          path: "/etc/systemd/system/{{ elasticsearch_instance.node_name }}_elasticsearch.service.d"
+          path: "/etc/systemd/system/elasticsearch.service.d"
           state: directory
 
       - name: Copy drop-in unitfile
         template:
           src: templates/Restart.conf
-          dest: "/etc/systemd/system/{{ elasticsearch_instance.node_name }}_elasticsearch.service.d/Restart.conf"
+          dest: "/etc/systemd/system/elasticsearch.service.d/Restart.conf"
 
       - name: Systemctl daemon-reload
         shell: "systemctl daemon-reload"
 
       - name: Restart elasticsearch service
-        service: name={{ elasticsearch_instance.node_name }}_elasticsearch state=restarted
+        service: name=elasticsearch state=restarted
 
     when: deployment_environment_id not in ['local_development']
     tags:
