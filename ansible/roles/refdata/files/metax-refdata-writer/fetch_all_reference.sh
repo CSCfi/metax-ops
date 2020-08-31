@@ -21,7 +21,26 @@ if [ ! -d "$1" ]; then
 fi
 
 REPO_PATH=$1
+NOW=$( date '+%Y%m%dT%H%M%S' )
+NEW_BRANCH=Reference-data-changes-$NOW
 
+# fetching reference data
 source /usr/local/metax/pyenv/bin/activate
 cd /usr/local/metax/refdata_writer
 python fetch_data.py $REPO_PATH
+ 
+# checking changes 
+cd $REPO_PATH
+CHANGES=$(git diff --name-only)
+ 
+if [ -z "$CHANGES" ]; then
+  echo "No changes in reference data. Exiting..."
+  exit 4
+fi
+ 
+# fetching reference data
+git checkout -b $NOW
+git add .
+git commit -m "Updated reference data"
+git push -u origin $NOW
+git checkout master

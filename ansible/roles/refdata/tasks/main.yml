@@ -114,7 +114,7 @@
   cron:
     name: "Fetch reference and organization data"
     minute: "00"
-    hour: "03"
+    hour: "3"
     job: "{{ metax_base_path }}/refdata_writer/fetch_all_reference.sh {{ ref_data_path }}"
     state: present
     user: "{{ app_user }}"
