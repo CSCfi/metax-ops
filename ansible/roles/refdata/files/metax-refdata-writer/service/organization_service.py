@@ -29,5 +29,7 @@ class OrganizationService:
             org_csc = org.get('org_csc', '')
             index_data_models.append(OrganizationData(org['org_id'], org['label'], parent_id, same_as, org_csc))
 
+        index_data_models.sort(key=lambda x: x.code)
+
         os.remove(self.INPUT_FILE)
         return index_data_models

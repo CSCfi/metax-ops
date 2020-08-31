@@ -11,19 +11,11 @@
 
 - name: Register file changes
   # cd to git dir is the shortest way to deal with ancient git version (1.8.3)
+  # after git has been updated to version 2.x "cd {{ ref_data_path }} &&" -part 
+  # can be updated with "git -C {{ ref_data_file }}"
   shell: cd {{ ref_data_path }} && git diff --name-only
   become_user: "{{ app_user }}"
   register: changes
-
-# - mail:
-#     host: smtp.gmail.com
-#     port: 587
-#     username: evgenia.lyjina@codento.com
-#     password:
-#     to: Evgenia Lyjina <evgenia.lyjina@codento.com>
-#     subject: "[Metax info] Reference data changed"
-#     body: changes.stdout_lines
-#   delegate_to: localhost
 
 - block:
 

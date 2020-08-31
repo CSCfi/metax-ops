@@ -40,6 +40,9 @@ class MimeDataService:
             return []
 
         index_data_models = self._parse_mime_data()
+
+        index_data_models.sort(key=lambda x: x.code)
+
         os.remove(self.TEMP_XML_FILENAME)
 
         return index_data_models

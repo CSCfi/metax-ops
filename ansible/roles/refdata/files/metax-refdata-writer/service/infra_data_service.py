@@ -30,6 +30,9 @@ class InfraDataService:
             return []
 
         index_data_models = self._parse_infra_data()
+
+        index_data_models.sort(key=lambda x: x.code)
+
         os.remove(self.TEMP_FILENAME)
 
         return index_data_models

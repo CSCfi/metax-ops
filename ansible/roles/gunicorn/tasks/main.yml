@@ -4,7 +4,7 @@
 ---
 
 - name: Copy gunicorn config file
-  template: src=templates/gunicorn_conf.py dest=/etc/gunicorn.py
+  template: src=templates/gunicorn_conf.py dest=/etc/gunicorn.py group=metax mode=0755
 
 - name: Create gunicorn logging directory
   file: path=/var/log/gunicorn state=directory owner={{ app_user }} group=metax

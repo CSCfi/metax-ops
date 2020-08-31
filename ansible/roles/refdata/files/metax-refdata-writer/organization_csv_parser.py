@@ -79,7 +79,8 @@ def govern(row):
     if all(row[i] for i in ['org_name_fi', 'org_code']):
         # check if sub-unit fields are present
         if not all(row[i] for i in ['unit_sub_code', 'unit_name']):
-            _logger.error(f'Missing unit codes (unit_sub_code, unit_name). Creating root organization only: {row}')
+            _logger.info(f"Missing unit codes (unit_sub_code, unit_name). Creating root organization only: \
+            {row.get('org_name_fi')}, {row.get('org_code')}")
         return True
     else:
         _logger.error(f'Missing root organization fields (org_name_fi, org_code). Skipping row {row}')

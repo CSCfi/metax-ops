@@ -23,33 +23,19 @@ def write_to_file(repo, ref_type, data):
     with open('{}/{}.es_ref'.format(repo, ref_type), 'w') as gitfile:
         for ref in data:
             gitfile.write(str(ref) + '\n')
-        ('Written {} to {}/{}.es_ref'.format(ref_type, repo, ref_type))
         _logger.info('Written {} to {}/{}.es_ref'.format(ref_type, repo, ref_type))
 
 def main():
-    # import ipdb; ipdb.launch_ipdb_on_exception() #ipdb.set_trace()
 
     if len(sys.argv) < 2:
         _logger.error('Please provide path to reference data repository')
         sys.exit(1)
     repo = sys.argv[1]
 
-    # TODO in services: sort outcomming data by label or other static data
-    # otherwise random ordering shows changes in data in git
-
     finto_service = FintoDataService()
     local_service = LocalDataService()
     org_service = OrganizationService()
     mime_service = MimeDataService()
-
-    # TODO:??? loop
-    # servises = {
-    #     finto: {service: FintoDataService(), datatype: ReferenceData.FINTO_REFERENCE_DATA_TYPES},
-    #     local: {service: LocalDataService(), datatype: ReferenceData.LOCAL_REFERENCE_DATA_TYPES},
-    #     org: {service: OrganizationService(), datatype: IndexableData.DATA_TYPE_ORGANIZATION},
-    #     infra: {service: InfraDataService(), datatype: ReferenceData.DATA_TYPE_RESEARCH_INFRA},
-    #     mime: {service: MimeDataService(), datatype: ReferenceData.DATA_TYPE_MIME_TYPE}}
-    # for service in services.keys():
 
     # get for Finto data
     for data_type in ReferenceData.FINTO_REF_DATA_TYPES:

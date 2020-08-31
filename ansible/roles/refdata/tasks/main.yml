@@ -3,52 +3,121 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: Add .ssh directory
-  file: path=/home/{{ app_user }}/.ssh state=directory owner={{ app_user }} group={{ app_group }} mode=0740
+  file:
+    path: /home/{{ app_user }}/.ssh
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0740'
 
 - name: Copy git access key
-  copy: src=files/id_rsa.github dest=/home/{{ app_user }}/.ssh/id_rsa.github owner={{ app_user }} group={{ app_group }} mode=0400
+  copy:
+    src: files/refdata_ssh/id_rsa.github
+    dest: /home/{{ app_user }}/.ssh/id_rsa.github
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0400'
 
 - name: Add ssh configurations
-  template: src=templates/ssh.conf dest=/home/{{ app_user }}/.ssh/config owner={{ app_user }} group={{ app_group }} mode=0640
+  template:
+    src: templates/ssh.conf
+    dest: /home/{{ app_user }}/.ssh/config
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0640'
 
 - name: Create reference data directory and set permissions
-  file: path={{ ref_data_path }} state=directory owner={{ app_user }} group={{ app_group }} mode=0755
+  file:
+    path: "{{ ref_data_path }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0755'
 
 - name: Clone a repo for reference data
-  git: repo={{ ref_data_repo }} dest={{ ref_data_path }} force=yes version=master
+  git:
+    repo: "{{ ref_data_repo }}"
+    dest: "{{ ref_data_path }}"
+    force: yes
+    version: master
   become_user: "{{ app_user }}"
 
 - name: Add git username
-  ini_file: dest={{ ref_data_path }}/.git/config section=user option=name value={{ app_user }}
+  ini_file:
+    dest: "{{ ref_data_path }}/.git/config"
+    section: user
+    option: name
+    value: "{{ app_user }}"
   become_user: "{{ app_user }}"
 
 - name: Add git user email
-  ini_file: dest={{ ref_data_path }}/.git/config section=user option=email value=<>
+  ini_file:
+    dest: "{{ ref_data_path }}/.git/config"
+    section: user
+    option: email
+    value: <>
   become_user: "{{ app_user }}"
 
 - name: Ensure correct push mode
-  ini_file: dest={{ ref_data_path }}/.git/config section=push option=default value=simple
+  ini_file:
+    dest: "{{ ref_data_path }}/.git/config"
+    section: push
+    option: default
+    value: simple
   become_user: "{{ app_user }}"
 
 - name: Create reference data logging directory
-  file: path=/var/log/refdata state=directory owner={{ app_user }} group={{ app_group }} mode=0755
+  file:
+    path: /var/log/refdata
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0755'
 
 - name: Create reference data log file and ensure file permissions
-  file: path=/var/log/refdata/{{ task }}.log state=touch owner={{ app_user }} group={{ app_group }} mode=0755
+  file:
+    path: "/var/log/refdata/{{ task }}.log"
+    state: touch
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0755'
 
-- set_fact: common_src_path=roles/refdata/files/common/
+- set_fact:
+    common_src_path: roles/refdata/files/common/
 
 - name: Copy common script files to target machine
-  copy: src={{ common_src_path }} dest={{ metax_base_path }}/refdata_{{ task }} owner={{ app_user }} group={{ app_group }} mode=0740
+  copy:
+    src: "{{ common_src_path }}"
+    dest: "{{ metax_base_path }}/refdata_{{ task }}"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0740'
 
-- set_fact: task_src_path=roles/refdata/files/metax-refdata-{{ task }}/
+- set_fact:
+    task_src_path: roles/refdata/files/metax-refdata-{{ task }}/
 
 - name: Copy task specific scripts to target machine
-  copy: src={{ task_src_path }} dest={{ metax_base_path }}/refdata_{{ task }} owner={{ app_user }} group={{ app_group }} mode=0740
+  copy:
+    src: "{{ task_src_path }}"
+    dest: "{{ metax_base_path }}/refdata_{{ task }}"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0740'
 
 - name: Install indexing script dependencies
-  pip: requirements={{ metax_base_path }}/refdata_{{ task }}/requirements.txt virtualenv={{ python_virtualenv_path }}
+  pip:
+    requirements: "{{ metax_base_path }}/refdata_{{ task }}/requirements.txt"
+    virtualenv: "{{ python_virtualenv_path }}"
   become_user: "{{ app_user }}"
+
+- name: Create cronjob for running reindexing script
+  cron:
+    name: "Fetch reference and organization data"
+    minute: "00"
+    hour: "03"
+    job: "{{ metax_base_path }}/refdata_writer/fetch_all_reference.sh {{ ref_data_path }}"
+    state: present
+    user: "{{ app_user }}"
 
 - name: Run {{ task }}
   include: "{{ task }}.yml"

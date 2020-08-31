@@ -41,4 +41,6 @@ class LocalDataService:
 
                 index_data_models.append(ref_item)
 
+        index_data_models.sort(key=lambda x: x.code)
+
         return index_data_models

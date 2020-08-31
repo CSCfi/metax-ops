@@ -41,6 +41,8 @@ class FintoDataService:
             return []
 
         index_data_models = self._parse_finto_data(graph, data_type)
+        index_data_models.sort(key=lambda x: x.code)
+
         return index_data_models
 
     def _parse_finto_data(self, graph, data_type):
@@ -67,10 +69,14 @@ class FintoDataService:
             uri = str(concept)
             # preferred labels
             label = dict(((literal.language, str(literal)) for literal in graph.objects(concept, SKOS.prefLabel)))
+            label = dict(sorted(label.items()))
+
             # parents (broader)
-            parent_ids = [self._get_uri_end_part(parent) for parent in graph.objects(concept, SKOS.broader)]
+            parent_ids = sorted([self._get_uri_end_part(parent) for parent in graph.objects(concept, SKOS.broader)])
+
             # children (narrower)
-            child_ids = [self._get_uri_end_part(child) for child in graph.objects(concept, SKOS.narrower)]
+            child_ids = sorted([self._get_uri_end_part(child) for child in graph.objects(concept, SKOS.narrower)])
+
             same_as = []
             wkt = ''
             if data_type == ReferenceData.DATA_TYPE_LOCATION:
