@@ -16,9 +16,12 @@ import csv
 import json
 import logging
 
+import domain.reference_data_sources as source
+
+
 _logger = logging.getLogger('refdata_writer.organization_csv_parser')
 
-INPUT_FILES = ['resources/organizations/organizations.csv']
+INPUT_FILES = source.ORG_TYPE_INPUT_FILES
 OUTPUT_FILE = '/tmp/metax_organizations.json'
 
 def parse_csv():

@@ -8,6 +8,7 @@ import requests
 from time import sleep
 
 from domain.reference_data import ReferenceData
+import domain.reference_data_sources as source
 from service.service_utils import file_exists
 
 _logger = logging.getLogger('refdata_writer.infra_data_service')
@@ -19,7 +20,7 @@ class InfraDataService:
     so it is first fetched and parsed.
     """
 
-    INFRA_REF_DATA_SOURCE_URL = 'https://avaa.tdata.fi/api/jsonws/tupa-portlet.Infrastructures/get-all-infrastructures'
+    INFRA_REF_DATA_SOURCE_URL = source.INFRA_REF_DATA_SOURCE_URL
 
     TEMP_FILENAME = '/tmp/data.json'
 

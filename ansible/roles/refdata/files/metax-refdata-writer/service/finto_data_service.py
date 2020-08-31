@@ -10,6 +10,7 @@ from rdflib import Graph, URIRef, RDF
 from rdflib.namespace import SKOS
 
 from domain.reference_data import ReferenceData
+import domain.reference_data_sources as source
 
 _logger = logging.getLogger('refdata_writer.finto_data_service')
 
@@ -20,14 +21,7 @@ class FintoDataService:
     so it is first fetched and parsed.
     """
 
-    FINTO_REFERENCE_DATA_SOURCE_URLS = {
-        ReferenceData.DATA_TYPE_FIELD_OF_SCIENCE: 'http://finto.fi/rest/v1/okm-tieteenala/data',
-        ReferenceData.DATA_TYPE_LANGUAGE: 'http://finto.fi/rest/v1/lexvo/data',
-        ReferenceData.DATA_TYPE_LOCATION: 'http://finto.fi/rest/v1/yso-paikat/data',
-        ReferenceData.DATA_TYPE_KEYWORD: 'http://finto.fi/rest/v1/koko/data'
-    }
-
-    WKT_FILENAME = './resources/uri_to_wkt.json'
+    WKT_FILENAME = source.WKT_FILENAME
 
     # Use this to decide whether to read location coordinates from a file
     # or whether to read coordinates from wikidata and paikkatiedot.fi and
@@ -117,7 +111,7 @@ class FintoDataService:
         return index_data_models
 
     def _fetch_finto_data(self, data_type):
-        url = self.FINTO_REFERENCE_DATA_SOURCE_URLS[data_type]
+        url = source.FINTO_REFERENCE_DATA_SOURCE_URLS[data_type]
         _logger.info("Fetching data from url " + url)
         sleep_time = 2
         num_retries = 7

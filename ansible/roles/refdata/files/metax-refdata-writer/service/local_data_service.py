@@ -4,6 +4,7 @@
 import json
 
 from domain.reference_data import ReferenceData
+import domain.reference_data_sources as source
 
 
 class LocalDataService:
@@ -12,7 +13,7 @@ class LocalDataService:
     i.e. data should exist on localhost.
     """
 
-    LOCAL_REFDATA_FOLDER = 'resources/local-refdata/'
+    LOCAL_REFDATA_FOLDER = source.LOCAL_REFDATA_FOLDER
 
     # move infra here beacuse the fetch API for it is broken and there is no estimate when it could be fixed.
     # to keep the reference data unchanged, use the old scheme until some fix for it has been invented and

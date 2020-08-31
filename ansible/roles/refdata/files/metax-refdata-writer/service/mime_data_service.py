@@ -8,6 +8,7 @@ from time import sleep
 from xml.etree import cElementTree as ET
 
 from domain.reference_data import ReferenceData
+import domain.reference_data_sources as source
 from service.service_utils import file_exists
 
 _logger = logging.getLogger('refdata_writer.mime_data_service')
@@ -20,7 +21,7 @@ class MimeDataService:
     """
 
     IANA_NS = '{http://www.iana.org/assignments}'
-    MIME_TYPE_REF_DATA_SOURCE_URL = 'https://www.iana.org/assignments/media-types/media-types.xml'
+    MIME_TYPE_REF_DATA_SOURCE_URL = source.MIME_TYPE_REF_DATA_SOURCE_URL
     MIME_TYPE_REGISTRY_IDS = [  'application',
                                 'audio',
                                 'font',
