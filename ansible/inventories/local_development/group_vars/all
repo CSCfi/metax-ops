@@ -192,6 +192,9 @@ api_access: {
             "harvested_datasets_cumulative":    { "use": ["all"] },
             "organization_datasets_cumulative": { "use": ["all"] },
             "unused_files":                     { "use": ["all"] }
+        },
+        "elasticsearchs": {
+            "map_refdata": { "use": ["all"] }
         }
     }
 }
