@@ -29,4 +29,4 @@ refdataserver_external_ip: "{{ server_3_ip }}"
 metax_app_base_path: "{{ metax_base_path }}/{{ app_name }}"
 deployment_environment_id: test
 project_repo_branch: test
-etsin_base_url: https://etsin-test.fairdata.fi
+etsin_base_url: https://etsin.fd-test.csc.fi
