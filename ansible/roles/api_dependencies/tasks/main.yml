@@ -1,0 +1,89 @@
+# SPDX-FileCopyrightText: Copyright (c) 2018-2019 Ministry of Education and Culture, Finland
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# - name: Activate virtualenv
+#   shell: source {{python_virtualenv_path}}/bin/activate
+
+- name: Copy requirements.txt
+  copy:
+    src: /metax/metax-api/requirements.txt
+    dest: /metax/metax-api/requirements.tmp
+    owner: "{{ app_user}}"
+
+- name: Copy requirements checking script
+  copy:
+    src: metax-api-dependencies/
+    dest: "{{ metax_base_path }}/api_dependencies"
+    owner: "{{ app_user}}"
+    group: metax
+    mode: '0740'
+
+- name: Create dependencies checker logging directory
+  file:
+    path: /var/log/api_dependencies
+    state: directory
+    owner: "{{ app_user }}"
+    group: metax
+
+- name: Create cdependencies checker log file and ensure file permissions
+  copy:
+    content: ""
+    dest: /var/log/api_dependencies/requirements.log
+    force: no
+    owner: "{{ app_user }}"
+    group: metax
+    mode: '0755'
+
+- name: Run pip compile
+  shell: |
+    source {{python_virtualenv_path}}/bin/activate
+    rm /metax/metax-api/requirements.txt
+    pip-compile --output-file=/metax/metax-api/requirements.txt /metax/metax-api/requirements.in
+  become_user: "{{ app_user }}"
+
+- name: Check if dependencies changed
+  shell: diff /metax/metax-api/requirements.txt /metax/metax-api/requirements.tmp
+  register: diff_result
+  ignore_errors: True
+
+
+- block:
+
+    - name: Install updated requirements
+      shell: |
+        source {{python_virtualenv_path}}/bin/activate
+        echo {{ ansible_date_time.iso8601_micro }} pip-sync >> /var/log/api_dependencies/requirements.log
+        pip-sync /metax/metax-api/requirements.txt >> /var/log/api_dependencies/requirements.log
+      register: install_result
+
+    - name: Print out changes
+      debug:
+        var: install_result.stdout_lines
+
+    - name: Run metax tests
+      shell: |
+        source {{python_virtualenv_path}}/bin/activate
+        cd /metax/metax-api/src
+        python manage.py test metax_api.tests --failfast
+      register: test_result
+      ignore_errors: True
+
+    - name: Check breaking dependencies
+      shell: |
+        source {{python_virtualenv_path}}/bin/activate
+        cd "{{ metax_base_path }}/api_dependencies"
+        python compare_requirements.py /metax/metax-api/requirements.txt /metax/metax-api/requirements.tmp /metax/metax-api/requirements_changes.txt
+      register: changes
+      when: test_result.stderr_lines|length>0
+
+    - name: Print out changes
+      debug:
+        var: changes.stdout_lines
+
+  become_user: "{{ app_user }}"
+  when: diff_result.stdout_lines|length>0
+
+- name: Remove temp file
+  file:
+    path: /metax/metax-api/requirements.tmp
+    state: absent
