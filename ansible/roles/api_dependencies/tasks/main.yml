@@ -25,7 +25,7 @@
     owner: "{{ app_user }}"
     group: metax
 
-- name: Create cdependencies checker log file and ensure file permissions
+- name: Create dependencies checker log file and ensure file permissions
   copy:
     content: ""
     dest: /var/log/api_dependencies/requirements.log
@@ -33,6 +33,17 @@
     owner: "{{ app_user }}"
     group: metax
     mode: '0755'
+
+- name: Update pip
+  shell: |
+    source {{python_virtualenv_path}}/bin/activate
+    pip install -U pip
+  become_user: "{{ app_user }}"
+
+- name: Insure pip-tools is installed
+  pip:
+    name: pip-tools
+    virtualenv: "{{python_virtualenv_path}}"
 
 - name: Run pip compile
   shell: |
@@ -68,11 +79,16 @@
       register: test_result
       ignore_errors: True
 
+    # this one for testing
+    - name: Print out test
+      debug:
+        var: test_result.stderr_lines
+
     - name: Check breaking dependencies
       shell: |
         source {{python_virtualenv_path}}/bin/activate
         cd "{{ metax_base_path }}/api_dependencies"
-        python compare_requirements.py /metax/metax-api/requirements.txt /metax/metax-api/requirements.tmp /metax/metax-api/requirements_changes.txt
+        python compare_requirements.py /metax/metax-api/requirements.txt /metax/metax-api/requirements.tmp /metax/metax-api/requirements_changes.json
       register: changes
       when: test_result.stderr_lines|length>0
 
