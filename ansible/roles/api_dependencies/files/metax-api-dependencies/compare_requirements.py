@@ -35,25 +35,25 @@ def main():
         line = line.replace('\n', '')
         try:
             d = line.split('==')
+            changes[d[0]] = {'new':d[1], 'old': None}
         except:
             _logger.error('%s' %line)
             continue
 
-        changes[d[0]] = {'new':d[1], 'old': None}
 
     for line in old:
         line = line.replace('\n', '')
         try:
             f = line.split('==')
+
+            if changes.get(f[0]):
+                changes[f[0]]['old'] = f[1]
+            else:
+                changes[f[0]] = {'new': None, 'old': f[1]}
+
         except:
             _logger.error('%s' %line)
             continue
-
-        if changes.get(f[0]):
-            changes[f[0]]['old'] = f[1]
-
-        else:
-            changes[f[0]] = {'new': None, 'old': f[1]}
 
     with open(req_changes, 'w') as f:
         json.dump(changes, f)
