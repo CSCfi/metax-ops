@@ -28,16 +28,16 @@ NEW_BRANCH=Reference-data-changes-$NOW
 source /usr/local/metax/pyenv/bin/activate
 cd /usr/local/metax/refdata_writer
 python fetch_data.py $REPO_PATH
- 
-# checking changes 
+
+# checking changes
 cd $REPO_PATH
 CHANGES=$(git diff --name-only)
- 
+
 if [ -z "$CHANGES" ]; then
   echo "No changes in reference data. Exiting..."
   exit 4
 fi
- 
+
 # fetching reference data
 git checkout -b $NOW
 git add .

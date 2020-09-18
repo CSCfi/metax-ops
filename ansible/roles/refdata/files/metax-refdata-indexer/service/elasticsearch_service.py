@@ -50,7 +50,7 @@ class ElasticSearchService:
             self._delete_all_documents_from_index_with_type(index, doc_type)
             _logger.info("Trying to bulk update reference data with type " + doc_type + " to index " + index)
 
-            self.es.bulk(body=bulk_update_str, request_timeout=100)
+            self.es.bulk(body=bulk_update_str, request_timeout=30)
 
         else:
             _logger.info("No data for {}".format(doc_type))

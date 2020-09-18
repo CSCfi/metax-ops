@@ -5,6 +5,7 @@ import json
 
 from domain.indexable_data import IndexableData
 
+
 class ReferenceData(IndexableData):
     '''
     Model class for reference data that can be indexed into Metax Elasticsearch
