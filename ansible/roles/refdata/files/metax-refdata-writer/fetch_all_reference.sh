@@ -1,6 +1,5 @@
 #!/bin/bash
-# Script to reindex all reference data and organization data.
-# Run only from the folder where es_index_data.py exists.
+# Script to fetch reference data and organization data to version control
 
 cd /usr/local/metax/refdata_indexer
 source /usr/local/metax/pyenv/bin/activate
@@ -39,8 +38,8 @@ if [ -z "$CHANGES" ]; then
 fi
 
 # fetching reference data
-git checkout -b $NOW
+git checkout -b $NEW_BRANCH
 git add .
 git commit -m "Updated reference data"
-git push -u origin $NOW
+git push -u origin $NEW_BRANCH
 git checkout master

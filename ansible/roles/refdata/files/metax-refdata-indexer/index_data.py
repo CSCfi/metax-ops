@@ -47,11 +47,11 @@ def _delete_and_update_indexable_data(refdata_path, data_type):
         pass
 
 def main():
-    """
+    help_text = """
     Runner file for indexing data to elasticsearch. Make sure requirements.txt is installed via pip.
 
     params:
-        refdata_path (required): path to reference data directory
+        refdata_path (required): path to reference data repository which is checked out to release tag.
 
         indices_to_recreate (required):
             Comma separated list of indices that are recreated before indexing. Can also take
@@ -66,6 +66,10 @@ def main():
     ALL = 'all'
 
     run_args = sys.argv[1:]
+
+    if len(run_args) < 3:
+        print(help_text)
+        exit(1)
 
     refdata_path = run_args[0]
     indices_to_recreate = run_args[1].split(',')

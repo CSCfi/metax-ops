@@ -6,5 +6,6 @@
   shell: |
     source {{ python_virtualenv_path }}/bin/activate
     cd {{ metax_base_path }}/refdata_indexer
+    git checkout {{ ref_data_tag }}
     python index_data.py {{ ref_data_path }} all all
   become_user: "{{ app_user }}"
