@@ -17,6 +17,7 @@
     owner: "{{ app_user}}"
     group: metax
     mode: '0740'
+  tags: update
 
 - name: Create dependencies checker logging directory
   file:
@@ -45,6 +46,7 @@
     name: pip-tools
     virtualenv: "{{python_virtualenv_path}}"
 
+# bring dependencies from requirements.in and all accociated ones
 - name: Run pip compile
   shell: |
     source {{python_virtualenv_path}}/bin/activate
@@ -52,11 +54,16 @@
     pip-compile --output-file=/metax/metax-api/requirements.txt /metax/metax-api/requirements.in
   become_user: "{{ app_user }}"
 
+# - name: Upgrade requirements
+#   shell: |
+#     source {{python_virtualenv_path}}/bin/activate
+#     pip-compile --upgrade --output-file=/metax/metax-api/requirements.txt /metax/metax-api/requirements.tmp
+#   become_user: "{{ app_user }}"
+
 - name: Check if dependencies changed
   shell: diff /metax/metax-api/requirements.txt /metax/metax-api/requirements.tmp
   register: diff_result
   ignore_errors: True
-
 
 - block:
 
@@ -90,11 +97,12 @@
         cd "{{ metax_base_path }}/api_dependencies"
         python compare_requirements.py /metax/metax-api/requirements.txt /metax/metax-api/requirements.tmp /metax/metax-api/requirements_changes.json
       register: changes
-      when: test_result.stderr_lines|length>0
+      when: '"FAILED" in test_result.stderr'
 
     - name: Print out changes
       debug:
         var: changes.stdout_lines
+      when: changes.stdout_lines is defined
 
   become_user: "{{ app_user }}"
   when: diff_result.stdout_lines|length>0

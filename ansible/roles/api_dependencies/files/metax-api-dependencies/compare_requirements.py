@@ -22,10 +22,11 @@ def main():
     with open(req_new, 'r') as f:
         f_new = set(f.readlines())
         f_new.discard('\n')
+        f_new = set(map(lambda x: x.lower(), f_new))
     with open(req_org, 'r') as f:
         f_org = set(f.readlines())
         f_org.discard('\n')
-
+        f_org = set(map(lambda x: x.lower(), f_org))
 
     changes = {}
     new = list(f_new - f_org)
@@ -34,22 +35,24 @@ def main():
     for line in new:
         line = line.replace('\n', '')
         try:
-            d = line.split('==')
-            changes[d[0]] = {'new':d[1], 'old': None}
+            line = line.split('==')
+            changes[line[0].lower()] = {'new':line[1].lower(), 'old': None}
+
         except:
             _logger.error('%s' %line)
             continue
 
-
     for line in old:
         line = line.replace('\n', '')
         try:
-            f = line.split('==')
+            line = line.split('==')
+            key_old = line[0].lower()
+            value_old = line[1].split('#')[0].rstrip()
 
-            if changes.get(f[0]):
-                changes[f[0]]['old'] = f[1]
+            if changes.get(key_old):
+                changes[key_old]['old'] = value_old
             else:
-                changes[f[0]] = {'new': None, 'old': f[1]}
+                changes[key_old] = {'new': None, 'old': value_old}
 
         except:
             _logger.error('%s' %line)
