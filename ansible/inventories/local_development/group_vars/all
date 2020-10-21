@@ -111,7 +111,7 @@ end_user_allowed_data_catalogs:
   - "{{ ida_datacatalog_identifier }}"
   - "{{ att_datacatalog_identifier }}"
   - "{{ legacy_datacatalog_identifier }}"
-  - "{{ draft_catalog_identifier }}"
+  - "{{ draft_datacatalog_identifier }}"
 
 
 api_versions_enabled:
