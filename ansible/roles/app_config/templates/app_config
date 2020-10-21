@@ -58,7 +58,8 @@ ATT_DATACATALOG_IDENTIFIER: {{ att_datacatalog_identifier }}
 IDA_DATACATALOG_IDENTIFIER: {{ ida_datacatalog_identifier }}
 LEGACY_DATACATALOG_IDENTIFIER: {{ legacy_datacatalog_identifier }}
 PAS_DATACATALOG_IDENTIFIER: {{ pas_datacatalog_identifier }}
-DFT_DATA_CATALOG_IDENTIFIER: {{ draft_datacatalog_identifier }}
+
+DFT_DATACATALOG_IDENTIFIER: {{ draft_datacatalog_identifier }}
 
 END_USER_ALLOWED_DATA_CATALOGS: {{ end_user_allowed_data_catalogs | to_nice_json }}
 
