@@ -1,10 +1,23 @@
+- name: Swagger | Generate swagger html non production
+  block:
+    - name: Generate swagger html non production
+      shell: su - {{ app_user }} -c '{{ python_virtualenv_path_docs }}/bin/python {{ metax_app_base_path }}/swagger/swagger-yaml-to-html.py < {{ metax_app_base_path }}/swagger/{{ api_version }}/swagger.yaml > {{ metax_app_base_path }}/swagger/{{ api_version }}/index.html'
+      tags:
+        - swagger
 
-- name: Swagger | Generate swagger html
-  shell: su - {{ app_user }} -c '{{ python_virtualenv_path_docs }}/bin/python {{ metax_app_base_path }}/swagger/swagger-yaml-to-html.py < {{ metax_app_base_path }}/swagger/{{ api_version }}/swagger.yaml > {{ metax_app_base_path }}/swagger/{{ api_version }}/index.html'
-  tags:
-    - swagger
+    - name: Swagger | Replace placeholder Metax domain values with environment-specific values
+      replace: dest={{ metax_app_base_path }}/swagger/{{ api_version }}/index.html regexp="__METAX_ENV_DOMAIN__" replace={{ server_domain_name }}
 
-- name: Swagger | Replace placeholder Metax domain values with environment-specific values
-  replace: dest={{ metax_app_base_path }}/swagger/{{ api_version }}/index.html regexp="__METAX_ENV_DOMAIN__" replace={{ server_domain_name }}
-  tags:
-    - swagger
+  when: deployment_environment_id != 'production'
+  tags: swagger
+
+- name: Swagger | Generate swagger html non production
+  block:
+    - name: Generate swagger html production
+      shell: su - {{ app_user }} -c '{{ python_virtualenv_path_docs }}/bin/python {{ metax_app_base_path }}/swagger/swagger-yaml-to-html.py < {{ metax_app_base_path }}/swagger/{{ api_version }}/swagger_prod.yaml > {{ metax_app_base_path }}/swagger/{{ api_version }}/index.html'
+
+    - name: Swagger | Replace placeholder Metax domain values with environment-specific values
+      replace: dest={{ metax_app_base_path }}/swagger/{{ api_version }}/index.html regexp="__METAX_ENV_DOMAIN__" replace={{ server_domain_name }}
+
+  when: deployment_environment_id == 'production'
+  tags: swagger
