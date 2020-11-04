@@ -4,5 +4,5 @@
 ---
 
 - name: Django migrate
-  django_manage: command=migrate metax_api 0027 app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
+  django_manage: command=migrate app_path={{ metax_django_base_path }} virtualenv={{ python_virtualenv_path }}
   become_user: "{{ app_user }}"
