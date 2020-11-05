@@ -30,7 +30,7 @@ att_datacatalog_identifier: urn:nbn:fi:att:data-catalog-att
 ida_datacatalog_identifier: urn:nbn:fi:att:data-catalog-ida
 legacy_datacatalog_identifier: urn:nbn:fi:att:data-catalog-legacy
 pas_datacatalog_identifier: urn:nbn:fi:att:data-catalog-pas
-draft_datacatalog_identifier: urn:nbn:fi:att:data-catalog-dft
+dft_datacatalog_identifier: urn:nbn:fi:att:data-catalog-dft
 
 checksum_algorithms: ['SHA-256', 'MD5', 'SHA-512']
 
