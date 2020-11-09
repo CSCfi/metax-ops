@@ -17,5 +17,6 @@
 {"id":"url","uri":"http://uri.suomi.fi/codelist/fairdata/identifier_type/code/url","label":{"en":"Universal Resource Locator (URL)"},"same_as":["http://purl.org/spar/datacite/url"]},
 {"id":"uri","uri":"http://uri.suomi.fi/codelist/fairdata/identifier_type/code/uri","label":{"en":"Universal Resource Identifier (URI)"},"same_as":["http://purl.org/spar/datacite/uri"]},
 {"id":"urn","uri":"http://uri.suomi.fi/codelist/fairdata/identifier_type/code/urn","label":{"en":"Uniform Resource Name (URN)"},"same_as":["http://purl.org/spar/datacite/urn"]},
-{"id":"orcid","uri":"http://uri.suomi.fi/codelist/fairdata/identifier_type/code/orcid","label":{"en":"Open Researcher and Contributor Identifier (ORCID)"},"same_as":["http://purl.org/spar/datacite/orcid"]}
+{"id":"orcid","uri":"http://uri.suomi.fi/codelist/fairdata/identifier_type/code/orcid","label":{"en":"Open Researcher and Contributor Identifier (ORCID)"},"same_as":["http://purl.org/spar/datacite/orcid"]},
+{"id":"virta","uri":"http://uri.suomi.fi/codelist/fairdata/identifier_type/code/virta","label":{"en":"VIRTA identifier"}}
 ]
