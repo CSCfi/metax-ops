@@ -8,6 +8,13 @@
 
 - name: NGINX | Replace NGINX conf file
   template: src=templates/metax_nginx.conf dest=/etc/nginx/nginx.conf
+  when: deployment_environment_id not in ['test', 'stable']
+  tags:
+    - conf
+
+- name: NGINX | Replace NGINX conf file for test and stable (special ES parameters needed)
+  template: src=templates/metax_nginx_test_stable.conf dest=/etc/nginx/nginx.conf
+  when: deployment_environment_id in ['test', 'stable']
   tags:
     - conf
 
