@@ -41,6 +41,7 @@ RABBITMQ:
   USER: {{ rabbitmq_common.user }}
   PASSWORD: {{ rabbitmq_common.password }}
   VHOST: {{ rabbitmq_common.vhost }}
+  VHOST_TTV: {{ rabbitmq_common.vhost_ttv }}
 
   CONSUMERS: {{ rabbitmq_consumers | to_nice_json }}
 
