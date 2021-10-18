@@ -1,4 +1,4 @@
-# This repository is no longer in use and has been replaced by https://github.com/CSCfi/fairdata-ansible-metax
+## Note: This repository has been deprecated and been replaced by https://github.com/CSCfi/fairdata-ansible-metax
 
 # metax-ops
 
